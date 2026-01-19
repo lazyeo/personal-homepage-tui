@@ -17,59 +17,107 @@ export const commands = {
 
   about: () => `
 <div class="output__section">ABOUT ME</div>
-<div class="output__line">Hi! I'm <span class="output__line--accent">Shaun</span>, a Product-Minded Vibe Coder based in Christchurch, New Zealand.</div>
+<div class="output__line">Hi! I'm <span class="output__line--accent">Shaun (Shun Zhang)</span>, a Product-Minded Vibe Coder based in Christchurch, New Zealand.</div>
 <div class="output__line output__line--muted"></div>
-<div class="output__line">I build things that matter — combining technical skills with product thinking</div>
-<div class="output__line">to create software that users actually love.</div>
+<div class="output__line">A versatile technical professional combining full-stack development skills with</div>
+<div class="output__line">extensive product management experience. I build things that matter — bridging</div>
+<div class="output__line">technical and business needs to create software users actually love.</div>
 
 <div class="output__section">EXPERIENCE</div>
 <div class="ascii-box">
-  <div class="ascii-box__header">[ Current Role ]</div>
-  <div class="output__line">Software Developer</div>
-  <div class="output__line output__line--secondary">Building web applications and solving interesting problems.</div>
+  <div class="ascii-box__header">[ Product Director · 2022-2024 ]</div>
+  <div class="output__line">Nanjing Yilisha Technology Co., Ltd.</div>
+  <div class="output__line output__line--secondary">Led EdgeMatrix distributed computing network for AI applications.</div>
+  <div class="output__line output__line--secondary">Stakeholder analysis, requirement gathering, cross-functional coordination.</div>
+</div>
+
+<div class="ascii-box">
+  <div class="ascii-box__header">[ Independent Developer · 2017-2022 ]</div>
+  <div class="output__line">Community Consultant & Technical Educator</div>
+  <div class="output__line output__line--secondary">Built GameMaker Studio 2 community with active developers.</div>
+  <div class="output__line output__line--secondary">Created 50+ technical tutorials reaching thousands of users.</div>
+</div>
+
+<div class="ascii-box">
+  <div class="ascii-box__header">[ Senior Product Manager · 2008-2017 ]</div>
+  <div class="output__line">Multiple Internet Startups (China)</div>
+  <div class="output__line output__line--secondary">Led product teams across e-commerce, sports tech, mobile platforms.</div>
+  <div class="output__line output__line--secondary">Managed teams up to 7 members for C-end and B-end products.</div>
 </div>
 
 <div class="output__section">EDUCATION</div>
-<div class="output__line">Computer Science Background</div>
-<div class="output__line output__line--secondary">Continuous learner, always exploring new technologies.</div>
+<div class="output__line"><span class="output__line--accent">Master of Applied Computing</span> · Lincoln University, NZ (2024-2025)</div>
+<div class="output__line output__line--secondary">Python, Business Analysis, User Experience, Machine Learning</div>
+<div class="output__line output__line--muted"></div>
+<div class="output__line"><span class="output__line--accent">Bachelor of Biological Sciences</span> · Nanjing Forestry University (2004-2008)</div>
 `,
 
   skills: () => `
 <div class="output__section">TECHNICAL SKILLS</div>
 
+<div class="output__line output__line--accent">Web Development</div>
+<div class="output__line">  Python Flask · MySQL · HTML/CSS · Git & Version Control</div>
+<div class="output__line output__line--muted"></div>
+
+<div class="output__line output__line--accent">Machine Learning & Data Science</div>
+<div class="output__line">  Python · Jupyter Notebooks · Pandas · Scikit-learn · Feature Engineering</div>
+<div class="output__line output__line--muted"></div>
+
+<div class="output__line output__line--accent">Business Analysis</div>
+<div class="output__line">  Requirements Gathering · Process Improvement · Stakeholder Management</div>
+<div class="output__line output__line--muted"></div>
+
+<div class="output__line output__line--accent">Technical Support & Documentation</div>
+<div class="output__line">  API Documentation · Technical Troubleshooting · User Guides</div>
+<div class="output__line output__line--muted"></div>
+
+<div class="output__line output__line--accent">AI Tools & Productivity</div>
+<div class="output__line">  Claude Code · Cursor · GitHub Copilot · ChatGPT · Gemini</div>
+<div class="output__line output__line--muted"></div>
+
+<div class="output__line output__line--accent">Cloud & Infrastructure</div>
+<div class="output__line">  AWS · Docker · Distributed Computing · Cloudflare · Vercel</div>
+<div class="output__line output__line--muted"></div>
+
 <div class="output__line output__line--accent">Languages</div>
-<div class="output__line">  JavaScript/TypeScript · Python · Go · Rust</div>
-<div class="output__line output__line--muted"></div>
-
-<div class="output__line output__line--accent">Frontend</div>
-<div class="output__line">  React · Vue · Astro · Next.js · Tailwind CSS</div>
-<div class="output__line output__line--muted"></div>
-
-<div class="output__line output__line--accent">Backend</div>
-<div class="output__line">  Node.js · FastAPI · PostgreSQL · Redis</div>
-<div class="output__line output__line--muted"></div>
-
-<div class="output__line output__line--accent">Tools & Platforms</div>
-<div class="output__line">  Git · Docker · AWS · Cloudflare · Vercel</div>
-<div class="output__line output__line--muted"></div>
-
-<div class="output__line output__line--accent">Interests</div>
-<div class="output__line">  AI/ML · Developer Tools · Product Design · Open Source</div>
+<div class="output__line">  English (Fluent) · Mandarin Chinese (Native)</div>
 `,
 
   projects: () => `
 <div class="output__section">FEATURED PROJECTS</div>
 
 <div class="ascii-box">
-  <div class="ascii-box__header">[ Project 1 ]</div>
-  <div class="output__line">Coming soon...</div>
-  <div class="output__line output__line--secondary">Add your projects here!</div>
+  <div class="ascii-box__header">[ Kids Worksheet Generator ]</div>
+  <div class="output__line">Web app generating printable math worksheets & coloring pages for children.</div>
+  <div class="output__line output__line--secondary">Built to solve personal need for my child's learning activities.</div>
+  <div class="output__line output__line--accent">→ <a href="https://kids.a-dobe.club/" target="_blank" rel="noopener">kids.a-dobe.club</a></div>
 </div>
 
 <div class="ascii-box">
-  <div class="ascii-box__header">[ Project 2 ]</div>
-  <div class="output__line">Coming soon...</div>
-  <div class="output__line output__line--secondary">Showcase your best work.</div>
+  <div class="ascii-box__header">[ Smart Canvas - AI Flowchart Generator ]</div>
+  <div class="output__line">AI-powered tool generating flowcharts through conversational interface.</div>
+  <div class="output__line output__line--secondary">Currently in early development, iterating on core functionality.</div>
+  <div class="output__line output__line--accent">→ <a href="https://smart-canvas-brown.vercel.app/" target="_blank" rel="noopener">smart-canvas-brown.vercel.app</a></div>
+</div>
+
+<div class="ascii-box">
+  <div class="ascii-box__header">[ LCC Issue Tracker ]</div>
+  <div class="output__line">Full-stack web app with Python Flask & MySQL for issue management.</div>
+  <div class="output__line output__line--secondary">Three-tier role-based access control (Visitor/Helper/Admin).</div>
+  <div class="output__line output__line--accent">→ <a href="https://github.com/Shun-Zhang-1163127/LCC_Issue_Tracker" target="_blank" rel="noopener">GitHub</a></div>
+</div>
+
+<div class="ascii-box">
+  <div class="ascii-box__header">[ ML Lending Data Analysis ]</div>
+  <div class="output__line">Machine learning project analyzing Lending Club data (2007-2018).</div>
+  <div class="output__line output__line--secondary">Predictive models for loan risk assessment & feature engineering.</div>
+  <div class="output__line output__line--accent">→ <a href="https://github.com/Shun-Zhang-1163127/1163127" target="_blank" rel="noopener">GitHub</a></div>
+</div>
+
+<div class="ascii-box">
+  <div class="ascii-box__header">[ EdgeMatrix Distributed Computing ]</div>
+  <div class="output__line">Distributed computing infrastructure for AI applications.</div>
+  <div class="output__line output__line--secondary">Led architecture design, documentation, and technical support.</div>
 </div>
 
 <div class="output__line output__line--muted"></div>
@@ -79,12 +127,14 @@ export const commands = {
   contact: () => `
 <div class="output__section">GET IN TOUCH</div>
 
-<div class="output__line"><span class="output__line--accent">Email</span>     → <a href="mailto:hello@example.com">hello@example.com</a></div>
-<div class="output__line"><span class="output__line--accent">GitHub</span>    → <a href="https://github.com/shaun" target="_blank" rel="noopener">github.com/shaun</a></div>
-<div class="output__line"><span class="output__line--accent">LinkedIn</span>  → <a href="https://linkedin.com/in/shaun" target="_blank" rel="noopener">linkedin.com/in/shaun</a></div>
+<div class="output__line"><span class="output__line--accent">Email</span>     → <a href="mailto:shaun@a-dobe.club">shaun@a-dobe.club</a></div>
+<div class="output__line"><span class="output__line--accent">GitHub</span>    → <a href="https://github.com/lazyeo" target="_blank" rel="noopener">github.com/lazyeo</a></div>
+<div class="output__line"><span class="output__line--accent">LinkedIn</span>  → <a href="https://linkedin.com/in/shaun-nz/" target="_blank" rel="noopener">linkedin.com/in/shaun-nz</a></div>
+<div class="output__line"><span class="output__line--accent">Location</span>  → Christchurch, New Zealand</div>
 
 <div class="output__line output__line--muted"></div>
-<div class="output__line">Feel free to reach out for opportunities, collaborations, or just to say hi!</div>
+<div class="output__line">Open to opportunities in Software Development, Business Analysis,</div>
+<div class="output__line">and Technical Support Engineering. Let's build something great together!</div>
 `,
 
   theme: (args) => {
