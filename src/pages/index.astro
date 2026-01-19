@@ -13,24 +13,28 @@ import MobileCommands from '../components/MobileCommands.astro';
         <ThemeSwitcher />
       </header>
 
-      <main class="terminal__body" id="terminal-body">
-        <AsciiLogo />
+      <main class="terminal__body">
+        <div class="terminal__content" id="terminal-content">
+          <AsciiLogo />
 
-        <div class="output" id="output">
-          <!-- Welcome message will be typed here -->
+          <div class="output" id="output">
+            <!-- Welcome message will be typed here -->
+          </div>
         </div>
 
-        <div class="command-line">
-          <span class="command-line__prompt">$</span>
-          <input
-            type="text"
-            class="command-line__input"
-            id="command-input"
-            placeholder="Type a command..."
-            autocomplete="off"
-            spellcheck="false"
-          />
-          <div class="suggestions" id="suggestions"></div>
+        <div class="terminal__input-area">
+          <div class="command-line">
+            <span class="command-line__prompt">$</span>
+            <input
+              type="text"
+              class="command-line__input"
+              id="command-input"
+              placeholder="Type a command..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div class="suggestions" id="suggestions"></div>
+          </div>
         </div>
       </main>
 
