@@ -1,0 +1,63 @@
+---
+interface Props {
+  currentTheme?: string;
+}
+
+const { currentTheme = 'gruvbox' } = Astro.props;
+
+const themes = [
+  { id: 'gruvbox', label: 'Gruvbox' },
+  { id: 'frost', label: 'Frost' },
+  { id: 'amber', label: 'Amber' },
+];
+---
+
+<div class="theme-switcher" role="group" aria-label="Theme switcher">
+  {themes.map((theme) => (
+    <button
+      class={`theme-switcher__dot theme-switcher__dot--${theme.id}`}
+      data-theme-id={theme.id}
+      data-active={theme.id === currentTheme ? 'true' : 'false'}
+      aria-label={`Switch to ${theme.label} theme`}
+      title={theme.label}
+    />
+  ))}
+</div>
+
+<script>
+  function initThemeSwitcher() {
+    const dots = document.querySelectorAll('.theme-switcher__dot');
+
+    // Update active state based on current theme
+    function updateActiveDot() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'gruvbox';
+      dots.forEach(dot => {
+        const isActive = dot.getAttribute('data-theme-id') === currentTheme;
+        dot.setAttribute('data-active', isActive ? 'true' : 'false');
+      });
+    }
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const themeId = dot.getAttribute('data-theme-id');
+        if (themeId) {
+          document.documentElement.setAttribute('data-theme', themeId);
+          localStorage.setItem('theme', themeId);
+          updateActiveDot();
+
+          // Dispatch custom event for terminal feedback
+          window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: themeId } }));
+        }
+      });
+    });
+
+    // Initial update
+    updateActiveDot();
+  }
+
+  // Run on page load
+  initThemeSwitcher();
+
+  // Re-run after Astro page transitions
+  document.addEventListener('astro:page-load', initThemeSwitcher);
+</script>

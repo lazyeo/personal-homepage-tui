@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Skill(planning-with-files-skill)"
+      "Skill(planning-with-files-skill)",
+      "Skill(frontend-design)",
+      "Bash(npm create astro@latest:*)"
     ]
   }
 }

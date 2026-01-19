@@ -1,0 +1,32 @@
+---
+const commands = ['help', 'about', 'skills', 'projects', 'contact', 'clear'];
+---
+
+<div class="mobile-commands">
+  {commands.map((cmd) => (
+    <button class="mobile-commands__btn" data-command={cmd}>
+      {cmd}
+    </button>
+  ))}
+</div>
+
+<script>
+  function initMobileCommands() {
+    const buttons = document.querySelectorAll('.mobile-commands__btn');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const command = btn.getAttribute('data-command');
+        if (command) {
+          // Dispatch command event for terminal to handle
+          window.dispatchEvent(new CustomEvent('execute-command', {
+            detail: { command: `/${command}` }
+          }));
+        }
+      });
+    });
+  }
+
+  initMobileCommands();
+  document.addEventListener('astro:page-load', initMobileCommands);
+</script>

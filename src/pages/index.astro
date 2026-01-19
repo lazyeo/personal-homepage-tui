@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AsciiLogo from '../components/AsciiLogo.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import MobileCommands from '../components/MobileCommands.astro';
+---
+
+<Layout>
+  <div class="terminal">
+    <div class="terminal__window">
+      <header class="terminal__header">
+        <span class="terminal__title">shaun@portfolio ~ </span>
+        <ThemeSwitcher />
+      </header>
+
+      <main class="terminal__body" id="terminal-body">
+        <AsciiLogo />
+
+        <div class="output" id="output">
+          <!-- Welcome message will be typed here -->
+        </div>
+
+        <div class="command-line">
+          <span class="command-line__prompt">$</span>
+          <input
+            type="text"
+            class="command-line__input"
+            id="command-input"
+            placeholder="Type a command..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <div class="suggestions" id="suggestions"></div>
+        </div>
+      </main>
+
+      <MobileCommands />
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { initTerminal } from '../scripts/terminal.js';
+
+  // Initialize terminal on page load
+  initTerminal();
+  document.addEventListener('astro:page-load', initTerminal);
+</script>

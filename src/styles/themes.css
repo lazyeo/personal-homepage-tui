@@ -1,0 +1,97 @@
+/* ═══════════════════════════════════════════════════════════════
+   TUI THEMES - Low saturation, eye-friendly terminal colors
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Shared */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace;
+  --font-size-base: 14px;
+  --font-size-mobile: 13px;
+  --line-height: 1.6;
+  --cursor-blink-speed: 1s;
+  --typewriter-speed: 50ms;
+
+  /* Border characters (for reference in JS) */
+  --border-tl: '┌';
+  --border-tr: '┐';
+  --border-bl: '└';
+  --border-br: '┘';
+  --border-h: '─';
+  --border-v: '│';
+}
+
+/* ───────────────────────────────────────────────────────────────
+   GRUVBOX THEME (Default)
+   Warm, retro feel inspired by the classic Gruvbox palette
+   ─────────────────────────────────────────────────────────────── */
+[data-theme="gruvbox"], :root {
+  --bg-primary: #1d2021;
+  --bg-secondary: #282828;
+  --bg-tertiary: #3c3836;
+
+  --text-primary: #ebdbb2;
+  --text-secondary: #a89984;
+  --text-muted: #665c54;
+
+  --accent-primary: #8ec07c;
+  --accent-secondary: #b8bb26;
+  --accent-tertiary: #fabd2f;
+
+  --border-color: #504945;
+  --selection-bg: #504945;
+  --cursor-color: #8ec07c;
+
+  /* Theme indicator colors */
+  --theme-dot-active: #8ec07c;
+  --theme-dot-inactive: #504945;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   FROST THEME
+   Cool, professional blue-green tones
+   ─────────────────────────────────────────────────────────────── */
+[data-theme="frost"] {
+  --bg-primary: #1e2030;
+  --bg-secondary: #232536;
+  --bg-tertiary: #2f3146;
+
+  --text-primary: #c0caf5;
+  --text-secondary: #9aa5ce;
+  --text-muted: #565f89;
+
+  --accent-primary: #89b4a6;
+  --accent-secondary: #7dcfff;
+  --accent-tertiary: #bb9af7;
+
+  --border-color: #3b3d57;
+  --selection-bg: #3b3d57;
+  --cursor-color: #89b4a6;
+
+  --theme-dot-active: #89b4a6;
+  --theme-dot-inactive: #3b3d57;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   AMBER THEME
+   Warm, nostalgic amber/sepia tones
+   ─────────────────────────────────────────────────────────────── */
+[data-theme="amber"] {
+  --bg-primary: #1b1b1b;
+  --bg-secondary: #242424;
+  --bg-tertiary: #2d2d2d;
+
+  --text-primary: #e5c07b;
+  --text-secondary: #c9a65a;
+  --text-muted: #7a6a4f;
+
+  --accent-primary: #d4a373;
+  --accent-secondary: #e5c07b;
+  --accent-tertiary: #d19a66;
+
+  --border-color: #3d3d3d;
+  --selection-bg: #3d3d3d;
+  --cursor-color: #d4a373;
+
+  --theme-dot-active: #d4a373;
+  --theme-dot-inactive: #3d3d3d;
+}
