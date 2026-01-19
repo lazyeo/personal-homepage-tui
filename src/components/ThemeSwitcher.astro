@@ -40,13 +40,12 @@ const themes = [
     dots.forEach(dot => {
       dot.addEventListener('click', () => {
         const themeId = dot.getAttribute('data-theme-id');
-        if (themeId) {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'gruvbox';
+
+        if (themeId && themeId !== currentTheme) {
           document.documentElement.setAttribute('data-theme', themeId);
           localStorage.setItem('theme', themeId);
           updateActiveDot();
-
-          // Dispatch custom event for terminal feedback
-          window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: themeId } }));
         }
       });
     });

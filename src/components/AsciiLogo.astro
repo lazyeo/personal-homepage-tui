@@ -1,4 +1,6 @@
 ---
+import GithubHeatmap from './GithubHeatmap.astro';
+
 // ASCII Logo - Desktop uses Unicode block style, Mobile uses pure ASCII
 const asciiLogoDesktop = `
 ███████╗██╗  ██╗ █████╗ ██╗   ██╗███╗   ██╗
@@ -23,8 +25,15 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
 ---
 
 <div class="ascii-header">
-  <pre class="ascii-logo ascii-logo--desktop" aria-label="SHAUN">{asciiLogoDesktop}</pre>
-  <pre class="ascii-logo ascii-logo--mobile" aria-label="SHAUN">{asciiLogoMobile}</pre>
+  <div class="ascii-header__row">
+    <div class="ascii-header__logo">
+      <pre class="ascii-logo ascii-logo--desktop" aria-label="SHAUN">{asciiLogoDesktop}</pre>
+      <pre class="ascii-logo ascii-logo--mobile" aria-label="SHAUN">{asciiLogoMobile}</pre>
+    </div>
+    <div class="ascii-header__heatmap">
+      <GithubHeatmap username="lazyeo" />
+    </div>
+  </div>
   <p class="brand-tagline">{tagline}</p>
 </div>
 
@@ -33,11 +42,39 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
     text-align: left;
   }
 
+  .ascii-header__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .ascii-header__logo {
+    flex-shrink: 0;
+  }
+
+  .ascii-header__heatmap {
+    flex: 1;
+    max-width: 280px;
+  }
+
   .ascii-logo--mobile {
     display: none;
   }
 
   @media (max-width: 768px) {
+    .ascii-header__row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .ascii-header__heatmap {
+      width: 100%;
+      max-width: unset;
+    }
+
     .ascii-logo--desktop {
       display: none;
     }
