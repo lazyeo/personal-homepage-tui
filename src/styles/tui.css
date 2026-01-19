@@ -425,6 +425,21 @@ body,
 }
 
 /* ───────────────────────────────────────────────────────────────
+   CLICKABLE COMMAND LINKS
+   ─────────────────────────────────────────────────────────────── */
+.cmd-link {
+  color: var(--accent-primary);
+  cursor: pointer;
+  border-bottom: 1px dashed var(--accent-primary);
+  transition: all 0.15s ease;
+}
+
+.cmd-link:hover {
+  border-bottom-style: solid;
+  text-shadow: 0 0 8px var(--accent-primary);
+}
+
+/* ───────────────────────────────────────────────────────────────
    LINKS
    ─────────────────────────────────────────────────────────────── */
 a {

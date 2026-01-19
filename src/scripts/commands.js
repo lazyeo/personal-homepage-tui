@@ -6,12 +6,12 @@
 export const commands = {
   help: () => `
 <div class="output__section">AVAILABLE COMMANDS</div>
-<div class="output__line"><span class="output__line--accent">/help</span>      - Show this help message</div>
-<div class="output__line"><span class="output__line--accent">/about</span>     - About me, experience & education</div>
-<div class="output__line"><span class="output__line--accent">/skills</span>    - Technical skills & tools</div>
-<div class="output__line"><span class="output__line--accent">/projects</span>  - Featured projects</div>
-<div class="output__line"><span class="output__line--accent">/contact</span>   - Get in touch</div>
-<div class="output__line"><span class="output__line--accent">/clear</span>     - Clear terminal</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/help">/help</span>      - Show this help message</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/about">/about</span>     - About me, experience & education</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/skills">/skills</span>    - Technical skills & tools</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/projects">/projects</span>  - Featured projects</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/contact">/contact</span>   - Get in touch</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/clear">/clear</span>     - Clear terminal</div>
 `,
 
   about: () => `
@@ -112,7 +112,7 @@ export const commands = {
 </div>
 
 <div class="output__line output__line--muted"></div>
-<div class="output__line">Run <span class="output__line--accent">/contact</span> to discuss potential collaborations.</div>
+<div class="output__line">Run <span class="cmd-link" data-cmd="/contact">/contact</span> to discuss potential collaborations.</div>
 `,
 
   contact: () => `
@@ -150,6 +150,11 @@ export const commands = {
 
   clear: () => {
     return '__CLEAR__';
+  },
+
+  // Hidden command: audio debug console
+  console: () => {
+    return '__CONSOLE__';
   },
 };
 

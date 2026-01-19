@@ -49,7 +49,7 @@ export function isSoundEnabled() {
 }
 
 // Play a simple beep/click sound
-function playBeep(frequency = 600, duration = 0.03, volume = 0.03) {
+function playBeep(frequency = 600, duration = 0.03, volume = 0.03, type = 'sine') {
   if (!soundEnabled) return;
 
   try {
@@ -61,7 +61,7 @@ function playBeep(frequency = 600, duration = 0.03, volume = 0.03) {
     gainNode.connect(ctx.destination);
 
     oscillator.frequency.value = frequency;
-    oscillator.type = 'square';
+    oscillator.type = type;
 
     gainNode.gain.setValueAtTime(volume, ctx.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
@@ -73,23 +73,30 @@ function playBeep(frequency = 600, duration = 0.03, volume = 0.03) {
   }
 }
 
-// Mechanical typewriter sound - deeper click with slight variation
+// Mechanical typewriter sound - muffled, slow thud
 export function playKeySound() {
   if (!soundEnabled) return;
 
-  // Lower frequency for more mechanical feel
-  const baseFreq = 150 + Math.random() * 80;
-  playBeep(baseFreq, 0.015, 0.02);
+  // Check for debug override
+  const debug = window.__audioDebugParams;
+  if (debug) {
+    const freq = debug.freq + Math.random() * debug.freqVar;
+    playBeep(freq, debug.dur, debug.vol, debug.wave);
+    return;
+  }
+
+  const baseFreq = 120 + Math.random() * 10;
+  playBeep(baseFreq, 0.150, 0.040, 'triangle');
 }
 
-// Enter key sound - slightly different
+// Enter key sound - deeper thunk
 export function playEnterSound() {
   if (!soundEnabled) return;
-  playBeep(120, 0.04, 0.025);
+  playBeep(100, 0.2, 0.03, 'sine');
 }
 
 // Heatmap cell fill sound - soft tick
 export function playTickSound() {
   if (!soundEnabled) return;
-  playBeep(300 + Math.random() * 100, 0.01, 0.015);
+  playBeep(200 + Math.random() * 50, 0.1, 0.015, 'sine');
 }
