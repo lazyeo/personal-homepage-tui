@@ -4,7 +4,8 @@
       "Skill(planning-with-files-skill)",
       "Skill(frontend-design)",
       "Bash(npm create astro@latest:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(git rm -r --cached:*)"
     ]
   }
 }
