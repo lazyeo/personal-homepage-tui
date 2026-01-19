@@ -1,6 +1,6 @@
 ---
-// ASCII Logo generated with Figlet (ANSI Shadow font)
-const asciiLogo = `
+// ASCII Logo - Desktop uses Unicode block style, Mobile uses pure ASCII
+const asciiLogoDesktop = `
 ███████╗██╗  ██╗ █████╗ ██╗   ██╗███╗   ██╗
 ██╔════╝██║  ██║██╔══██╗██║   ██║████╗  ██║
 ███████╗███████║███████║██║   ██║██╔██╗ ██║
@@ -9,16 +9,42 @@ const asciiLogo = `
 ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 `.trim();
 
+// Mobile: Pure ASCII only (no Unicode box-drawing)
+const asciiLogoMobile = `
+ #####   #   #   #   #   # #   #
+#       #   #  # #  #   # ##  #
+ ####   ##### #   # #   # # # #
+     #  #   # ##### #   # #  ##
+#####   #   # #   #  ###  #   #
+
+`.trim();
+
 const tagline = "Christchurch · Product-Minded Vibe Coder";
 ---
 
 <div class="ascii-header">
-  <pre class="ascii-logo" aria-label="SHAUN">{asciiLogo}</pre>
+  <pre class="ascii-logo ascii-logo--desktop" aria-label="SHAUN">{asciiLogoDesktop}</pre>
+  <pre class="ascii-logo ascii-logo--mobile" aria-label="SHAUN">{asciiLogoMobile}</pre>
   <p class="brand-tagline">{tagline}</p>
 </div>
 
 <style>
   .ascii-header {
     text-align: left;
+  }
+
+  .ascii-logo--mobile {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .ascii-logo--desktop {
+      display: none;
+    }
+    .ascii-logo--mobile {
+      display: block;
+      font-size: 0.6rem;
+      line-height: 1.2;
+    }
   }
 </style>

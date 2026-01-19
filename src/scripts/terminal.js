@@ -44,12 +44,6 @@ export function initTerminal() {
     runCommand(command);
   });
 
-  // Listen for theme changes
-  window.addEventListener('theme-changed', (e) => {
-    const { theme } = e.detail;
-    appendOutput(`<div class="output__line">Theme changed to <span class="output__line--accent">${theme}</span></div>`);
-  });
-
   // Focus input on click anywhere in terminal
   terminalContentEl?.addEventListener('click', (e) => {
     if (e.target === terminalContentEl || e.target === outputEl) {
@@ -181,6 +175,9 @@ function handleInput() {
 // ───────────────────────────────────────────────────────────────
 
 function runCommand(command) {
+  // Fade previous content
+  fadeOldContent();
+
   // Echo the command
   appendOutput(`<div class="output__line"><span class="output__line--accent">$</span> ${escapeHtml(command)}</div>`);
 
@@ -193,13 +190,21 @@ function runCommand(command) {
     return;
   }
 
-  // Append result
+  // Append result (skip if null - silent commands like theme)
   if (result) {
     appendOutput(result);
   }
 
-  // Scroll to bottom
-  scrollToBottom();
+  // Scroll new content to top of viewport
+  scrollNewContentToTop();
+}
+
+function fadeOldContent() {
+  // Add faded class to all existing content in output
+  const existingContent = outputEl.querySelectorAll(':scope > div:not(.output--faded)');
+  existingContent.forEach(el => {
+    el.classList.add('output--faded');
+  });
 }
 
 function appendOutput(html) {
@@ -214,7 +219,19 @@ function clearTerminal() {
 }
 
 function scrollToBottom() {
+  // Scroll to show new content at top of viewport
+  // by scrolling the container to the bottom
   terminalContentEl.scrollTop = terminalContentEl.scrollHeight;
+}
+
+// Scroll new content to top of viewport (push old content up)
+function scrollNewContentToTop() {
+  // Get the last added content block
+  const lastChild = outputEl.lastElementChild;
+  if (lastChild) {
+    // Scroll so the new content appears at the top of the visible area
+    lastChild.scrollIntoView({ behavior: 'instant', block: 'start' });
+  }
 }
 
 // ───────────────────────────────────────────────────────────────

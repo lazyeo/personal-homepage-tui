@@ -166,6 +166,15 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Fade old content when new command is executed */
+.output--faded {
+  opacity: 0.5;
+}
+
+.output--faded .output__line--accent {
+  color: var(--text-muted);
+}
+
 .output__line {
   margin-bottom: 0.25rem;
 }
@@ -302,11 +311,13 @@ body {
    ─────────────────────────────────────────────────────────────── */
 .mobile-commands {
   display: none;
-  flex-wrap: wrap;
   gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid var(--border-color);
-  background-color: var(--bg-tertiary);
+  padding: 0.75rem 0;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px dashed var(--border-color);
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-commands__btn {
@@ -319,6 +330,8 @@ body {
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .mobile-commands__btn:hover,
@@ -368,22 +381,40 @@ a:hover {
    RESPONSIVE DESIGN
    ─────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
   html {
     font-size: var(--font-size-mobile);
   }
 
   .terminal {
     padding: 0;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile browsers */
   }
 
   .terminal__window {
     border-radius: 0;
     border-left: none;
     border-right: none;
+    height: 100%;
   }
 
   .terminal__body {
     padding: 1rem;
+    padding-bottom: 0;
+  }
+
+  .terminal__content {
+    padding: 0.75rem;
+    padding-bottom: 0;
+  }
+
+  .terminal__input-area {
+    padding: 0.5rem 0.75rem 0.75rem;
   }
 
   .ascii-logo {
@@ -405,6 +436,10 @@ a:hover {
   }
 
   .terminal__header {
+    padding: 0.5rem;
+  }
+
+  .terminal__input-area {
     padding: 0.5rem;
   }
 

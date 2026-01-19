@@ -11,7 +11,6 @@ export const commands = {
 <div class="output__line"><span class="output__line--accent">/skills</span>    - Technical skills & tools</div>
 <div class="output__line"><span class="output__line--accent">/projects</span>  - Featured projects</div>
 <div class="output__line"><span class="output__line--accent">/contact</span>   - Get in touch</div>
-<div class="output__line"><span class="output__line--accent">/theme</span>     - Change color theme (gruvbox|frost|amber)</div>
 <div class="output__line"><span class="output__line--accent">/clear</span>     - Clear terminal</div>
 `,
 
@@ -19,9 +18,7 @@ export const commands = {
 <div class="output__section">ABOUT ME</div>
 <div class="output__line">Hi! I'm <span class="output__line--accent">Shaun (Shun Zhang)</span>, a Product-Minded Vibe Coder based in Christchurch, New Zealand.</div>
 <div class="output__line output__line--muted"></div>
-<div class="output__line">A versatile technical professional combining full-stack development skills with</div>
-<div class="output__line">extensive product management experience. I build things that matter — bridging</div>
-<div class="output__line">technical and business needs to create software users actually love.</div>
+<div class="output__line">A versatile technical professional combining full-stack development skills with extensive product management experience. I build things that matter — bridging technical and business needs to create software users actually love.</div>
 
 <div class="output__section">EXPERIENCE</div>
 <div class="ascii-box">
@@ -114,12 +111,6 @@ export const commands = {
   <div class="output__line output__line--accent">→ <a href="https://github.com/Shun-Zhang-1163127/1163127" target="_blank" rel="noopener">GitHub</a></div>
 </div>
 
-<div class="ascii-box">
-  <div class="ascii-box__header">[ EdgeMatrix Distributed Computing ]</div>
-  <div class="output__line">Distributed computing infrastructure for AI applications.</div>
-  <div class="output__line output__line--secondary">Led architecture design, documentation, and technical support.</div>
-</div>
-
 <div class="output__line output__line--muted"></div>
 <div class="output__line">Run <span class="output__line--accent">/contact</span> to discuss potential collaborations.</div>
 `,
@@ -133,49 +124,37 @@ export const commands = {
 <div class="output__line"><span class="output__line--accent">Location</span>  → Christchurch, New Zealand</div>
 
 <div class="output__line output__line--muted"></div>
-<div class="output__line">Open to opportunities in Software Development, Business Analysis,</div>
-<div class="output__line">and Technical Support Engineering. Let's build something great together!</div>
+<div class="output__line">Open to opportunities in Software Development and Business Analysis.</div>
+<div class="output__line">Let's build something great together!</div>
 `,
 
+  // theme is handled silently, not listed in help
   theme: (args) => {
     const validThemes = ['gruvbox', 'frost', 'amber'];
     const theme = args?.[0]?.toLowerCase();
 
-    if (!theme) {
-      const current = document.documentElement.getAttribute('data-theme') || 'gruvbox';
-      return `
-<div class="output__line">Current theme: <span class="output__line--accent">${current}</span></div>
-<div class="output__line output__line--secondary">Usage: /theme [gruvbox|frost|amber]</div>
-`;
-    }
-
-    if (!validThemes.includes(theme)) {
-      return `
-<div class="output__line output__line--secondary">Unknown theme: ${theme}</div>
-<div class="output__line">Available themes: <span class="output__line--accent">${validThemes.join(', ')}</span></div>
-`;
+    if (!theme || !validThemes.includes(theme)) {
+      return null;
     }
 
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
 
-    // Update theme switcher dots
     document.querySelectorAll('.theme-switcher__dot').forEach(dot => {
       const isActive = dot.getAttribute('data-theme-id') === theme;
       dot.setAttribute('data-active', isActive ? 'true' : 'false');
     });
 
-    return `<div class="output__line">Theme changed to <span class="output__line--accent">${theme}</span></div>`;
+    return null;
   },
 
   clear: () => {
-    // Special handling in terminal.js
     return '__CLEAR__';
   },
 };
 
-// Get list of available commands for suggestions
-export const commandList = Object.keys(commands);
+// Commands shown in suggestions (exclude theme)
+export const commandList = ['help', 'about', 'skills', 'projects', 'contact', 'clear'];
 
 // Execute a command and return the result
 export function executeCommand(input) {
