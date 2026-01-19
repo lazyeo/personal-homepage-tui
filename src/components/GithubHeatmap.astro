@@ -12,7 +12,7 @@ const { username = 'lazyeo' } = Astro.props;
     <span class="github-heatmap__period">Last 30 days</span>
   </div>
   <div class="github-heatmap__grid" id="heatmap-grid">
-    <div class="github-heatmap__loading">Loading...</div>
+    <!-- Will be filled by JavaScript -->
   </div>
   <div class="github-heatmap__legend">
     <span class="github-heatmap__legend-label">Less</span>
@@ -112,6 +112,8 @@ const { username = 'lazyeo' } = Astro.props;
 </style>
 
 <script>
+  import { playTickSound } from '../scripts/sound.js';
+
   async function initHeatmap() {
     const container = document.querySelector('.github-heatmap');
     const grid = document.getElementById('heatmap-grid');
@@ -119,12 +121,22 @@ const { username = 'lazyeo' } = Astro.props;
 
     if (!grid) return;
 
+    // First, show empty cells
+    grid.textContent = '';
+    for (let i = 0; i < 30; i++) {
+      const cell = document.createElement('span');
+      cell.className = 'github-heatmap__cell github-heatmap__cell--0';
+      cell.textContent = '░';
+      grid.appendChild(cell);
+    }
+
+    // Then fetch and animate
     try {
       const contributions = await fetchContributions(username);
-      renderHeatmap(grid, contributions);
+      await renderHeatmapAnimated(grid, contributions);
     } catch (error) {
       console.error('Failed to load GitHub heatmap:', error);
-      renderPlaceholder(grid);
+      await renderPlaceholderAnimated(grid);
     }
   }
 
@@ -142,34 +154,57 @@ const { username = 'lazyeo' } = Astro.props;
     return last30Days.map((day: { count: number }) => day.count);
   }
 
-  function renderHeatmap(grid: HTMLElement, contributions: number[]) {
+  async function renderHeatmapAnimated(grid: HTMLElement, contributions: number[]) {
     const maxContrib = Math.max(...contributions, 1);
+    const emptyChar = '░';
     const chars = ['░', '▒', '▓', '█'];
 
-    // Clear grid
+    // Clear grid and create empty cells first
     grid.textContent = '';
 
+    const cells: HTMLSpanElement[] = [];
+
     contributions.forEach((count, index) => {
+      const cell = document.createElement('span');
+      cell.className = 'github-heatmap__cell github-heatmap__cell--0';
+      cell.textContent = emptyChar;
+
+      const date = new Date();
+      date.setDate(date.getDate() - (29 - index));
+      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      cell.title = `${dateStr}: ${count} contributions`;
+
+      // Store the target level for animation
       let level = 0;
       if (count > 0) {
         if (count >= maxContrib * 0.75) level = 3;
         else if (count >= maxContrib * 0.5) level = 2;
         else level = 1;
       }
+      cell.dataset.targetLevel = String(level);
+      cell.dataset.targetChar = chars[level];
 
-      const date = new Date();
-      date.setDate(date.getDate() - (29 - index));
-      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
-      const cell = document.createElement('span');
-      cell.className = `github-heatmap__cell github-heatmap__cell--${level}`;
-      cell.title = `${dateStr}: ${count} contributions`;
-      cell.textContent = chars[level];
       grid.appendChild(cell);
+      cells.push(cell);
     });
+
+    // Animate cells one by one
+    for (const cell of cells) {
+      const level = cell.dataset.targetLevel || '0';
+      const char = cell.dataset.targetChar || emptyChar;
+
+      await sleep(30);
+
+      cell.className = `github-heatmap__cell github-heatmap__cell--${level}`;
+      cell.textContent = char;
+
+      if (level !== '0') {
+        playTickSound();
+      }
+    }
   }
 
-  function renderPlaceholder(grid: HTMLElement) {
+  async function renderPlaceholderAnimated(grid: HTMLElement) {
     const chars = ['░', '▒', '▓', '█'];
     const pattern = [
       0, 1, 0, 2, 1, 0, 1, 2, 0, 1,
@@ -179,19 +214,43 @@ const { username = 'lazyeo' } = Astro.props;
 
     grid.textContent = '';
 
+    const cells: HTMLSpanElement[] = [];
+
     pattern.forEach((level, i) => {
       const cell = document.createElement('span');
-      cell.className = `github-heatmap__cell github-heatmap__cell--${level}`;
+      cell.className = 'github-heatmap__cell github-heatmap__cell--0';
+      cell.textContent = '░';
       cell.title = `Day ${i + 1}`;
-      cell.textContent = chars[level];
+      cell.dataset.targetLevel = String(level);
+      cell.dataset.targetChar = chars[level];
       grid.appendChild(cell);
+      cells.push(cell);
     });
+
+    // Animate cells one by one
+    for (const cell of cells) {
+      const level = cell.dataset.targetLevel || '0';
+      const char = cell.dataset.targetChar || '░';
+
+      await sleep(30);
+
+      cell.className = `github-heatmap__cell github-heatmap__cell--${level}`;
+      cell.textContent = char;
+
+      if (level !== '0') {
+        playTickSound();
+      }
+    }
 
     const error = document.createElement('div');
     error.className = 'github-heatmap__error';
-    error.style.cssText = 'grid-column: 1 / -1; margin-top: 0.5rem;';
+    error.style.cssText = 'margin-top: 0.5rem; width: 100%;';
     error.textContent = '(Demo data - API unavailable)';
     grid.appendChild(error);
+  }
+
+  function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   initHeatmap();

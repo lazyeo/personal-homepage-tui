@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { executeCommand, commandList } from './commands.js';
+import { playKeySound, playEnterSound } from './sound.js';
 
 // Configuration
 const TYPEWRITER_SPEED = 30; // ms per character
@@ -107,6 +108,7 @@ function handleKeyDown(e) {
   switch (e.key) {
     case 'Enter':
       e.preventDefault();
+      playEnterSound();
       const command = inputEl.value.trim();
       if (command) {
         runCommand(command);
@@ -149,6 +151,7 @@ function handleKeyDown(e) {
 
 function handleInput() {
   const value = inputEl.value;
+  playKeySound();
 
   // Show all commands when just "/" is typed
   if (value === '/') {
@@ -190,13 +193,10 @@ function runCommand(command) {
     return;
   }
 
-  // Append result (skip if null - silent commands like theme)
+  // Append result with typewriter effect (skip if null - silent commands like theme)
   if (result) {
-    appendOutput(result);
+    typewriterHtml(result);
   }
-
-  // Scroll new content to top of viewport
-  scrollNewContentToTop();
 }
 
 function fadeOldContent() {
@@ -318,6 +318,58 @@ function typewriterEffect(text, callback) {
   }
 
   type();
+}
+
+// Typewriter effect for HTML content - reveals block by block, then char by char
+async function typewriterHtml(html) {
+  const tempContainer = document.createElement('div');
+  tempContainer.innerHTML = html;
+
+  // Get top-level elements (blocks like ascii-box, output__line, etc.)
+  const blocks = Array.from(tempContainer.children);
+
+  for (const block of blocks) {
+    // Clone the block and add to output
+    const blockClone = block.cloneNode(true);
+
+    // Collect all text nodes in this block
+    const textNodes = [];
+    function collectTextNodes(node) {
+      node.childNodes.forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE && child.textContent.trim()) {
+          textNodes.push({ node: child, text: child.textContent });
+          child.textContent = '';
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          collectTextNodes(child);
+        }
+      });
+    }
+    collectTextNodes(blockClone);
+
+    // Add block to output
+    outputEl.appendChild(blockClone);
+    scrollNewContentToTop();
+
+    // Type out text in this block
+    for (const { node, text } of textNodes) {
+      for (let i = 0; i < text.length; i++) {
+        node.textContent += text[i];
+        if (i % 8 === 0) { // Play sound every 8 characters
+          playKeySound();
+        }
+        await sleep(5);
+      }
+    }
+
+    // Small pause between blocks
+    await sleep(30);
+  }
+
+  scrollNewContentToTop();
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // ───────────────────────────────────────────────────────────────

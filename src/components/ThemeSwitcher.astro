@@ -13,6 +13,13 @@ const themes = [
 ---
 
 <div class="theme-switcher" role="group" aria-label="Theme switcher">
+  <button
+    class="sound-toggle"
+    id="sound-toggle"
+    data-enabled="true"
+    aria-label="Mute sounds"
+    title="Toggle sound"
+  >♪</button>
   {themes.map((theme) => (
     <button
       class={`theme-switcher__dot theme-switcher__dot--${theme.id}`}
@@ -25,8 +32,17 @@ const themes = [
 </div>
 
 <script>
+  import { initSound, toggleSound } from '../scripts/sound.js';
+
   function initThemeSwitcher() {
     const dots = document.querySelectorAll('.theme-switcher__dot');
+    const soundBtn = document.getElementById('sound-toggle');
+
+    // Initialize sound system
+    initSound();
+
+    // Sound toggle button
+    soundBtn?.addEventListener('click', toggleSound);
 
     // Update active state based on current theme
     function updateActiveDot() {
