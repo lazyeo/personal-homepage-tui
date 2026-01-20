@@ -38,6 +38,12 @@ const themes = [
     const dots = document.querySelectorAll('.theme-switcher__dot');
     const soundBtn = document.getElementById('sound-toggle');
 
+    // Restore theme from localStorage first
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
     // Initialize sound system
     initSound();
 
