@@ -124,7 +124,7 @@ export const commands = {
 <div class="output__line"><span class="output__line--accent">Location</span>  → Christchurch, New Zealand</div>
 
 <div class="output__line output__line--muted"></div>
-<div class="output__line">Open to opportunities in Software Development and Business Analysis.</div>
+<div class="output__line">Open to opportunities in Software Development and Business/Product Analysis.</div>
 <div class="output__line">Let's build something great together!</div>
 `,
 

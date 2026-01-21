@@ -8,8 +8,15 @@ import { playKeySound, playEnterSound } from './sound.js';
 
 // Configuration
 const TYPEWRITER_SPEED = 30; // ms per character
-const WELCOME_MESSAGE = `Welcome! Available commands:
-<span class="cmd-link" data-cmd="/help">/help</span> <span class="cmd-link" data-cmd="/about">/about</span> <span class="cmd-link" data-cmd="/skills">/skills</span> <span class="cmd-link" data-cmd="/projects">/projects</span> <span class="cmd-link" data-cmd="/contact">/contact</span> <span class="cmd-link" data-cmd="/clear">/clear</span>`;
+const WELCOME_MESSAGE = `
+<div class="output__section">WELCOME</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/help">/help</span>      - Show available commands</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/about">/about</span>     - About me, experience & education</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/skills">/skills</span>    - Technical skills & tools</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/projects">/projects</span>  - Featured projects</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/contact">/contact</span>   - Get in touch</div>
+<div class="output__line"><span class="cmd-link" data-cmd="/clear">/clear</span>     - Clear terminal</div>
+`;
 
 // DOM Elements
 let outputEl;
