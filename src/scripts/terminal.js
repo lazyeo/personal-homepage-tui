@@ -5,17 +5,21 @@
 
 import { executeCommand, commandList } from './commands.js';
 import { playKeySound, playEnterSound } from './sound.js';
+import { chat, isAIConfigured, getRemainingConversations, MAX_CONVERSATIONS_PER_SESSION } from './ai.js';
 
 // Configuration
 const TYPEWRITER_SPEED = 30; // ms per character
 const WELCOME_MESSAGE = `
 <div class="output__section">WELCOME</div>
-<div class="output__line"><span class="cmd-link" data-cmd="/help">/help</span>      - Show available commands</div>
-<div class="output__line"><span class="cmd-link" data-cmd="/about">/about</span>     - About me, experience & education</div>
-<div class="output__line"><span class="cmd-link" data-cmd="/skills">/skills</span>    - Technical skills & tools</div>
-<div class="output__line"><span class="cmd-link" data-cmd="/projects">/projects</span>  - Featured projects</div>
-<div class="output__line"><span class="cmd-link" data-cmd="/contact">/contact</span>   - Get in touch</div>
-<div class="output__line"><span class="cmd-link" data-cmd="/clear">/clear</span>     - Clear terminal</div>
+<div class="output__line">Hi! I'm <span class="output__line--accent">Shaun's AI agent</span>. I can answer questions about his background, projects, and experience — or you can use commands to explore.</div>
+<div class="output__line output__line--muted"></div>
+<div class="output__line"><span class="output__line--accent">Chat:</span> Just type your question (10 conversations per session)</div>
+<div class="output__line"><span class="output__line--accent">Commands:</span></div>
+<div class="output__line">  <span class="cmd-link" data-cmd="/about">/about</span>     - About me, experience & education</div>
+<div class="output__line">  <span class="cmd-link" data-cmd="/skills">/skills</span>    - Technical skills & tools</div>
+<div class="output__line">  <span class="cmd-link" data-cmd="/projects">/projects</span>  - Featured projects</div>
+<div class="output__line">  <span class="cmd-link" data-cmd="/contact">/contact</span>   - Get in touch</div>
+<div class="output__line">  <span class="cmd-link" data-cmd="/help">/help</span>      - All commands</div>
 `;
 
 // DOM Elements
@@ -186,7 +190,7 @@ function handleInput() {
 // COMMAND EXECUTION
 // ───────────────────────────────────────────────────────────────
 
-function runCommand(command) {
+async function runCommand(command) {
   // Fade previous content
   fadeOldContent();
 
@@ -207,9 +211,76 @@ function runCommand(command) {
     return;
   }
 
+  // Handle AI question (prefix __AI__)
+  if (typeof result === 'string' && result.startsWith('__AI__')) {
+    const question = result.slice(6);
+    await handleAIQuestion(question);
+    return;
+  }
+
   // Append result with typewriter effect (skip if null - silent commands like theme)
   if (result) {
     typewriterHtml(result);
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// AI CHAT HANDLING
+// ───────────────────────────────────────────────────────────────
+
+async function handleAIQuestion(question) {
+  // Check if AI is configured
+  if (!isAIConfigured()) {
+    appendOutput(`<div class="output__line output__line--secondary">AI chat is not available. Use <span class="cmd-link" data-cmd="/help">/help</span> to see available commands.</div>`);
+    bindCommandLinks();
+    return;
+  }
+
+  // Show thinking indicator
+  const thinkingEl = document.createElement('div');
+  thinkingEl.className = 'output__line output__line--muted ai-thinking';
+  thinkingEl.innerHTML = '<span class="thinking-dots">Thinking</span>';
+  outputEl.appendChild(thinkingEl);
+  scrollToBottom();
+
+  // Start thinking animation
+  let dots = 0;
+  const thinkingInterval = setInterval(() => {
+    dots = (dots + 1) % 4;
+    const dotsStr = '.'.repeat(dots);
+    thinkingEl.innerHTML = `<span class="thinking-dots">Thinking${dotsStr}</span>`;
+  }, 400);
+
+  try {
+    const response = await chat(question);
+
+    // Remove thinking indicator
+    clearInterval(thinkingInterval);
+    thinkingEl.remove();
+
+    if (response.success) {
+      // Format AI response with typewriter effect
+      const remainingText = response.remaining !== undefined
+        ? `<div class="output__line output__line--muted">[${response.remaining}/${MAX_CONVERSATIONS_PER_SESSION} conversations remaining]</div>`
+        : '';
+
+      const formattedResponse = `
+<div class="output__section">AI RESPONSE</div>
+<div class="output__line">${escapeHtml(response.content)}</div>
+${remainingText}
+`;
+      await typewriterHtml(formattedResponse);
+    } else {
+      // Show error
+      appendOutput(`<div class="output__line output__line--secondary">${escapeHtml(response.error)}</div>`);
+    }
+  } catch (error) {
+    // Remove thinking indicator on error
+    clearInterval(thinkingInterval);
+    thinkingEl.remove();
+
+    console.error('AI chat error:', error);
+    appendOutput(`<div class="output__line output__line--secondary">An error occurred. Please try again.</div>`);
   }
 }
 

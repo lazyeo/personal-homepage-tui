@@ -165,24 +165,31 @@ export const commandList = ['help', 'about', 'skills', 'projects', 'contact', 'c
 export function executeCommand(input) {
   const trimmed = input.trim();
 
-  // Remove leading slash if present
-  const normalized = trimmed.startsWith('/') ? trimmed.slice(1) : trimmed;
-
-  // Split into command and arguments
-  const parts = normalized.split(/\s+/);
-  const cmd = parts[0]?.toLowerCase();
-  const args = parts.slice(1);
-
-  if (!cmd) {
+  if (!trimmed) {
     return '';
   }
 
-  if (commands[cmd]) {
-    return commands[cmd](args);
-  }
+  // If starts with '/', treat as command
+  if (trimmed.startsWith('/')) {
+    const normalized = trimmed.slice(1);
+    const parts = normalized.split(/\s+/);
+    const cmd = parts[0]?.toLowerCase();
+    const args = parts.slice(1);
 
-  return `
+    if (!cmd) {
+      return '';
+    }
+
+    if (commands[cmd]) {
+      return commands[cmd](args);
+    }
+
+    return `
 <div class="output__line output__line--secondary">Command not found: ${cmd}</div>
 <div class="output__line">Type <span class="output__line--accent">/help</span> for available commands.</div>
 `;
+  }
+
+  // Otherwise, treat as AI question
+  return '__AI__' + trimmed;
 }
