@@ -32,8 +32,8 @@ export const commands = {
   <div class="ascii-box__header">[ Independent Developer · 2017-2022 ]</div>
   <div class="output__line">Self-directed Learning & Community Building</div>
   <div class="output__line output__line--secondary">Built GameMaker community of ~1000 developers, created 50+ tutorials.</div>
-  <div class="output__line output__line--secondary">🏆 "Signal" - 2nd Place, Microsoft ID@Xbox Dream Campus Tour</div>
-  <div class="output__line output__line--secondary">🏆 "Swing & Crash" - Best Student Game, Giant 48h Game Jam</div>
+  <div class="output__line output__line--secondary">"Signal" - 2nd Place, Microsoft ID@Xbox Dream Campus Tour</div>
+  <div class="output__line output__line--secondary">"Swing & Crash" - Best Student Game, Giant 48h Game Jam</div>
 </div>
 
 <div class="ascii-box">
@@ -44,7 +44,7 @@ export const commands = {
 </div>
 
 <div class="output__section">EDUCATION</div>
-<div class="output__line"><span class="output__line--accent">Master of Applied Computing</span> · Lincoln University, NZ (2024-2025) ✓</div>
+<div class="output__line"><span class="output__line--accent">Master of Applied Computing</span> · Lincoln University, NZ (Completed 2025)</div>
 <div class="output__line output__line--secondary">Python, Business Analysis, User Experience, Machine Learning</div>
 <div class="output__line output__line--muted"></div>
 <div class="output__line"><span class="output__line--accent">Bachelor of Biological Sciences</span> · Nanjing Forestry University (2004-2008)</div>
