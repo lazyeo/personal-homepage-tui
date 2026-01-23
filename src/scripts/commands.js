@@ -30,9 +30,10 @@ export const commands = {
 
 <div class="ascii-box">
   <div class="ascii-box__header">[ Independent Developer · 2017-2022 ]</div>
-  <div class="output__line">Community Consultant & Technical Educator</div>
-  <div class="output__line output__line--secondary">Built GameMaker Studio 2 community with active developers.</div>
-  <div class="output__line output__line--secondary">Created 50+ technical tutorials reaching thousands of users.</div>
+  <div class="output__line">Self-directed Learning & Community Building</div>
+  <div class="output__line output__line--secondary">Built GameMaker community of ~1000 developers, created 50+ tutorials.</div>
+  <div class="output__line output__line--secondary">🏆 "Signal" - 2nd Place, Microsoft ID@Xbox Dream Campus Tour</div>
+  <div class="output__line output__line--secondary">🏆 "Swing & Crash" - Best Student Game, Giant 48h Game Jam</div>
 </div>
 
 <div class="ascii-box">
@@ -43,7 +44,7 @@ export const commands = {
 </div>
 
 <div class="output__section">EDUCATION</div>
-<div class="output__line"><span class="output__line--accent">Master of Applied Computing</span> · Lincoln University, NZ (2024-2025)</div>
+<div class="output__line"><span class="output__line--accent">Master of Applied Computing</span> · Lincoln University, NZ (2024-2025) ✓</div>
 <div class="output__line output__line--secondary">Python, Business Analysis, User Experience, Machine Learning</div>
 <div class="output__line output__line--muted"></div>
 <div class="output__line"><span class="output__line--accent">Bachelor of Biological Sciences</span> · Nanjing Forestry University (2004-2008)</div>
@@ -85,9 +86,16 @@ export const commands = {
 
 <div class="ascii-box">
   <div class="ascii-box__header">[ Kids Worksheet Generator ]</div>
-  <div class="output__line">Web app generating printable math worksheets & coloring pages for children.</div>
-  <div class="output__line output__line--secondary">Built to solve personal need for my child's learning activities.</div>
+  <div class="output__line">Web app generating printable math worksheets & coloring pages.</div>
+  <div class="output__line output__line--secondary">Built for my son's learning — includes AI-generated coloring pages.</div>
   <div class="output__line output__line--accent">→ <a href="https://kids.a-dobe.club/" target="_blank" rel="noopener">kids.a-dobe.club</a></div>
+</div>
+
+<div class="ascii-box">
+  <div class="ascii-box__header">[ CareerMatch AI ]</div>
+  <div class="output__line">AI agent analyzing job postings against your resume.</div>
+  <div class="output__line output__line--secondary">Provides CV & cover letter recommendations. Chrome extension in development.</div>
+  <div class="output__line output__line--accent">→ <a href="https://careermatch-ai-web-git-main-lazyeos-projects.vercel.app/" target="_blank" rel="noopener">careermatch-ai.vercel.app</a></div>
 </div>
 
 <div class="ascii-box">

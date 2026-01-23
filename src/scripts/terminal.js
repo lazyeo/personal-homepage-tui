@@ -266,7 +266,7 @@ async function handleAIQuestion(question) {
 
       const formattedResponse = `
 <div class="output__section">AI RESPONSE</div>
-<div class="output__line">${escapeHtml(response.content)}</div>
+<div class="output__line">${parseMarkdown(response.content)}</div>
 ${remainingText}
 `;
       await typewriterHtml(formattedResponse);
@@ -891,4 +891,25 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+// Simple Markdown to HTML converter for AI responses
+function parseMarkdown(text) {
+  return text
+    // Escape HTML first
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    // Bold: **text** or __text__
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__(.+?)__/g, '<strong>$1</strong>')
+    // Italic: *text* or _text_
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/_(.+?)_/g, '<em>$1</em>')
+    // Inline code: `code`
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    // Line breaks
+    .replace(/\n/g, '<br>')
+    // Bullet points: - item or * item (at start of line)
+    .replace(/^[-*]\s+(.+)$/gm, '• $1');
 }

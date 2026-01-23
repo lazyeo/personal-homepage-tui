@@ -17,14 +17,28 @@ A versatile technical professional combining full-stack development skills with 
 
 ## Career Transition Story
 
-- **From Product to Code**: Transitioned from Product Management to hands-on development because I love the satisfaction of building products myself
+### From Biology to Tech (The Origin)
+- During university, became fascinated with the rapid development of mobile apps
+- After graduating with a Biology degree, actively sought opportunities in tech instead
+- Landed first job as a Content Editor at a mobile reading app company
+- Learned on the job while working, gradually grew into a Product Manager role
+- **Key Driver**: Genuine passion and curiosity for the industry, not just following a "safe" career path
+
+### From Product to Code (Recent Transition)
+- Transitioned from Product Management to hands-on development because I love the satisfaction of building products myself
 - **AI as Enabler**: The rise of AI tools dramatically boosted productivity, allowing my years of product experience to finally be unleashed — now I can freely experiment and bring ideas to life
 - **Unique Advantage**: Product thinking + technical execution = understanding both "what to build" and "how to build it"
+
+### My Learning Philosophy
+- This industry rewards continuous learners
+- **Not knowing a technology isn't scary — stopping learning is**
+- From mobile apps → product management → development → AI tools: each transition was driven by curiosity and willingness to learn
+- I believe the best professionals are those who stay hungry and keep evolving with the industry
 
 ## Why New Zealand
 
 - **Work-Life Balance**: Seeking a healthier balance between career and personal life
-- **For My Child**: Want my kid to grow up in an environment that values mental/physical wellbeing and outdoor activities, not just academic pressure and endless homework
+- **For My Son**: Want my 8-year-old son to grow up in an environment that values mental/physical wellbeing and outdoor activities, not just academic pressure and endless homework
 - **Personal Growth Focus**: Believe true education includes character development, not just test scores
 
 ## Work Experience
@@ -36,12 +50,19 @@ A versatile technical professional combining full-stack development skills with 
 - Stakeholder analysis, requirement gathering, cross-functional coordination
 - Managed product roadmap and feature prioritization
 
-### Independent Developer (2017-2022)
-**Community Consultant & Technical Educator**
+### Independent Developer & Career Gap (2017-2022)
+**Self-directed Learning & Community Building**
 
-- Built GameMaker Studio 2 community with active developers
+- **Why the Gap**: Took time off after my son was born — wanted to be present for family while also taking a break to explore personal projects
+- Self-taught game development using GameMaker Studio 2
+- Built and led a Chinese GameMaker community of nearly 1,000 enthusiasts
 - Created 50+ technical tutorials reaching thousands of users
-- Provided consulting services for game development projects
+- **Tutorial Archive**: https://gamebar.me/wiki — collection of translated and original game development tutorials (Chinese)
+- **Video Content**: Previously created dozens of video tutorials on Bilibili (Chinese YouTube); removed content due to disagreement with platform policies. May restart on YouTube in the future
+- **Game Development Achievements**:
+  - **"Signal"** — 2nd Place at Microsoft ID@Xbox Dream Campus Tour (https://indienova.com/g/signal-4)
+  - **"Swing & Crash"** — Best Student Game at Giant 48-hour Game Innovation Camp (https://indienova.com/g/swing-crash)
+- This period proved I can learn independently, build communities, and deliver results without traditional employment structure
 
 ### Senior Product Manager (2008-2017)
 **Multiple Internet Startups (China)**
@@ -52,7 +73,7 @@ A versatile technical professional combining full-stack development skills with 
 
 ## Education
 
-### Master of Applied Computing (2024-2025)
+### Master of Applied Computing (2024-2025, Completed)
 **Lincoln University, New Zealand**
 
 - Python programming and data analysis
@@ -88,7 +109,7 @@ A versatile technical professional combining full-stack development skills with 
 
 ### Kids Worksheet Generator
 - Web app generating printable math worksheets & coloring pages for children
-- **Origin Story**: Wanted my child to practice math and writing, but preferred printed materials over screen time
+- **Origin Story**: Wanted my son to practice math and writing, but preferred printed materials over screen time
 - **Problem Solved**: Didn't want to create exercises manually, so built a tool to auto-generate them
 - **AI Coloring Feature**: A friend's kid loved coloring books, so added an AI image generation feature to create custom-themed coloring pages on any topic the child wants
 - **Tech Stack**: Netlify + Supabase
