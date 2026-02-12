@@ -1,9 +1,13 @@
 // ═══════════════════════════════════════════════════════════════
 // AI CHAT SERVICE
 // Handles AI conversations with rate limiting and context restriction
+// Supports multiple AI providers: Gemini, OpenAI-compatible, Anthropic-compatible
 // ═══════════════════════════════════════════════════════════════
 
+import { createProvider } from '../lib/ai/index.js';
+
 // Configuration from environment variables (Astro exposes PUBLIC_ prefixed vars)
+const AI_PROVIDER = import.meta.env.PUBLIC_AI_PROVIDER || 'openai';
 const AI_BASE_URL = import.meta.env.PUBLIC_AI_BASE_URL || '';
 const AI_API_KEY = import.meta.env.PUBLIC_AI_API_KEY || '';
 const AI_MODEL = import.meta.env.PUBLIC_AI_MODEL || 'gpt-3.5-turbo';
@@ -50,7 +54,8 @@ function isRateLimited() {
 // ───────────────────────────────────────────────────────────────
 
 export function isAIConfigured() {
-  return Boolean(AI_BASE_URL && AI_API_KEY);
+  // Only API_KEY is required (BASE_URL has defaults for each provider)
+  return Boolean(AI_API_KEY);
 }
 
 // ───────────────────────────────────────────────────────────────
@@ -80,11 +85,13 @@ export async function chat(message) {
   }
 
   try {
-    // Normalize base URL: remove trailing slash and /v1 suffix if present
-    let baseUrl = AI_BASE_URL.replace(/\/+$/, '');
-    if (baseUrl.endsWith('/v1')) {
-      baseUrl = baseUrl.slice(0, -3);
-    }
+    // Create provider instance
+    const provider = createProvider({
+      provider: AI_PROVIDER,
+      apiKey: AI_API_KEY,
+      baseUrl: AI_BASE_URL,
+      model: AI_MODEL,
+    });
 
     // Build messages with conversation history
     const messages = [
@@ -93,42 +100,12 @@ export async function chat(message) {
       { role: 'user', content: message },
     ];
 
-    const response = await fetch(`${baseUrl}/v1/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${AI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: AI_MODEL,
-        messages,
-        max_tokens: 1000,
-        temperature: 0.7,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('AI API error:', response.status, errorData);
-      return {
-        success: false,
-        error: 'Failed to get AI response. Please try again later.',
-      };
-    }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-
-    if (!content) {
-      return {
-        success: false,
-        error: 'Received empty response from AI.',
-      };
-    }
+    // Get AI response using the provider
+    const content = await provider.chat(messages);
 
     // Add user message and assistant response to history
     conversationHistory.push({ role: 'user', content: message });
-    conversationHistory.push({ role: 'assistant', content: content });
+    conversationHistory.push({ role: 'assistant', content });
 
     // Trim history to keep only recent messages
     if (conversationHistory.length > MAX_HISTORY_LENGTH) {
@@ -147,7 +124,7 @@ export async function chat(message) {
     console.error('AI chat error:', error);
     return {
       success: false,
-      error: 'Network error. Please check your connection and try again.',
+      error: error.message || 'Network error. Please check your connection and try again.',
     };
   }
 }
