@@ -22,6 +22,13 @@ export const commands = {
 
 <div class="output__section">EXPERIENCE</div>
 <div class="ascii-box">
+  <div class="ascii-box__header">[ Volunteer · eLearning & LMS Admin · 2025-Present ]</div>
+  <div class="output__line">Youthline Canterbury, Christchurch, NZ</div>
+  <div class="output__line output__line--secondary">Moodle course content creation & migration.</div>
+  <div class="output__line output__line--secondary">Plugin management, UX optimisation, promotional graphics & certificate design.</div>
+</div>
+
+<div class="ascii-box">
   <div class="ascii-box__header">[ Product Director · 2022-2024 ]</div>
   <div class="output__line">Nanjing Yilisha Technology Co., Ltd.</div>
   <div class="output__line output__line--secondary">Led EdgeMatrix distributed computing network for AI applications.</div>
@@ -70,7 +77,7 @@ export const commands = {
 <div class="output__line output__line--muted"></div>
 
 <div class="output__line output__line--accent">AI Tools & Productivity</div>
-<div class="output__line">  Claude Code · Cursor · GitHub Copilot · ChatGPT · Gemini</div>
+<div class="output__line">  Claude Code · Cursor · GitHub Copilot · Codex · Gemini · Openclaw</div>
 <div class="output__line output__line--muted"></div>
 
 <div class="output__line output__line--accent">Cloud & Infrastructure</div>
