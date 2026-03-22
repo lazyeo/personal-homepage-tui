@@ -33,7 +33,10 @@ export class GeminiProvider extends BaseProvider {
       parts: [{ text: msg.content }],
     }));
 
-    const body = { contents };
+    const body = {
+      contents,
+      generationConfig: { maxOutputTokens: 1024 },
+    };
 
     // Add system instruction if present (Gemini 1.5+ feature)
     if (systemMessage) {

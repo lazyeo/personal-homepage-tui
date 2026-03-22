@@ -30,7 +30,7 @@ export class OpenAIProvider extends BaseProvider {
       body: JSON.stringify({
         model: this.model,
         messages,
-        max_tokens: 1000,
+        max_tokens: 1024,
         temperature: 0.7,
       }),
     });

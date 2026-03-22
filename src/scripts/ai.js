@@ -93,11 +93,14 @@ export async function chat(message) {
       model: AI_MODEL,
     });
 
+    // Truncate input to prevent excessive token usage
+    const truncatedMessage = message.length > 1000 ? message.slice(0, 1000) : message;
+
     // Build messages with conversation history
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT },
       ...conversationHistory,
-      { role: 'user', content: message },
+      { role: 'user', content: truncatedMessage },
     ];
 
     // Get AI response using the provider
