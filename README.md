@@ -62,7 +62,7 @@ Security notes:
 - Browser code calls the same-origin `/api/chat` endpoint only; provider calls happen in Cloudflare Pages Functions.
 - Gemini requests use the `x-goog-api-key` header instead of putting the key in the URL.
 - Provider error details returned to visitors are generic, and server logs redact common key patterns.
-- `/api/chat` applies server-side rate limiting through the `PORTFOLIO_CONTEXT` KV binding. Optional controls: `CHAT_RATE_LIMIT_MAX_REQUESTS`, `CHAT_RATE_LIMIT_WINDOW_SECONDS`, and `CHAT_RATE_LIMIT_SALT`.
+- `/api/chat` applies server-side rate limiting through the `PORTFOLIO_CONTEXT` KV binding. Optional controls: `CHAT_RATE_LIMIT_MAX_REQUESTS`, `CHAT_RATE_LIMIT_WINDOW_SECONDS`, `CHAT_RATE_LIMIT_SALT`, and comma-separated `CHAT_RATE_LIMIT_BYPASS_IPS` for trusted testing IPs.
 
 ## Commands (In-site)
 

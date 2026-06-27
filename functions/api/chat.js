@@ -99,6 +99,10 @@ function getRateLimitConfig(env) {
     windowSeconds: Number.isFinite(windowSeconds) && windowSeconds > 0
       ? Math.min(windowSeconds, 24 * 60 * 60)
       : RATE_LIMIT_WINDOW_SECONDS,
+    bypassIps: String(env.CHAT_RATE_LIMIT_BYPASS_IPS || '')
+      .split(',')
+      .map((ip) => ip.trim())
+      .filter(Boolean),
   };
 }
 
@@ -151,12 +155,15 @@ async function getPortfolioContext(env) {
   return FALLBACK_PORTFOLIO_CONTEXT;
 }
 
-function getClientFingerprint(request) {
-  const headers = request.headers;
-  const ip = headers.get('CF-Connecting-IP')
-    || headers.get('X-Forwarded-For')?.split(',')[0]?.trim()
+function getClientIp(request) {
+  return request.headers.get('CF-Connecting-IP')
+    || request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim()
     || 'unknown-ip';
-  const userAgent = headers.get('User-Agent') || 'unknown-ua';
+}
+
+function getClientFingerprint(request) {
+  const ip = getClientIp(request);
+  const userAgent = request.headers.get('User-Agent') || 'unknown-ua';
 
   return `${ip}|${userAgent}`.slice(0, 500);
 }
@@ -174,7 +181,13 @@ async function checkRateLimit(request, env) {
     return { allowed: true };
   }
 
-  const { maxRequests, windowSeconds } = getRateLimitConfig(env);
+  const { maxRequests, windowSeconds, bypassIps } = getRateLimitConfig(env);
+  const clientIp = getClientIp(request);
+
+  if (bypassIps.includes(clientIp)) {
+    return { allowed: true, bypassed: true, limit: maxRequests, remaining: maxRequests };
+  }
+
   const now = Date.now();
   const bucket = Math.floor(now / (windowSeconds * 1000));
   const resetAt = (bucket + 1) * windowSeconds * 1000;
@@ -417,6 +430,7 @@ export async function onRequestPost({ request, env }) {
     return json({ success: true, content }, 200, {
       'X-RateLimit-Limit': String(rateLimit.limit ?? ''),
       'X-RateLimit-Remaining': String(rateLimit.remaining ?? ''),
+      ...(rateLimit.bypassed ? { 'X-RateLimit-Bypass': 'ip' } : {}),
     });
   } catch (error) {
     console.warn('AI chat endpoint failed:', safeErrorDetail(error?.message || error));
