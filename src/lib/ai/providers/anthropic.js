@@ -60,8 +60,8 @@ export class AnthropicProvider extends BaseProvider {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(`Anthropic API error: ${response.status} - ${JSON.stringify(errorData)}`);
+      await response.body?.cancel?.();
+      throw new Error(`Anthropic API request failed (${response.status})`);
     }
 
     const data = await response.json();

@@ -39,16 +39,19 @@ const response = await provider.chat(messages);
 console.log(response); // "Hello! How can I help you today?"
 ```
 
-### 2. 在 Astro 项目中使用
+### 2. 在 Astro / Cloudflare Pages 中使用
+
+API key 必须只在服务端读取，例如 Cloudflare Pages Functions 的 `env.AI_API_KEY`。
+不要使用 `PUBLIC_AI_API_KEY` / `import.meta.env.PUBLIC_*` 存放密钥；Astro 会把 `PUBLIC_` 变量打进浏览器 bundle。
 
 ```javascript
 import { createProvider } from '../lib/ai/index.js';
 
 const provider = createProvider({
-  provider: import.meta.env.PUBLIC_AI_PROVIDER,
-  apiKey: import.meta.env.PUBLIC_AI_API_KEY,
-  baseUrl: import.meta.env.PUBLIC_AI_BASE_URL,
-  model: import.meta.env.PUBLIC_AI_MODEL,
+  provider: env.AI_PROVIDER,
+  apiKey: env.AI_API_KEY,
+  baseUrl: env.AI_BASE_URL,
+  model: env.AI_MODEL,
 });
 ```
 
@@ -81,7 +84,7 @@ class BaseProvider {
 实现 Google Gemini API 调用:
 
 - **端点**: `/v1beta/models/{model}:generateContent`
-- **认证**: URL 参数 `?key={apiKey}`
+- **认证**: `x-goog-api-key` 请求头，避免把 key 放进 URL / 日志
 - **消息转换**:
   - `system` → `systemInstruction`
   - `user`/`assistant` → `contents` (role: user/model)
@@ -127,10 +130,11 @@ class BaseProvider {
 try {
   const response = await provider.chat(messages);
 } catch (error) {
-  console.error(error.message);
-  // "Gemini API error: 400 - {...}"
-  // "OpenAI API error: 401 - {...}"
-  // "Anthropic API error: 429 - {...}"
+  // 只记录脱敏后的错误摘要，不要把 request URL、headers 或完整 provider error 对象直接打进日志。
+  console.warn(error.message);
+  // "Gemini API request failed (400)"
+  // "OpenAI API request failed (401)"
+  // "Anthropic API request failed (429)"
 }
 ```
 

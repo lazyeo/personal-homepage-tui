@@ -36,8 +36,8 @@ export class OpenAIProvider extends BaseProvider {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(`OpenAI API error: ${response.status} - ${JSON.stringify(errorData)}`);
+      await response.body?.cancel?.();
+      throw new Error(`OpenAI API request failed (${response.status})`);
     }
 
     const data = await response.json();

@@ -43,6 +43,26 @@ npm run build
 npm run preview
 ```
 
+## AI Chat Configuration
+
+AI provider credentials must be configured as server-side Cloudflare Pages environment variables, not browser-exposed `PUBLIC_*` variables.
+
+For OpenAI-compatible / GPT-compatible providers:
+
+```bash
+AI_PROVIDER=openai
+AI_BASE_URL=https://your-compatible-base-url/v1
+AI_API_KEY=your_server_side_api_key_here
+AI_MODEL=your-model-name
+```
+
+Security notes:
+
+- Do not use `PUBLIC_AI_API_KEY`, `PUBLIC_AI_PROVIDER`, or `PUBLIC_AI_MODEL` for AI credentials/config; Astro exposes `PUBLIC_*` variables to browser bundles.
+- Browser code calls the same-origin `/api/chat` endpoint only; provider calls happen in Cloudflare Pages Functions.
+- Gemini requests use the `x-goog-api-key` header instead of putting the key in the URL.
+- Provider error details returned to visitors are generic, and server logs redact common key patterns.
+
 ## Commands (In-site)
 
 ```

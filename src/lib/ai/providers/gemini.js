@@ -51,22 +51,24 @@ export class GeminiProvider extends BaseProvider {
   async chat(messages) {
     const normalizedUrl = this.normalizeBaseUrl(this.baseUrl);
 
-    // Gemini endpoint: /v1beta/models/{model}:generateContent?key={apiKey}
+    // Gemini endpoint: /v1beta/models/{model}:generateContent
+    // Send the API key in a header instead of the URL to avoid leaks in logs/errors.
     const endpoint = `${normalizedUrl}/v1beta/models/${this.model}:generateContent`;
 
     const requestBody = this.convertMessages(messages);
 
-    const response = await fetch(`${endpoint}?key=${this.apiKey}`, {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-goog-api-key': this.apiKey,
       },
       body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(`Gemini API error: ${response.status} - ${JSON.stringify(errorData)}`);
+      await response.body?.cancel?.();
+      throw new Error(`Gemini API request failed (${response.status})`);
     }
 
     const data = await response.json();
