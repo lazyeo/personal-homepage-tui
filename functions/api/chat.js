@@ -48,10 +48,11 @@ const SECRET_REPLACEMENTS = [
 ];
 
 const STOP_WORDS = new Set([
-  'about', 'after', 'also', 'and', 'are', 'background', 'can', 'could', 'current', 'does', 'for', 'from', 'give',
-  'has', 'have', 'her', 'his', 'how', 'into', 'job', 'more', 'project', 'projects', 'shaun', 'should', 'skill',
-  'skills', 'tell', 'that', 'the', 'their', 'this', 'was', 'what', 'when', 'where', 'which', 'who', 'why', 'with',
-  'work', 'you', 'your', 'zhang',
+  'about', 'after', 'also', 'and', 'are', 'available', 'background', 'built', 'can', 'context', 'could',
+  'current', 'does', 'for', 'from', 'give', 'has', 'have', 'her', 'his', 'how', 'into', 'job', 'mention',
+  'more', 'names', 'only', 'project', 'projects', 'shaun', 'should', 'skill', 'skills', 'tell', 'that',
+  'the', 'their', 'this', 'was', 'what', 'when', 'where', 'which', 'who', 'why', 'with', 'work', 'you',
+  'your', 'zhang',
 ]);
 
 function redactSecrets(value) {
@@ -227,11 +228,15 @@ function sanitizeMessages(history = []) {
 }
 
 function extractSearchTerms(value) {
-  return String(value || '')
+  const matches = String(value || '')
     .toLowerCase()
-    .match(/[a-z0-9][a-z0-9+.#-]{1,}|[\p{Script=Han}]{2,}/gu)
-    ?.filter((term) => !STOP_WORDS.has(term) && term.length <= 40)
-    .slice(0, 24) || [];
+    .match(/[a-z0-9][a-z0-9+.#-]{1,}|[\p{Script=Han}]{2,}/gu) || [];
+
+  return [...new Set(matches
+    .map((term) => term.replace(/^[^a-z0-9\p{Script=Han}]+|[^a-z0-9\p{Script=Han}]+$/gu, ''))
+    .filter((term) => term.length >= 3 || /[\p{Script=Han}]{2,}/u.test(term))
+    .filter((term) => !STOP_WORDS.has(term) && term.length <= 40))]
+    .slice(0, 16);
 }
 
 function splitMarkdownSections(markdown) {
@@ -271,11 +276,13 @@ function selectRelevantContext(fullContext, query) {
 
   const terms = extractSearchTerms(query);
   const scored = sections.map((section) => {
-    const haystack = `${section.heading}\n${section.text}`.toLowerCase();
+    const heading = section.heading.toLowerCase();
+    const body = section.text.toLowerCase();
     const score = terms.reduce((sum, term) => {
-      const occurrences = haystack.split(term).length - 1;
-      return sum + Math.min(occurrences, 4);
-    }, section.index === 0 ? 3 : 0);
+      const headingMatches = heading.split(term).length - 1;
+      const bodyMatches = body.split(term).length - 1;
+      return sum + (headingMatches * 5) + Math.min(bodyMatches, 4);
+    }, section.index === 0 ? 2 : 0);
 
     return { ...section, score };
   });
@@ -293,11 +300,12 @@ function selectRelevantContext(fullContext, query) {
   scored
     .filter((section) => section.score > 0)
     .sort((a, b) => b.score - a.score || a.index - b.index)
+    .slice(0, 8)
     .forEach(add);
-  scored.slice(1, 4).forEach(add);
+  scored.slice(1, 3).forEach(add);
 
   let output = '';
-  for (const section of selected.sort((a, b) => a.index - b.index)) {
+  for (const section of selected) {
     const next = `${output ? '\n\n' : ''}${section.text}`;
     if (next.length > MAX_RETRIEVED_CONTEXT_CHARS) continue;
     output = next;
