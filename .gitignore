@@ -10,9 +10,10 @@ dist/
 .env.*
 !.env.example
 
-# IDE
+# IDE / local agent tooling
 .idea/
 .vscode/
+.claude/settings.local.json
 *.swp
 *.swo
 

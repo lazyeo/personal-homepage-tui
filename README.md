@@ -62,6 +62,7 @@ Security notes:
 - Browser code calls the same-origin `/api/chat` endpoint only; provider calls happen in Cloudflare Pages Functions.
 - Gemini requests use the `x-goog-api-key` header instead of putting the key in the URL.
 - Provider error details returned to visitors are generic, and server logs redact common key patterns.
+- `/api/chat` applies server-side rate limiting through the `PORTFOLIO_CONTEXT` KV binding. Optional controls: `CHAT_RATE_LIMIT_MAX_REQUESTS`, `CHAT_RATE_LIMIT_WINDOW_SECONDS`, and `CHAT_RATE_LIMIT_SALT`.
 
 ## Commands (In-site)
 
@@ -85,7 +86,7 @@ MIT
 
 ## Public Portfolio Context Updates
 
-The AI chat reads public-facing profile context from a Cloudflare KV binding at runtime.
+The AI chat reads public-facing profile context from a Cloudflare KV binding at runtime. Long context is split by markdown sections and the endpoint selects sections relevant to the visitor's question instead of blindly sending only the first chunk.
 
 Required Pages Function binding:
 

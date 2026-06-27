@@ -12,6 +12,8 @@ const DEFAULT_GEMINI_MODEL = 'gemini-2.0-flash';
 const MAX_INPUT_CHARS = 1000;
 const MAX_HISTORY_MESSAGES = 10;
 const MAX_RETRIEVED_CONTEXT_CHARS = 8000;
+const RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
+const RATE_LIMIT_MAX_REQUESTS = 20;
 const DEFAULT_CONTEXT_KEY = 'portfolio_context:latest';
 
 const FALLBACK_PORTFOLIO_CONTEXT = `# Shaun Zhang - Portfolio Context
@@ -41,8 +43,16 @@ const SECRET_REPLACEMENTS = [
   [/Bearer\s+[^\s'"`]+/gi, 'Bearer [REDACTED]'],
   [/(key=)[^&\s'"`]+/gi, '$1[REDACTED]'],
   [/((?:api[_-]?key|x-api-key|authorization)\s*[=:]\s*)[^\s,'"`}]+/gi, '$1[REDACTED]'],
+  [/('(?:apiKey|api_key|key|authorization|x-api-key)'\s*:\s*')[^']+(')/gi, '$1[REDACTED]$2'],
   [/("(?:apiKey|api_key|key|authorization|x-api-key)"\s*:\s*")[^"]+(")/gi, '$1[REDACTED]$2'],
 ];
+
+const STOP_WORDS = new Set([
+  'about', 'after', 'also', 'and', 'are', 'background', 'can', 'could', 'current', 'does', 'for', 'from', 'give',
+  'has', 'have', 'her', 'his', 'how', 'into', 'job', 'more', 'project', 'projects', 'shaun', 'should', 'skill',
+  'skills', 'tell', 'that', 'the', 'their', 'this', 'was', 'what', 'when', 'where', 'which', 'who', 'why', 'with',
+  'work', 'you', 'your', 'zhang',
+]);
 
 function redactSecrets(value) {
   return SECRET_REPLACEMENTS.reduce(
@@ -55,12 +65,13 @@ function safeErrorDetail(value, maxLength = 500) {
   return redactSecrets(value).slice(0, maxLength);
 }
 
-function json(data, status = 200) {
+function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
+      ...extraHeaders,
     },
   });
 }
@@ -74,6 +85,20 @@ function getConfig(env) {
   ).trim();
 
   return { provider, apiKey, baseUrl, model };
+}
+
+function getRateLimitConfig(env) {
+  const maxRequests = Number.parseInt(env.CHAT_RATE_LIMIT_MAX_REQUESTS, 10);
+  const windowSeconds = Number.parseInt(env.CHAT_RATE_LIMIT_WINDOW_SECONDS, 10);
+
+  return {
+    maxRequests: Number.isFinite(maxRequests) && maxRequests > 0
+      ? Math.min(maxRequests, 500)
+      : RATE_LIMIT_MAX_REQUESTS,
+    windowSeconds: Number.isFinite(windowSeconds) && windowSeconds > 0
+      ? Math.min(windowSeconds, 24 * 60 * 60)
+      : RATE_LIMIT_WINDOW_SECONDS,
+  };
 }
 
 function normalizePortfolioContext(value) {
@@ -125,6 +150,70 @@ async function getPortfolioContext(env) {
   return FALLBACK_PORTFOLIO_CONTEXT;
 }
 
+function getClientFingerprint(request) {
+  const headers = request.headers;
+  const ip = headers.get('CF-Connecting-IP')
+    || headers.get('X-Forwarded-For')?.split(',')[0]?.trim()
+    || 'unknown-ip';
+  const userAgent = headers.get('User-Agent') || 'unknown-ua';
+
+  return `${ip}|${userAgent}`.slice(0, 500);
+}
+
+async function sha256Hex(value) {
+  const input = new TextEncoder().encode(value);
+  const hash = await crypto.subtle.digest('SHA-256', input);
+  return [...new Uint8Array(hash)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function checkRateLimit(request, env) {
+  const kv = env.PORTFOLIO_CONTEXT;
+  if (!kv || typeof kv.get !== 'function' || typeof kv.put !== 'function') {
+    console.warn('Rate limit KV binding is not configured; allowing request.');
+    return { allowed: true };
+  }
+
+  const { maxRequests, windowSeconds } = getRateLimitConfig(env);
+  const now = Date.now();
+  const bucket = Math.floor(now / (windowSeconds * 1000));
+  const resetAt = (bucket + 1) * windowSeconds * 1000;
+  const salt = String(env.CHAT_RATE_LIMIT_SALT || '').slice(0, 200);
+  const fingerprintHash = await sha256Hex(`${salt}|${getClientFingerprint(request)}`);
+  const key = `rate_limit:chat:${bucket}:${fingerprintHash}`;
+
+  let count = 0;
+  try {
+    count = Number.parseInt(await kv.get(key), 10) || 0;
+  } catch (error) {
+    console.warn('Failed to read rate limit KV entry:', safeErrorDetail(error?.message || error));
+    return { allowed: true };
+  }
+
+  if (count >= maxRequests) {
+    return {
+      allowed: false,
+      limit: maxRequests,
+      remaining: 0,
+      retryAfter: Math.max(1, Math.ceil((resetAt - now) / 1000)),
+    };
+  }
+
+  const nextCount = count + 1;
+  try {
+    await kv.put(key, String(nextCount), { expirationTtl: windowSeconds + 60 });
+  } catch (error) {
+    console.warn('Failed to update rate limit KV entry:', safeErrorDetail(error?.message || error));
+    return { allowed: true };
+  }
+
+  return {
+    allowed: true,
+    limit: maxRequests,
+    remaining: Math.max(0, maxRequests - nextCount),
+    retryAfter: Math.max(1, Math.ceil((resetAt - now) / 1000)),
+  };
+}
+
 function sanitizeMessages(history = []) {
   if (!Array.isArray(history)) return [];
 
@@ -137,8 +226,88 @@ function sanitizeMessages(history = []) {
     }));
 }
 
-function buildSystemPrompt(retrievedContext = '') {
-  const safeContext = String(retrievedContext || '').slice(0, MAX_RETRIEVED_CONTEXT_CHARS);
+function extractSearchTerms(value) {
+  return String(value || '')
+    .toLowerCase()
+    .match(/[a-z0-9][a-z0-9+.#-]{1,}|[\p{Script=Han}]{2,}/gu)
+    ?.filter((term) => !STOP_WORDS.has(term) && term.length <= 40)
+    .slice(0, 24) || [];
+}
+
+function splitMarkdownSections(markdown) {
+  const lines = String(markdown || '').split('\n');
+  const sections = [];
+  let current = [];
+  let heading = 'Overview';
+  let index = 0;
+
+  function flush() {
+    const text = current.join('\n').trim();
+    if (text) sections.push({ heading, text, index: index++ });
+  }
+
+  for (const line of lines) {
+    const match = line.match(/^(#{1,3})\s+(.+)$/);
+    if (match && current.length > 0) {
+      flush();
+      heading = match[2].trim();
+      current = [line];
+    } else {
+      if (match) heading = match[2].trim();
+      current.push(line);
+    }
+  }
+
+  flush();
+  return sections;
+}
+
+function selectRelevantContext(fullContext, query) {
+  const context = String(fullContext || '').trim();
+  if (context.length <= MAX_RETRIEVED_CONTEXT_CHARS) return context;
+
+  const sections = splitMarkdownSections(context);
+  if (!sections.length) return context.slice(0, MAX_RETRIEVED_CONTEXT_CHARS);
+
+  const terms = extractSearchTerms(query);
+  const scored = sections.map((section) => {
+    const haystack = `${section.heading}\n${section.text}`.toLowerCase();
+    const score = terms.reduce((sum, term) => {
+      const occurrences = haystack.split(term).length - 1;
+      return sum + Math.min(occurrences, 4);
+    }, section.index === 0 ? 3 : 0);
+
+    return { ...section, score };
+  });
+
+  const selected = [];
+  const seen = new Set();
+
+  function add(section) {
+    if (!section || seen.has(section.index)) return;
+    seen.add(section.index);
+    selected.push(section);
+  }
+
+  add(scored[0]);
+  scored
+    .filter((section) => section.score > 0)
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .forEach(add);
+  scored.slice(1, 4).forEach(add);
+
+  let output = '';
+  for (const section of selected.sort((a, b) => a.index - b.index)) {
+    const next = `${output ? '\n\n' : ''}${section.text}`;
+    if (next.length > MAX_RETRIEVED_CONTEXT_CHARS) continue;
+    output = next;
+  }
+
+  return output || context.slice(0, MAX_RETRIEVED_CONTEXT_CHARS);
+}
+
+function buildSystemPrompt(retrievedContext = '', userMessage = '') {
+  const safeContext = selectRelevantContext(retrievedContext, userMessage);
 
   return `You are an AI assistant embedded in Shaun Zhang's personal portfolio website terminal.
 
@@ -175,9 +344,21 @@ export async function onRequestPost({ request, env }) {
     return json({ success: false, error: 'Message is required.' }, 400);
   }
 
+  const rateLimit = await checkRateLimit(request, env);
+  if (!rateLimit.allowed) {
+    return json({
+      success: false,
+      error: 'AI chat rate limit reached. Please try again later.',
+    }, 429, {
+      'Retry-After': String(rateLimit.retryAfter),
+      'X-RateLimit-Limit': String(rateLimit.limit),
+      'X-RateLimit-Remaining': '0',
+    });
+  }
+
   const history = sanitizeMessages(body.history);
   const portfolioContext = await getPortfolioContext(env);
-  const systemPrompt = buildSystemPrompt(portfolioContext);
+  const systemPrompt = buildSystemPrompt(portfolioContext, message);
   const messages = [
     { role: 'system', content: systemPrompt },
     ...history,
@@ -187,7 +368,10 @@ export async function onRequestPost({ request, env }) {
   try {
     const provider = createProvider(config);
     const content = await provider.chat(messages);
-    return json({ success: true, content });
+    return json({ success: true, content }, 200, {
+      'X-RateLimit-Limit': String(rateLimit.limit ?? ''),
+      'X-RateLimit-Remaining': String(rateLimit.remaining ?? ''),
+    });
   } catch (error) {
     console.warn('AI chat endpoint failed:', safeErrorDetail(error?.message || error));
 
