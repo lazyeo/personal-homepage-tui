@@ -306,7 +306,7 @@ function selectRelevantContext(fullContext, query) {
 
   let output = '';
   for (const section of selected) {
-    const next = `${output ? '\n\n' : ''}${section.text}`;
+    const next = `${output}${output ? '\n\n' : ''}${section.text}`;
     if (next.length > MAX_RETRIEVED_CONTEXT_CHARS) continue;
     output = next;
   }
