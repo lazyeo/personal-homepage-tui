@@ -4,7 +4,6 @@
 // Keeps AI API keys server-side and never exposes them to browser JS.
 // ═══════════════════════════════════════════════════════════════
 
-import { PORTFOLIO_CONTEXT } from './portfolio-context.js';
 import { createProvider } from '../../src/lib/ai/index.js';
 
 const DEFAULT_PROVIDER = 'openai';
@@ -13,6 +12,28 @@ const DEFAULT_GEMINI_MODEL = 'gemini-2.0-flash';
 const MAX_INPUT_CHARS = 1000;
 const MAX_HISTORY_MESSAGES = 10;
 const MAX_RETRIEVED_CONTEXT_CHARS = 8000;
+const DEFAULT_CONTEXT_KEY = 'portfolio_context:latest';
+
+const FALLBACK_PORTFOLIO_CONTEXT = `# Shaun Zhang - Portfolio Context
+
+Shaun Zhang is a Christchurch-based product-minded full-stack developer with a background in product management, independent building, AI-assisted development, and business analysis.
+
+Public contact points:
+- Email: shaun@a-dobe.club
+- GitHub: github.com/lazyeo
+- LinkedIn: linkedin.com/in/shaun-nz
+
+Current public positioning:
+- Open to Software Development and Business/Product Analysis opportunities in New Zealand.
+- Strong fit for teams that value product thinking, practical AI workflows, full-stack execution, and clear communication.
+- Current visa: Post-Study Open Work Visa with full work rights in New Zealand.
+
+Selected public projects:
+- CareerMatch AI: AI-powered career matching and job application support.
+- Kids Worksheet Generator: printable children’s learning materials and AI coloring pages.
+- Smart Canvas: AI-powered flowchart generation through conversational interaction.
+- Personal Homepage TUI: terminal-style portfolio with AI chat.
+`;
 
 const SECRET_REPLACEMENTS = [
   [/AIza[0-9A-Za-z_-]{10,}/g, '[REDACTED_GEMINI_KEY]'],
@@ -53,6 +74,55 @@ function getConfig(env) {
   ).trim();
 
   return { provider, apiKey, baseUrl, model };
+}
+
+function normalizePortfolioContext(value) {
+  const text = String(value || '').trim();
+  if (!text) return '';
+
+  try {
+    const parsed = JSON.parse(text);
+    if (typeof parsed === 'string') return parsed.trim();
+    if (typeof parsed?.context === 'string') return parsed.context.trim();
+    if (typeof parsed?.text === 'string') return parsed.text.trim();
+    if (Array.isArray(parsed?.chunks)) {
+      return parsed.chunks
+        .map((chunk) => (typeof chunk === 'string' ? chunk : chunk?.text))
+        .filter(Boolean)
+        .join('\n\n')
+        .trim();
+    }
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map((chunk) => (typeof chunk === 'string' ? chunk : chunk?.text))
+        .filter(Boolean)
+        .join('\n\n')
+        .trim();
+    }
+  } catch {
+    // Plain markdown context is the default storage format.
+  }
+
+  return text;
+}
+
+async function getPortfolioContext(env) {
+  const key = String(env.PORTFOLIO_CONTEXT_KEY || DEFAULT_CONTEXT_KEY).trim();
+  const kv = env.PORTFOLIO_CONTEXT;
+
+  if (kv && typeof kv.get === 'function') {
+    try {
+      const storedContext = normalizePortfolioContext(await kv.get(key));
+      if (storedContext) return storedContext;
+      console.warn(`Portfolio context KV key not found or empty: ${key}`);
+    } catch (error) {
+      console.warn('Failed to load portfolio context from KV:', safeErrorDetail(error?.message || error));
+    }
+  } else {
+    console.warn('Portfolio context KV binding is not configured; using fallback context.');
+  }
+
+  return FALLBACK_PORTFOLIO_CONTEXT;
 }
 
 function sanitizeMessages(history = []) {
@@ -106,7 +176,8 @@ export async function onRequestPost({ request, env }) {
   }
 
   const history = sanitizeMessages(body.history);
-  const systemPrompt = buildSystemPrompt(PORTFOLIO_CONTEXT);
+  const portfolioContext = await getPortfolioContext(env);
+  const systemPrompt = buildSystemPrompt(portfolioContext);
   const messages = [
     { role: 'system', content: systemPrompt },
     ...history,

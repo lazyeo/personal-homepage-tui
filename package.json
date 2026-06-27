@@ -6,7 +6,6 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "prebuild": "node scripts/generate-functions-context.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

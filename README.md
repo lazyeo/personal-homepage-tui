@@ -82,3 +82,30 @@ $ clear         - Clear terminal
 ## License
 
 MIT
+
+## Public Portfolio Context Updates
+
+The AI chat reads public-facing profile context from a Cloudflare KV binding at runtime.
+
+Required Pages Function binding:
+
+```text
+Binding name: PORTFOLIO_CONTEXT
+KV key: portfolio_context:latest
+```
+
+Optional environment variable:
+
+```bash
+PORTFOLIO_CONTEXT_KEY=portfolio_context:latest
+```
+
+Local source of truth is intentionally outside this public repo. Pass it via `PORTFOLIO_CONTEXT_SOURCE` or `--source <path>`.
+
+Review and publish helpers:
+
+```bash
+node scripts/review-public-portfolio-context.mjs --source <local-public-context.md>
+node scripts/publish-public-portfolio-context.mjs --source <local-public-context.md> --dry-run
+node scripts/publish-public-portfolio-context.mjs --source <local-public-context.md> --namespace-id <kv_namespace_id> --remote
+```
