@@ -6,8 +6,9 @@ The accepted baseline is now `/`: the terminal-computer Hero plus the layered,
 click-selected 3D project collection. Continue future work on `src/pages/index.astro`,
 `TerminalHero.astro`, `ProjectShowcase.astro`, `project-selection.ts`, and
 `experience-scene.ts`. `/exhibit/` and `/studio/` only redirect to `/`.
-Retired editions are recoverably archived under `.impeccable/archive/retired-editions/`
-and are not built or offered in navigation.
+Retired editions are not built and not offered in navigation. They are kept only
+in the author's local working archive, which is deliberately outside version
+control, so they cannot be recovered from a clone of this repository.
 
 The homepage now presents selected work, with case studies at `/work/mrsl/`,
 `/work/careermatch/`, and `/work/kids-worksheets/`. The original terminal is at
