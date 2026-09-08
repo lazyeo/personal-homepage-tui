@@ -102,7 +102,7 @@ export const commands = {
   <div class="ascii-box__header">[ CareerMatch AI ]</div>
   <div class="output__line">AI agent analyzing job postings against your resume.</div>
   <div class="output__line output__line--secondary">Provides CV & cover letter recommendations. Chrome extension in development.</div>
-  <div class="output__line output__line--accent">→ <a href="https://careermatch-ai-web-git-main-lazyeos-projects.vercel.app/" target="_blank" rel="noopener">careermatch-ai.vercel.app</a></div>
+  <div class="output__line output__line--accent">→ <a href="https://cvto.work/" target="_blank" rel="noopener">cvto.work</a></div>
 </div>
 
 <div class="ascii-box">

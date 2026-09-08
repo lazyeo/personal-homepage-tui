@@ -1,0 +1,112 @@
+---
+const { slug } = Astro.props;
+---
+
+{
+  slug === "mrsl" ? (
+    <div class="project-art mrsl-art">
+      <>
+        <div class="browser-chrome">
+          <>
+            <i />
+            <i />
+            <i />
+            <span>mrsl.nz</span>
+          </>
+        </div>
+        <img
+          src="/images/mrsl-live-2026-09-08.webp"
+          width="1440"
+          height="900"
+          loading="lazy"
+          alt="MRSL live homepage captured 8 September 2026: Expert management. Personal care."
+        />
+      </>
+    </div>
+  ) : slug === "careermatch" ? (
+    <div class="project-art career-art">
+      <>
+        <div class="workflow-sheet">
+          <>
+            <div class="sheet-brand">
+              CareerMatch<span>AI</span>
+            </div>
+            <h3>
+              Your experience.
+              <br />A clearer direction.
+            </h3>
+            <div class="workflow-row">
+              <>
+                <span>01</span>
+                <div>
+                  Your experience<small>The things you’ve actually done.</small>
+                </div>
+                <b>✓</b>
+              </>
+            </div>
+            <div class="workflow-row">
+              <>
+                <span>02</span>
+                <div>
+                  The opportunity<small>What the role really needs.</small>
+                </div>
+                <b>✓</b>
+              </>
+            </div>
+            <div class="workflow-row">
+              <>
+                <span>03</span>
+                <div>
+                  A thoughtful application
+                  <small>Find the connection. Tell your story.</small>
+                </div>
+                <b>↗</b>
+              </>
+            </div>
+            <p class="illustration-caption">WORKFLOW ILLUSTRATION</p>
+          </>
+        </div>
+        <span class="floating-note">Find your next chapter.</span>
+      </>
+    </div>
+  ) : (
+    <div class="project-art kids-art">
+      <>
+        <div class="worksheet">
+          <>
+            <span class="worksheet-label">A LITTLE PRACTICE, EVERY DAY</span>
+            <h3>
+              Let’s count
+              <br />
+              something good.
+            </h3>
+            <div class="worksheet-name">
+              Made for curious minds. &nbsp; Name: __________
+            </div>
+            <div class="maths">
+              <>
+                <span>
+                  3 + 2 = <i />
+                </span>
+                <span>
+                  4 + 1 = <i />
+                </span>
+                <span>
+                  2 + 6 = <i />
+                </span>
+                <span>
+                  5 + 3 = <i />
+                </span>
+              </>
+            </div>
+            <div class="worksheet-bottom">
+              A pencil. A little time. A bright idea.
+            </div>
+            <p class="illustration-caption">ILLUSTRATIVE WORKSHEET</p>
+          </>
+        </div>
+        <div class="pencil" aria-hidden="true" />
+      </>
+    </div>
+  )
+}

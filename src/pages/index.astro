@@ -1,51 +1,23 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import AsciiLogo from '../components/AsciiLogo.astro';
-import ThemeSwitcher from '../components/ThemeSwitcher.astro';
-import MobileCommands from '../components/MobileCommands.astro';
+import Portfolio from "../layouts/Portfolio.astro";
+import TerminalHero from "../components/TerminalHero.astro";
+import ProjectShowcase from "../components/ProjectShowcase.astro";
 ---
 
-<Layout>
-  <div class="terminal">
-    <div class="terminal__window">
-      <header class="terminal__header">
-        <span class="terminal__title">shaun@portfolio ~ </span>
-        <ThemeSwitcher />
-      </header>
-
-      <main class="terminal__body">
-        <div class="terminal__content" id="terminal-content">
-          <AsciiLogo />
-
-          <div class="output" id="output">
-            <!-- Welcome message will be typed here -->
-          </div>
-        </div>
-
-        <div class="terminal__input-area">
-          <MobileCommands />
-          <div class="command-line">
-            <span class="command-line__prompt">$</span>
-            <input
-              type="text"
-              class="command-line__input"
-              id="command-input"
-              placeholder="Type a command..."
-              autocomplete="off"
-              spellcheck="false"
-            />
-            <div class="suggestions" id="suggestions"></div>
-          </div>
-        </div>
-      </main>
+<Portfolio title="Shaun Zhang — Ideas, in use" workHref="#work">
+  <TerminalHero />
+  <ProjectShowcase />
+  <section class="contact-section wrap">
+    <div>
+      <h2>Something in mind?<br /><em>Let’s make it real.</em></h2><a
+        class="contact-email"
+        href="mailto:shaun@a-dobe.club">shaun@a-dobe.club</a>
+    </div><div class="contact-aside">
+      <p>Curious about how I work?<br />Start a conversation.</p><a
+        class="text-link"
+        href="/terminal"
+        data-terminal>Ask my AI terminal</a
+      >
     </div>
-  </div>
-</Layout>
-
-<script>
-  import { initTerminal } from '../scripts/terminal.js';
-
-  // Initialize terminal on page load
-  initTerminal();
-  document.addEventListener('astro:page-load', initTerminal);
-</script>
+  </section>
+</Portfolio>

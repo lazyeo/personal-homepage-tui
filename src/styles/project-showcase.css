@@ -1,0 +1,344 @@
+.project-showcase {
+  padding-top: 85px;
+  padding-bottom: 90px;
+  border-top: 1px solid #deded2;
+  scroll-margin-top: 30px;
+}
+.project-showcase .section-heading {
+  margin-bottom: 35px;
+}
+.project-showcase .section-heading h2 {
+  font-size: clamp(34px, 3.7vw, 56px);
+  line-height: 1.12;
+}
+.showcase-content {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 65px;
+  align-items: center;
+}
+.project-stage-column {
+  min-width: 0;
+}
+.project-stage {
+  position: relative;
+  height: 520px;
+  touch-action: pan-y;
+  background: radial-gradient(ellipse at 50% 66%, #dde2d180, transparent 67%);
+}
+.project-stage canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.project-stage[data-ready="true"] canvas {
+  opacity: 1;
+}
+.project-stage[data-ready="true"] .project-stage-fallback {
+  visibility: hidden;
+}
+.project-stage-fallback {
+  position: absolute;
+  inset: 8%;
+  display: grid;
+  place-items: center;
+}
+.project-stage-fallback > img {
+  max-width: 100%;
+  height: auto;
+  box-shadow: 12px 20px 35px #33452b20;
+  border: 8px solid #344332;
+  border-radius: 7px;
+}
+.project-stage-fallback .project-art {
+  width: 100%;
+  max-height: 420px;
+  overflow: hidden;
+}
+.exhibit-hover {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: #344332;
+  color: #faf8ef;
+  padding: 8px 13px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 11px;
+}
+.collection-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #cdd2c3;
+  padding: 16px 0 10px;
+  gap: 20px;
+}
+.collection-controls[hidden] {
+  display: none;
+}
+.collection-controls button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: #344332;
+  padding: 8px 0;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.collection-controls button:hover {
+  color: #708052;
+}
+.project-showcase svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.collection-position {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+}
+.collection-position > span:first-child {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: #63705a;
+}
+.project-showcase button:focus-visible,
+.project-showcase summary:focus-visible,
+.project-showcase a:focus-visible {
+  outline: 3px solid #87976c;
+  outline-offset: 4px;
+}
+.project-stage-status {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  font-size: 10px;
+  color: #63705a;
+}
+.project-stage-status p {
+  margin: 0;
+}
+.project-stage-status > div {
+  display: flex;
+  gap: 15px;
+}
+.project-stage-status button {
+  font: inherit;
+  background: none;
+  color: inherit;
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
+  min-height: 40px;
+  padding: 5px 0;
+}
+.project-stage-status button[hidden] {
+  display: none;
+}
+.project-preview-note {
+  font-size: 10px;
+  color: #63705a;
+  line-height: 1.6;
+  margin: 4px 0 0;
+}
+.project-details {
+  min-width: 0;
+  min-height: 425px;
+  display: grid;
+  align-items: center;
+}
+.project-details article[hidden] {
+  display: none;
+}
+.project-details h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(35px, 3.4vw, 50px);
+  line-height: 1.12;
+  margin: 0 0 20px;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.project-kind {
+  font-size: 11px;
+  color: #63705a;
+  margin: 0 0 25px;
+}
+.project-kind span {
+  margin: 0 8px;
+  opacity: 0.6;
+}
+.project-origin {
+  font-size: 15px;
+  line-height: 1.95;
+  color: #526149;
+  margin: 0 0 28px;
+  max-width: 47ch;
+}
+.project-notes {
+  border-top: 1px solid #d4d7c9;
+  border-bottom: 1px solid #d4d7c9;
+  margin: 0 0 30px;
+}
+.project-notes summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 17px 0;
+  list-style: none;
+  font-size: 12px;
+  cursor: pointer;
+  line-height: 1.6;
+}
+.project-notes summary::-webkit-details-marker {
+  display: none;
+}
+.project-notes[open] summary svg {
+  transform: rotate(45deg);
+}
+.project-notes p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: #526149;
+  margin: 0 0 16px;
+}
+.project-notes .project-stack {
+  font-size: 10px;
+  margin-bottom: 20px;
+}
+.project-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.story-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  border-bottom: 1px solid currentColor;
+  padding: 7px 0;
+  color: #344332;
+  font-size: 13px;
+  text-decoration: none;
+}
+.visit-link {
+  font-size: 11px;
+  color: #63705a;
+}
+.project-showcase[data-enhanced="true"] .project-static-art {
+  display: none;
+}
+.project-static-art {
+  margin: 24px 0;
+}
+.project-details article + article {
+  margin-top: 50px;
+}
+.project-showcase[data-enhanced="true"] .project-details article {
+  margin-top: 0;
+}
+@media (max-width: 1000px) {
+  .showcase-content {
+    gap: 35px;
+    grid-template-columns: 1.3fr 1fr;
+  }
+  .project-stage {
+    height: 440px;
+  }
+  .project-details h3 {
+    font-size: 36px;
+  }
+  .project-origin {
+    font-size: 14px;
+  }
+  .project-stage-status {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 760px) {
+  .project-showcase {
+    padding-top: 50px;
+    padding-bottom: 55px;
+  }
+  .project-showcase .section-heading {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .project-showcase .section-heading p {
+    margin-top: 20px;
+  }
+  .showcase-content {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+  .project-stage {
+    height: 360px;
+    margin: 0 -12px;
+  }
+  .project-details {
+    min-height: 0;
+  }
+  .project-details h3 {
+    font-size: 38px;
+    max-width: 15ch;
+  }
+  .project-stage-status {
+    font-size: 10px;
+    gap: 0;
+  }
+  .project-stage-status > div {
+    margin-left: auto;
+  }
+  .project-stage-status button {
+    min-height: 44px;
+  }
+  .collection-controls {
+    gap: 10px;
+    padding-top: 10px;
+  }
+  .collection-controls button {
+    font-size: 11px;
+    gap: 6px;
+  }
+  .collection-position {
+    gap: 9px;
+    font-size: 11px;
+  }
+  .project-origin {
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  .project-preview-note {
+    font-size: 10px;
+  }
+  .exhibit-hover {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-stage canvas {
+    transition: none;
+  }
+}

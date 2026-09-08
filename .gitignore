@@ -9,6 +9,8 @@ dist/
 .env
 .env.*
 !.env.example
+.dev.vars
+.dev.vars.*
 
 # IDE / local agent tooling
 .idea/
@@ -29,3 +31,8 @@ npm-debug.log*
 .wrangler/
 docs/
 .alma-snapshots/
+
+# Local design/product working artifacts (not shipped)
+.impeccable/
+DESIGN.md
+PRODUCT.md

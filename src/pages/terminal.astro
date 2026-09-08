@@ -1,0 +1,110 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AsciiLogo from "../components/AsciiLogo.astro";
+import ThemeSwitcher from "../components/ThemeSwitcher.astro";
+import MobileCommands from "../components/MobileCommands.astro";
+---
+
+<Layout title="Shaun | Terminal">
+  <nav
+    class="terminal-return"
+    id="terminal-return"
+    aria-label="Return navigation"
+  >
+    <a href="/">← Back to portfolio</a>
+    <span>Shaun’s interactive terminal</span>
+  </nav>
+  <div class="terminal">
+    <div class="terminal__window">
+      <header class="terminal__header">
+        <span class="terminal__title">shaun@portfolio ~</span>
+        <ThemeSwitcher />
+      </header>
+
+      <main class="terminal__body">
+        <div class="terminal__content" id="terminal-content">
+          <AsciiLogo />
+
+          <div class="output" id="output">
+            <!-- Welcome message will be typed here -->
+          </div>
+        </div>
+
+        <div class="terminal__input-area">
+          <MobileCommands />
+          <div class="command-line">
+            <span class="command-line__prompt">$</span>
+            <input
+              type="text"
+              class="command-line__input"
+              id="command-input"
+              placeholder="Type a command..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div class="suggestions" id="suggestions"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { initTerminal } from "../scripts/terminal.js";
+
+  if (window.self !== window.top) {
+    document.getElementById("terminal-return")?.setAttribute("hidden", "");
+    document.documentElement.classList.add("terminal-embedded");
+  }
+
+  // Initialize terminal on page load
+  initTerminal();
+  document.addEventListener("astro:page-load", initTerminal);
+</script>
+
+<style is:global>
+  .terminal-return {
+    max-width: 900px;
+    margin: auto;
+    height: 54px;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 12px;
+  }
+  .terminal-return[hidden] {
+    display: none;
+  }
+  .terminal-return a {
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 7px 11px;
+    text-decoration: none;
+  }
+  .terminal-return a:hover {
+    background: var(--bg-tertiary);
+  }
+  .terminal-return a:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 3px;
+  }
+  .terminal-return span {
+    color: var(--text-secondary);
+    font-size: 10px;
+  }
+  .terminal {
+    height: calc(100dvh - 54px);
+  }
+  .terminal-embedded .terminal {
+    height: 100dvh;
+  }
+  @media (max-width: 420px) {
+    .terminal-return span {
+      display: none;
+    }
+  }
+</style>

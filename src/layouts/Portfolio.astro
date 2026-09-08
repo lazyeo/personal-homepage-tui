@@ -1,0 +1,79 @@
+---
+import "../styles/portfolio.css";
+interface Props {
+  title?: string;
+  description?: string;
+  workHref?: string;
+}
+const {
+  workHref = '/#work',
+  title = "Shaun Zhang — Product-minded developer",
+  description = "Websites, useful tools and AI-powered products. Selected work by Shaun Zhang, a product-minded developer in Christchurch, New Zealand.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head
+    ><meta charset="UTF-8" /><meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    /><meta name="description" content={description} /><meta
+      name="theme-color"
+      content="#f5f3ec"
+    /><meta property="og:title" content={title} /><meta
+      property="og:description"
+      content={description}
+    /><link rel="icon" href="/favicon.svg" type="image/svg+xml" /><link
+      rel="preload"
+      href="/fonts/dm-serif-display.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    /><title>{title}</title></head
+  >
+  <body
+    ><a class="skip-link" href="#main">Skip to content</a><header
+      class="site-header wrap"
+    >
+      <a class="wordmark" href="/" aria-label="Shaun home"
+        >shaun<span>.</span></a
+      ><nav aria-label="Main navigation">
+        <a href={workHref}>Work</a><a
+          href="mailto:shaun@a-dobe.club">Get in touch ↗</a
+        >
+      </nav><a class="terminal-link" href="/terminal" data-terminal
+        ><span aria-hidden="true">&gt;_</span> Open terminal</a
+      >
+    </header>
+    <main id="main"><slot /></main><footer class="site-footer wrap">
+      <a class="wordmark" href="/">shaun<span>.</span></a><p>
+        Made with curiosity. Built with care.
+      </p><div>
+        <a
+          href="https://github.com/lazyeo"
+          target="_blank"
+          rel="noopener noreferrer">GitHub ↗</a
+        ><a
+          href="https://linkedin.com/in/shaun-nz/"
+          target="_blank"
+          rel="noopener noreferrer">LinkedIn ↗</a
+        >
+      </div><span>© {new Date().getFullYear()} Shaun Zhang</span>
+    </footer>
+    <dialog id="terminal-dialog" aria-labelledby="terminal-heading">
+      <div class="dialog-bar">
+        <h2 id="terminal-heading">A conversation with Shaun’s AI</h2><div
+          class="terminal-controls"
+        >
+          <button id="expand-terminal" aria-pressed="false">Full screen</button
+          ><button id="close-terminal" aria-label="Close terminal"
+            >Close ×</button>
+        </div>
+      </div><p class="terminal-note">
+        Ask about my work, or explore with /projects.
+      </p><div id="terminal-frame-slot"></div>
+    </dialog>
+    <script src="../scripts/portfolio.ts"></script></body
+  >
+</html>

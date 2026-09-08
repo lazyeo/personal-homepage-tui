@@ -1,0 +1,172 @@
+---
+import { projects } from "../data/projects";
+import ProjectVisual from "./ProjectVisual.astro";
+import "../styles/project-showcase.css";
+const stories = [
+  {
+    name: "MRSL",
+    title: "A better front door.",
+    origin:
+      "For a property business, the first viewing often happens online. I rebuilt MRSL’s website to make that first encounter clearer — for people looking for a home and owners looking for someone to care for one.",
+    detail: "The quiet work behind the pages",
+    note: "A custom Astro front end, with Wix taking care of content. Listings, property details and enquiries belong to one considered journey.",
+    cta: "Step inside the rebuild",
+  },
+  {
+    name: "CareerMatch AI",
+    title: "Finding the thread.",
+    origin:
+      "This started on my side of the job search. I wanted to see the connection between what I had actually done and what a role was asking for — without starting from a blank page every time.",
+    detail: "An assistant, not an invented career",
+    note: "The workflow brings real experience and a job description together, then organizes gaps and application recommendations for the person to review.",
+    cta: "Follow the thinking",
+  },
+  {
+    name: "Kids Worksheets",
+    title: "Made for a small human.",
+    origin:
+      "Some products start with a business brief. This one started with my son. I wanted fresh things to learn together, with a pencil and a sheet of paper instead of another hour on a screen.",
+    detail: "The screen is only the beginning",
+    note: "Maths, writing practice and AI coloring pages become printable activities. The web app does the preparation; the useful part happens away from it.",
+    cta: "See how it grew",
+  },
+];
+---
+
+<section
+  class="project-showcase wrap"
+  id="work"
+  aria-labelledby="showcase-title"
+>
+  <div class="section-heading">
+    <h2 id="showcase-title">
+      A few things<br /><em>worth a closer look.</em>
+    </h2><p>
+      Every project starts somewhere.<br />Pick one. I’ll tell you its story.
+    </p>
+  </div>
+  <div class="showcase-content">
+    <div class="project-stage-column">
+      <div
+        id="scene"
+        class="project-stage"
+        data-project-exhibit="true"
+        data-selected="0"
+        role="img"
+        aria-label="A collection of three layered project displays. Select an exposed display to bring it forward. Use Previous and Next below as a keyboard alternative."
+      >
+        <div class="project-stage-fallback">
+          <img
+            src="/images/mrsl-live-2026-09-08.webp"
+            width="1440"
+            height="900"
+            alt="MRSL live homepage captured 8 September 2026"
+            loading="lazy"
+          />
+        </div>
+        <span class="exhibit-hover" id="exhibit-hover" aria-hidden="true" hidden
+        ></span>
+      </div>
+      <div
+        class="collection-controls"
+        id="project-picker"
+        role="group"
+        aria-label="Browse the collection"
+        hidden
+      >
+        <button
+          type="button"
+          id="project-prev"
+          aria-label="Previous project"
+          aria-controls="project-details"
+          ><svg viewBox="0 0 24 24" aria-hidden="true"
+            ><path d="M19 12H5m6-6-6 6 6 6"></path></svg
+          ><span>Previous</span></button
+        >
+        <p class="collection-position">
+          <span id="project-count">1 / 3</span><span id="collection-name"
+            >MRSL</span>
+        </p>
+        <button
+          type="button"
+          id="project-next"
+          aria-label="Next project"
+          aria-controls="project-details"
+          ><span>Next</span><svg viewBox="0 0 24 24" aria-hidden="true"
+            ><path d="M5 12h14m-6-6 6 6-6 6"></path></svg
+          ></button
+        >
+      </div>
+      <div class="project-stage-status">
+        <p id="scene-status" role="status">
+          The collection · loading the interactive view
+        </p><div>
+          <button type="button" id="project-inspect" hidden>Look closer</button
+          ><button type="button" id="motion-toggle" hidden
+            >Use static view</button>
+        </div>
+      </div>
+      <p class="project-preview-note" id="preview-note">
+        Live MRSL homepage · captured 8 September 2026.
+      </p>
+    </div>
+    <div
+      id="project-details"
+      class="project-details"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      {
+        projects.map((project, i) => (
+          <article
+            data-project-panel={i}
+            data-project-name={stories[i].name}
+            id={`project-${project.slug}`}
+            aria-labelledby={`title-${project.slug}`}
+          >
+            <h3 id={`title-${project.slug}`}>{stories[i].title}</h3>
+            <p class="project-kind">
+              {stories[i].name} <span aria-hidden="true">/</span>{" "}
+              {project.category}
+            </p>
+            <p class="project-origin">{stories[i].origin}</p>
+            <details class="project-notes">
+              <>
+                <summary>
+                  {stories[i].detail}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </summary>
+                <p>{stories[i].note}</p>
+                <p class="project-stack">{project.stack}</p>
+              </>
+            </details>
+            <div class="project-actions">
+              <>
+                <a class="story-link" href={`/work/${project.slug}/`}>
+                  {stories[i].cta}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m6 18 12-12M6 6h12v12" />
+                  </svg>
+                </a>
+                <a
+                  class="visit-link"
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Visit the website
+                </a>
+              </>
+            </div>
+            <div class="project-static-art">
+              <ProjectVisual slug={project.slug} />
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+<script src="../scripts/project-selection.ts"></script>
