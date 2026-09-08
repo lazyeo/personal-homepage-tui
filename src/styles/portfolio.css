@@ -1045,9 +1045,6 @@ dialog::backdrop {
   nav {
     gap: 20px;
   }
-  nav a:last-child {
-    display: none;
-  }
   .terminal-link {
     font-size: 0;
     padding: 10px;
@@ -1283,6 +1280,9 @@ dialog::backdrop {
   min-width: 0;
 }
 @media (max-width: 380px) {
+  nav {
+    gap: 14px;
+  }
   .computer {
     scale: 0.67;
     top: 48px;
