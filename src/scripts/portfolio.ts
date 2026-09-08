@@ -88,19 +88,44 @@ slot?.addEventListener(
 );
 const stage = document.querySelector<HTMLElement>("#computer-stage");
 const computer = document.querySelector<HTMLElement>("#computer");
+const coarse = matchMedia("(hover: none)");
 stage?.addEventListener("pointermove", (event) => {
   if (!computer || motion.matches || event.pointerType !== "mouse") return;
   const bounds = stage.getBoundingClientRect();
   computer.style.setProperty(
     "--turn",
-    `${-13 + ((event.clientX - bounds.left) / bounds.width - 0.5) * 12}deg`,
+    `${-13 + ((event.clientX - bounds.left) / bounds.width - 0.5) * 18}deg`,
   );
   computer.style.setProperty(
     "--tilt",
-    `${-7 - ((event.clientY - bounds.top) / bounds.height - 0.5) * 8}deg`,
+    `${-7 - ((event.clientY - bounds.top) / bounds.height - 0.5) * 12}deg`,
   );
 });
 stage?.addEventListener("pointerleave", () => {
   computer?.style.removeProperty("--turn");
   computer?.style.removeProperty("--tilt");
 });
+// Touch has no pointer to follow, so the machine answers the input it does
+// have: how far it has travelled through the viewport.
+let tiltQueued = false;
+function scrollTilt() {
+  tiltQueued = false;
+  if (!stage || !computer) return;
+  const bounds = stage.getBoundingClientRect();
+  const centre = (bounds.top + bounds.height / 2) / window.innerHeight;
+  const travel = Math.min(Math.max(centre, 0), 1) - 0.5;
+  computer.style.setProperty("--turn", `${-13 - travel * 16}deg`);
+  computer.style.setProperty("--tilt", `${-7 + travel * 10}deg`);
+}
+if (coarse.matches && !motion.matches) {
+  addEventListener(
+    "scroll",
+    () => {
+      if (tiltQueued) return;
+      tiltQueued = true;
+      requestAnimationFrame(scrollTilt);
+    },
+    { passive: true },
+  );
+  scrollTilt();
+}

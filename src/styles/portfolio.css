@@ -247,9 +247,7 @@ nav a:hover,
   transform: translateX(-50%) rotateX(var(--tilt, -7deg))
     rotateY(var(--turn, -13deg));
   transform-style: preserve-3d;
-  transition:
-    transform 0.35s ease-out,
-    scale 0.25s ease-out;
+  transition: transform 0.35s ease-out;
   z-index: 2;
   outline-offset: 18px !important;
 }
@@ -494,7 +492,6 @@ nav a:hover,
 }
 .computer:hover {
   animation-play-state: paused;
-  scale: 1.012;
 }
 .computer:hover .screen,
 .computer:focus-visible .screen {
@@ -503,8 +500,10 @@ nav a:hover,
 .computer:active {
   scale: 0.99;
 }
-.computer:active .screen {
-  background: #36452f;
+@media (hover: none) {
+  .computer:active .screen {
+    background: #36452f;
+  }
 }
 @keyframes blink {
   50% {
