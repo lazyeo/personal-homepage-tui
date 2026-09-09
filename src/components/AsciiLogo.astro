@@ -24,7 +24,7 @@ const asciiLogoMobile = `
 const tagline = "Christchurch · Product-Minded Vibe Coder";
 ---
 
-<div class="ascii-header">
+<div class="ascii-header" data-ascii-header>
   <div class="ascii-header__row">
     <div class="ascii-header__logo">
       <pre class="ascii-logo ascii-logo--desktop" aria-label="SHAUN">{asciiLogoDesktop}</pre>
@@ -41,7 +41,8 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
   .ascii-header {
     text-align: left;
     /* The terminal also renders inside a ~680px drawer on desktop, where a
-       viewport breakpoint wrongly reports "mobile". Ask the container. */
+       viewport breakpoint wrongly reports "mobile", so the layout below asks
+       the container instead. */
     container-type: inline-size;
   }
 
@@ -62,13 +63,10 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
     max-width: 280px;
   }
 
-  .ascii-logo--mobile {
-    display: none;
-  }
-
   /* Solid block characters need their rows to touch, or the letters read as
      stripes. The hash logo is open by design and keeps the base line height. */
   .ascii-logo--desktop {
+    display: none;
     line-height: 1;
   }
 
@@ -94,18 +92,57 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
     }
   }
 
-  /* The block letters are not in the loaded webfont, so each one is substituted
-     from a system font whose advance width may not match. That drift is what
-     misaligns them on phones, so keep the pure-ASCII logo for narrow screens.
-     Width is not the reason: the block version measures 254px. */
-  @container (max-width: 420px) {
-    .ascii-logo--desktop {
-      display: none;
-    }
-    .ascii-logo--mobile {
-      display: block;
-      font-size: 0.6rem;
-      line-height: 1.2;
-    }
+  /* Which logo to show is not a question of width -- the block version is only
+     254px and fits a 320px screen. It is a question of whether this browser has
+     the box and block characters in the rendered font. They are absent from the
+     webfont, so each is substituted from a system font, and when that font's
+     advance width differs the rows drift apart. No breakpoint can express that,
+     so the ASCII logo is the default and the probe below upgrades it only where
+     the glyphs measure identically. */
+  .ascii-logo--mobile {
+    display: block;
+    font-size: 0.6rem;
+    line-height: 1.2;
+  }
+
+  [data-ascii-header][data-blocks='aligned'] .ascii-logo--desktop {
+    display: block;
+  }
+  [data-ascii-header][data-blocks='aligned'] .ascii-logo--mobile {
+    display: none;
   }
 </style>
+
+<script is:inline>
+  // Ask the only question that matters: do the six rows of the block logo
+  // render to the same width here? The box and block characters are absent
+  // from the webfont, so each is substituted from a system font, and if that
+  // font's advance differs the rows drift and the letters skew. Measuring the
+  // real strings tests alignment directly rather than guessing from viewport
+  // width, which cannot tell a 480px phone from a 635px drawer on a desktop.
+  (function () {
+    var header = document.currentScript.previousElementSibling;
+    if (!header || !header.hasAttribute('data-ascii-header')) {
+      header = document.querySelector('[data-ascii-header]');
+    }
+    var block = header && header.querySelector('.ascii-logo--desktop');
+    if (!block) return;
+    var probe = document.createElement('span');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText =
+      'position:absolute;left:-9999px;top:0;visibility:hidden;white-space:pre;font-size:40px;font-family:' +
+      getComputedStyle(block).fontFamily;
+    (document.body || document.documentElement).append(probe);
+    var rows = block.textContent.split('\n').filter(function (row) { return row.length > 0; });
+    var widths = rows.map(function (row) {
+      probe.textContent = row;
+      return probe.getBoundingClientRect().width;
+    });
+    probe.remove();
+    // Measured at 40px, so half a pixel across a 43-column row stays well under
+    // one rendered pixel at the sizes the logo is actually displayed.
+    if (rows.length > 1 && Math.max.apply(null, widths) - Math.min.apply(null, widths) < 0.5) {
+      header.dataset.blocks = 'aligned';
+    }
+  })();
+</script>
