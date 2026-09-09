@@ -75,16 +75,19 @@ const { username = 'lazyeo' } = Astro.props;
     color: var(--border-color);
   }
 
+  /* Every day with a commit has to read as activity, so the levels climb the
+     theme's accent rather than passing through body-text greys that sit a
+     hair away from the empty colour. */
   .github-heatmap__cell--1 {
-    color: var(--text-muted);
+    color: var(--heat-low);
   }
 
   .github-heatmap__cell--2 {
-    color: var(--text-secondary);
+    color: var(--accent-primary);
   }
 
   .github-heatmap__cell--3 {
-    color: var(--accent-primary);
+    color: var(--accent-secondary);
   }
 
   .github-heatmap__legend {
@@ -154,8 +157,25 @@ const { username = 'lazyeo' } = Astro.props;
     return last30Days.map((day: { count: number }) => day.count);
   }
 
+  // Thresholds relative to the busiest day collapse under one outlier: with a
+  // 118-commit day, everything up to 58 lands in the lowest band. Split the
+  // active days by their own spread instead.
+  function activityBands(contributions: number[]) {
+    const active = contributions.filter((count) => count > 0).sort((a, b) => a - b);
+    if (!active.length) return { mid: Infinity, high: Infinity };
+    const at = (q: number) => active[Math.min(active.length - 1, Math.floor(q * active.length))];
+    return { mid: Math.max(2, at(0.5)), high: Math.max(3, at(0.85)) };
+  }
+
+  function levelFor(count: number, bands: { mid: number; high: number }) {
+    if (count <= 0) return 0;
+    if (count >= bands.high) return 3;
+    if (count >= bands.mid) return 2;
+    return 1;
+  }
+
   async function renderHeatmapAnimated(grid: HTMLElement, contributions: number[]) {
-    const maxContrib = Math.max(...contributions, 1);
+    const bands = activityBands(contributions);
     const emptyChar = '░';
     const chars = ['░', '▒', '▓', '█'];
 
@@ -175,12 +195,7 @@ const { username = 'lazyeo' } = Astro.props;
       cell.title = `${dateStr}: ${count} contributions`;
 
       // Store the target level for animation
-      let level = 0;
-      if (count > 0) {
-        if (count >= maxContrib * 0.75) level = 3;
-        else if (count >= maxContrib * 0.5) level = 2;
-        else level = 1;
-      }
+      const level = levelFor(count, bands);
       cell.dataset.targetLevel = String(level);
       cell.dataset.targetChar = chars[level];
 

@@ -35,6 +35,7 @@
 
   --accent-primary: #8ec07c;
   --accent-secondary: #b8bb26;
+  --heat-low: #689d6a;
   --accent-tertiary: #fabd2f;
 
   --border-color: #504945;
@@ -61,6 +62,7 @@
 
   --accent-primary: #89b4a6;
   --accent-secondary: #7dcfff;
+  --heat-low: #5c9487;
   --accent-tertiary: #bb9af7;
 
   --border-color: #3b3d57;
@@ -86,6 +88,7 @@
 
   --accent-primary: #d4a373;
   --accent-secondary: #e5c07b;
+  --heat-low: #ab8058;
   --accent-tertiary: #d19a66;
 
   --border-color: #3d3d3d;
