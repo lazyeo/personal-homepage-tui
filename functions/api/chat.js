@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { createProvider } from '../../src/lib/ai/index.js';
-import { projects } from '../../src/data/projects.ts';
+import { projects, archiveProjects } from '../../src/data/projects.ts';
 
 const DEFAULT_PROVIDER = 'openai';
 const DEFAULT_OPENAI_MODEL = 'gpt-3.5-turbo';
@@ -26,6 +26,13 @@ Design decision: ${project.decision}
 Technologies: ${project.stack}
 Public URL: ${project.link}
 Evidence and limits: ${project.result}`).join('\n\n');
+
+// The terminal's /projects lists these too, so the chat has to know them or the
+// same terminal window would name a project the assistant has never heard of.
+const ARCHIVE_PROJECT_CONTEXT = archiveProjects.map((project) => `## ${project.name}
+${project.intro} ${project.note}
+Technologies: ${project.stack}
+Public URL: ${project.link}`).join('\n\n');
 
 const FALLBACK_PORTFOLIO_CONTEXT = `# Shaun Zhang - Portfolio Context
 
@@ -387,6 +394,7 @@ Rules:
 - Ground answers in the provided portfolio context.
 - The reviewed homepage projects below are always available and take precedence over conflicting or outdated supplementary context, including project URLs and implementation details.
 - For broad project questions, lead with these named projects and explain what I built and why. Do not require visitors to know a project name first.
+- Lead with the reviewed projects. Bring up earlier work when the visitor asks for more, asks about it by name, or when it is the relevant evidence for their question.
 - Do not present plans, illustrations, preview screenshots, or unmeasured outcomes as completed or measured results.
 - Treat named headings and project sections in the retrieved context as authoritative public facts. If a relevant named project appears in the retrieved context or detected project facts, acknowledge it and summarize only what is stated there.
 - If the visitor asks for project names, use names from reviewed homepage projects or relevant supplementary project sections.
@@ -397,6 +405,10 @@ Rules:
 
 Reviewed homepage projects:
 ${REVIEWED_PROJECT_CONTEXT}
+
+Earlier work. The terminal's /projects command lists these after the reviewed
+projects. They have no case study, so describe only what is stated here:
+${ARCHIVE_PROJECT_CONTEXT}
 
 Detected project facts extracted from supplementary context:
 ${detectedProjectFacts.length ? detectedProjectFacts.map((fact) => `- ${fact.heading}${fact.summary ? `: ${fact.summary}` : ''}`).join('\n') : '(No project facts detected.)'}

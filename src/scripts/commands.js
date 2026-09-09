@@ -1,7 +1,18 @@
-// ═══════════════════════════════════════════════════════════════
-// COMMAND HANDLERS
-// Each command returns HTML string to be rendered in output
-// ═══════════════════════════════════════════════════════════════
+import { projects, archiveProjects } from '../data/projects';
+
+// The homepage, the case studies and the AI all read src/data/projects.ts.
+// This command used to carry its own hard-coded copy, which drifted: it had
+// lost MRSL entirely and described CareerMatch differently from the site.
+const linkLabel = (url) =>
+  url.startsWith('https://github.com/') ? 'GitHub' : url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+const projectBox = (project, secondary) => `
+<div class="ascii-box">
+  <div class="ascii-box__header">[ ${project.publicName || project.name} ]</div>
+  <div class="output__line">${project.intro}</div>
+  <div class="output__line output__line--secondary">${secondary}</div>
+  <div class="output__line output__line--accent">→ <a href="${project.link}" target="_blank" rel="noopener">${linkLabel(project.link)}</a></div>
+</div>`;
 
 export const commands = {
   help: () => `
@@ -89,43 +100,11 @@ export const commands = {
 `,
 
   projects: () => `
-<div class="output__section">FEATURED PROJECTS</div>
-
-<div class="ascii-box">
-  <div class="ascii-box__header">[ Kids Worksheet Generator ]</div>
-  <div class="output__line">Web app generating printable math worksheets & coloring pages.</div>
-  <div class="output__line output__line--secondary">Built for my son's learning — includes AI-generated coloring pages.</div>
-  <div class="output__line output__line--accent">→ <a href="https://kids.a-dobe.club/" target="_blank" rel="noopener">kids.a-dobe.club</a></div>
-</div>
-
-<div class="ascii-box">
-  <div class="ascii-box__header">[ CareerMatch AI ]</div>
-  <div class="output__line">AI agent analyzing job postings against your resume.</div>
-  <div class="output__line output__line--secondary">Provides CV & cover letter recommendations. Chrome extension in development.</div>
-  <div class="output__line output__line--accent">→ <a href="https://cvto.work/" target="_blank" rel="noopener">cvto.work</a></div>
-</div>
-
-<div class="ascii-box">
-  <div class="ascii-box__header">[ Smart Canvas - AI Flowchart Generator ]</div>
-  <div class="output__line">AI-powered tool generating flowcharts through conversational interface.</div>
-  <div class="output__line output__line--secondary">Currently in early development, iterating on core functionality.</div>
-  <div class="output__line output__line--accent">→ <a href="https://smart-canvas-brown.vercel.app/" target="_blank" rel="noopener">smart-canvas-brown.vercel.app</a></div>
-</div>
-
-<div class="ascii-box">
-  <div class="ascii-box__header">[ LCC Issue Tracker ]</div>
-  <div class="output__line">Full-stack web app with Python Flask & MySQL for issue management.</div>
-  <div class="output__line output__line--secondary">Three-tier role-based access control (Visitor/Helper/Admin).</div>
-  <div class="output__line output__line--accent">→ <a href="https://github.com/Shun-Zhang-1163127/LCC_Issue_Tracker" target="_blank" rel="noopener">GitHub</a></div>
-</div>
-
-<div class="ascii-box">
-  <div class="ascii-box__header">[ ML Lending Data Analysis ]</div>
-  <div class="output__line">Machine learning project analyzing Lending Club data (2007-2018).</div>
-  <div class="output__line output__line--secondary">Predictive models for loan risk assessment & feature engineering.</div>
-  <div class="output__line output__line--accent">→ <a href="https://github.com/Shun-Zhang-1163127/1163127" target="_blank" rel="noopener">GitHub</a></div>
-</div>
-
+<div class="output__section">SELECTED WORK</div>
+${projects.map((project) => projectBox(project, project.decision)).join('')}
+<div class="output__line output__line--muted"></div>
+<div class="output__section">EARLIER WORK</div>
+${archiveProjects.map((project) => projectBox(project, project.note)).join('')}
 <div class="output__line output__line--muted"></div>
 <div class="output__line">Run <span class="cmd-link" data-cmd="/contact">/contact</span> to discuss potential collaborations.</div>
 `,

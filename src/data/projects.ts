@@ -55,3 +55,42 @@ export const projects = [
       "A usable tool built around a real family need. The worksheet on this portfolio is an illustrative sample, not a screenshot of the application.",
   },
 ];
+
+// Earlier work. The terminal's /projects lists it after the selected projects;
+// the homepage does not, because these have no case study and mixing them in
+// would dilute the three that do. Copy is carried over from the command's
+// previous hard-coded markup, with no claims added.
+export const archiveProjects = [
+  {
+    slug: "smart-canvas",
+    name: "Smart Canvas",
+    subtitle: "AI flowchart generator",
+    category: "AI tool",
+    stack: "LLM workflows · Web",
+    link: "https://smart-canvas-brown.vercel.app/",
+    intro:
+      "A tool that builds flowcharts through a conversational interface.",
+    note: "In early development, still iterating on core functionality.",
+  },
+  {
+    slug: "lcc-issue-tracker",
+    name: "LCC Issue Tracker",
+    subtitle: "Issue management with role-based access",
+    category: "Full-stack project",
+    stack: "Python · Flask · MySQL",
+    link: "https://github.com/Shun-Zhang-1163127/LCC_Issue_Tracker",
+    intro: "A full-stack web application for managing issues.",
+    note: "Three-tier role-based access control: visitor, helper and admin.",
+  },
+  {
+    slug: "ml-lending-analysis",
+    name: "ML Lending Data Analysis",
+    subtitle: "Loan risk models over Lending Club data",
+    category: "Data project",
+    stack: "Python · Machine learning",
+    link: "https://github.com/Shun-Zhang-1163127/1163127",
+    intro:
+      "Predictive models over Lending Club data from 2007 to 2018.",
+    note: "Loan risk assessment with feature engineering.",
+  },
+];
