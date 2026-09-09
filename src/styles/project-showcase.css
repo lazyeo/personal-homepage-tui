@@ -1,7 +1,7 @@
 .project-showcase {
   padding-top: 85px;
   padding-bottom: 90px;
-  border-top: 1px solid #deded2;
+  border-top: 1px solid var(--showcase-rule);
   scroll-margin-top: 30px;
 }
 .project-showcase .section-heading {
@@ -24,7 +24,7 @@
   position: relative;
   height: 520px;
   touch-action: pan-y;
-  background: radial-gradient(ellipse at 50% 66%, #dde2d180, transparent 67%);
+  background: radial-gradient(ellipse at 50% 66%, var(--showcase-stage), transparent 67%);
 }
 .project-stage canvas {
   position: absolute;
@@ -51,7 +51,7 @@
   max-width: 100%;
   height: auto;
   box-shadow: 12px 20px 35px #33452b20;
-  border: 8px solid #344332;
+  border: 8px solid var(--showcase-strong);
   border-radius: 7px;
 }
 .project-stage-fallback .project-art {
@@ -65,8 +65,8 @@
   left: 50%;
   transform: translateX(-50%);
   pointer-events: none;
-  background: #344332;
-  color: #faf8ef;
+  background: var(--showcase-strong);
+  color: var(--showcase-hover-ink);
   padding: 8px 13px;
   border-radius: 4px;
   white-space: nowrap;
@@ -76,7 +76,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid #cdd2c3;
+  border-top: 1px solid var(--showcase-rule-soft);
   padding: 16px 0 10px;
   gap: 20px;
 }
@@ -90,14 +90,14 @@
   min-height: 44px;
   border: 0;
   background: transparent;
-  color: #344332;
+  color: var(--showcase-strong);
   padding: 8px 0;
   font: inherit;
   font-size: 12px;
   cursor: pointer;
 }
 .collection-controls button:hover {
-  color: #708052;
+  color: var(--showcase-accent-hover);
 }
 .project-showcase svg {
   width: 20px;
@@ -119,12 +119,12 @@
 .collection-position > span:first-child {
   font-size: 10px;
   font-variant-numeric: tabular-nums;
-  color: #63705a;
+  color: var(--showcase-meta);
 }
 .project-showcase button:focus-visible,
 .project-showcase summary:focus-visible,
 .project-showcase a:focus-visible {
-  outline: 3px solid #87976c;
+  outline: 3px solid var(--showcase-focus);
   outline-offset: 4px;
 }
 .project-stage-status {
@@ -133,7 +133,7 @@
   gap: 10px;
   align-items: center;
   font-size: 10px;
-  color: #63705a;
+  color: var(--showcase-meta);
 }
 .project-stage-status p {
   margin: 0;
@@ -157,7 +157,7 @@
 }
 .project-preview-note {
   font-size: 10px;
-  color: #63705a;
+  color: var(--showcase-meta);
   line-height: 1.6;
   margin: 4px 0 0;
 }
@@ -181,7 +181,7 @@
 }
 .project-kind {
   font-size: 11px;
-  color: #63705a;
+  color: var(--showcase-meta);
   margin: 0 0 25px;
 }
 .project-kind span {
@@ -191,13 +191,13 @@
 .project-origin {
   font-size: 15px;
   line-height: 1.95;
-  color: #526149;
+  color: var(--showcase-note);
   margin: 0 0 28px;
   max-width: 47ch;
 }
 .project-notes {
-  border-top: 1px solid #d4d7c9;
-  border-bottom: 1px solid #d4d7c9;
+  border-top: 1px solid var(--showcase-rule-strong);
+  border-bottom: 1px solid var(--showcase-rule-strong);
   margin: 0 0 30px;
 }
 .project-notes summary {
@@ -220,7 +220,7 @@
 .project-notes p {
   font-size: 13px;
   line-height: 1.85;
-  color: #526149;
+  color: var(--showcase-note);
   margin: 0 0 16px;
 }
 .project-notes .project-stack {
@@ -239,13 +239,13 @@
   gap: 22px;
   border-bottom: 1px solid currentColor;
   padding: 7px 0;
-  color: #344332;
+  color: var(--showcase-strong);
   font-size: 13px;
   text-decoration: none;
 }
 .visit-link {
   font-size: 11px;
-  color: #63705a;
+  color: var(--showcase-meta);
 }
 .project-showcase[data-enhanced="true"] .project-static-art {
   display: none;
