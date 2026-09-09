@@ -560,9 +560,6 @@ nav a:hover,
 .computer:focus-visible .screen {
   background: var(--screen-hover);
 }
-.computer:active {
-  scale: 0.99;
-}
 @media (hover: none) {
   .computer:active .screen {
     background: var(--screen-press);
