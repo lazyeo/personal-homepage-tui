@@ -218,6 +218,10 @@ body,
    ─────────────────────────────────────────────────────────────── */
 .ascii-logo {
   color: var(--accent-primary);
+  /* Deliberately the generic family: the box and block characters are absent
+     from JetBrains Mono's web subset and get substituted, so pairing them with
+     a different primary font mixes advance widths (24.00 vs 24.08 at 40px). */
+  font-family: monospace;
   white-space: pre;
   font-size: 0.7rem;
   line-height: 1.2;
@@ -510,10 +514,6 @@ a:hover {
     padding: 0.5rem 0.75rem 0.75rem;
   }
 
-  .ascii-logo {
-    font-size: 0.45rem;
-  }
-
   .mobile-commands {
     display: flex;
   }
@@ -524,10 +524,6 @@ a:hover {
 }
 
 @media (max-width: 480px) {
-  .ascii-logo {
-    font-size: 0.35rem;
-  }
-
   .terminal__header {
     padding: 0.5rem;
   }

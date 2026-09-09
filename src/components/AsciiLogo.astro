@@ -40,6 +40,9 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
 <style>
   .ascii-header {
     text-align: left;
+    /* The terminal also renders inside a ~680px drawer on desktop, where a
+       viewport breakpoint wrongly reports "mobile". Ask the container. */
+    container-type: inline-size;
   }
 
   .ascii-header__row {
@@ -63,7 +66,22 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
     display: none;
   }
 
-  @media (max-width: 768px) {
+  /* Solid block characters need their rows to touch, or the letters read as
+     stripes. The hash logo is open by design and keeps the base line height. */
+  .ascii-logo--desktop {
+    line-height: 1;
+  }
+
+  /* Both logos are measured to fit at every width, and overflow-x: auto would
+     promote overflow-y to auto as well, reserving scrollbar gutters around art
+     that never scrolls. */
+  .ascii-logo--desktop,
+  .ascii-logo--mobile {
+    overflow: visible;
+  }
+
+  /* Logo 254px + heatmap 280px + gap: below this they stop fitting side by side. */
+  @container (max-width: 580px) {
     .ascii-header__row {
       flex-direction: column;
       align-items: flex-start;
@@ -74,7 +92,13 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
       width: 100%;
       max-width: unset;
     }
+  }
 
+  /* The block letters are not in the loaded webfont, so each one is substituted
+     from a system font whose advance width may not match. That drift is what
+     misaligns them on phones, so keep the pure-ASCII logo for narrow screens.
+     Width is not the reason: the block version measures 254px. */
+  @container (max-width: 420px) {
     .ascii-logo--desktop {
       display: none;
     }
