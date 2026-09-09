@@ -732,8 +732,8 @@ function showAudioConsole() {
     </div>
 
     <div class="buttons">
-      <button id="ac-test-once">▶ Once</button>
-      <button id="ac-test-seq">▶▶ Sequence</button>
+      <button id="ac-test-once">▶︎ Once</button>
+      <button id="ac-test-seq">▶︎▶︎ Sequence</button>
       <button id="ac-stop">■ Stop</button>
     </div>
     <div class="buttons">
