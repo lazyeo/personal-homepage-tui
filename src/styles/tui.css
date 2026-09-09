@@ -4,6 +4,11 @@
    ═══════════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* The latin subsets above drop box drawing and block elements, so the logo's
+   characters fell back to whatever the platform had, with advances that did
+   not match and rows that drifted apart. This second face carries exactly the
+   seven it uses plus a space, and weighs 880 bytes. */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&text=%20%E2%96%88%E2%95%90%E2%95%91%E2%95%94%E2%95%97%E2%95%9A%E2%95%9D&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -218,10 +223,7 @@ body,
    ─────────────────────────────────────────────────────────────── */
 .ascii-logo {
   color: var(--accent-primary);
-  /* Deliberately the generic family: the box and block characters are absent
-     from JetBrains Mono's web subset and get substituted, so pairing them with
-     a different primary font mixes advance widths (24.00 vs 24.08 at 40px). */
-  font-family: monospace;
+  font-family: var(--font-mono);
   white-space: pre;
   font-size: 0.7rem;
   line-height: 1.2;
