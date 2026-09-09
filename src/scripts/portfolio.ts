@@ -21,9 +21,26 @@ function closeTerminal() {
   );
   animation.onfinish = finish;
 }
+// Building the frame on click means the whole framed page loads while the
+// drawer is animating in. Hovering, touching or focusing the control is a
+// reliable signal of intent, and costs nothing for visitors who never use it.
+function ensureFrame() {
+  if (!slot || slot.firstChild) return;
+  // Isolate the existing terminal's global CSS and event lifecycle.
+  const frame = document.createElement("iframe");
+  frame.src = "/terminal";
+  frame.title = "Shaun’s interactive portfolio terminal";
+  slot.append(frame);
+}
 document
   .querySelectorAll<HTMLAnchorElement>("[data-terminal]")
   .forEach((link) => {
+    for (const signal of ["pointerenter", "touchstart", "focus"]) {
+      link.addEventListener(signal, ensureFrame, {
+        once: true,
+        passive: true,
+      });
+    }
     link.addEventListener("click", (event) => {
       if (
         !dialog ||
@@ -38,13 +55,7 @@ document
       event.preventDefault();
       opener = link;
       if (dialog.open) return;
-      if (!slot.firstChild) {
-        // Isolate the existing terminal's global CSS and event lifecycle.
-        const frame = document.createElement("iframe");
-        frame.src = "/terminal";
-        frame.title = "Shaun’s interactive portfolio terminal";
-        slot.append(frame);
-      }
+      ensureFrame();
       dialog.showModal();
       if (!motion.matches)
         dialog.animate(

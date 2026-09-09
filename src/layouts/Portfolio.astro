@@ -24,7 +24,11 @@ const {
     /><meta property="og:title" content={title} /><meta
       property="og:description"
       content={description}
-    /><link rel="icon" href="/favicon.svg" type="image/svg+xml" /><link
+    /><link rel="icon" href="/favicon.svg" type="image/svg+xml" /><!-- The terminal drawer frames /terminal, whose fonts come from these two
+      origins. Opening the handshakes here keeps them off the click path. --><link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link
       rel="preload"
       href="/fonts/dm-serif-display.ttf"
       as="font"

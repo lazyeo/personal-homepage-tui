@@ -1001,6 +1001,12 @@ dialog::backdrop {
 #terminal-frame-slot {
   height: calc(100% - 99px);
 }
+#terminal-frame-slot,
+#terminal-frame-slot iframe {
+  /* Until the framed page's own stylesheet applies, the iframe paints the
+     browser default, which on this page reads as a white flash. */
+  background: var(--screen);
+}
 #terminal-frame-slot iframe {
   display: block;
   width: 100%;
