@@ -18,11 +18,30 @@ const { project } = Astro.props;
     <a class="text-link" href="/#work">← All work</a><div class="case-title">
       <h1>{project.name}</h1><p>{project.intro}</p>
     </div><div class="case-meta">
-      <span>{project.category}</span><span>{project.stack}</span><a
-        href={project.link}
-        target="_blank"
-        rel="noopener noreferrer">Visit project ↗&#xFE0E;</a>
-    </div><ProjectVisual slug={project.slug} /><div class="case-sections">
+      <span>{project.category}</span><span>{project.stack}</span>{
+        project.link && (
+          <a href={project.link} target="_blank" rel="noopener noreferrer">
+            Visit project ↗&#xFE0E;
+          </a>
+        )
+      }
+    </div>{
+      project.slug === "ky01-launcher" ? (
+        <div class="device-viewer">
+          <iframe
+            src="/ky01/?embed=1&screen=home&lang=en"
+            title="Interactive 3D preview of the KY-01L running Pocket Home"
+            loading="lazy"
+          />
+          <p>
+            Drag to turn the device. The screen is a capture from the launcher
+            running on the physical KY-01L, not a mock-up.
+          </p>
+        </div>
+      ) : (
+        <ProjectVisual slug={project.slug} />
+      )
+    }<div class="case-sections">
       {
         [
           ["The starting point", project.problem],

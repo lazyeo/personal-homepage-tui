@@ -3,7 +3,22 @@ const { slug } = Astro.props;
 ---
 
 {
-  slug === "mrsl" ? (
+  slug === "ky01-launcher" ? (
+    <div class="project-art ky01-art">
+      <>
+        <div class="ky01-device">
+          <img
+            src="/ky01/screens/home.png"
+            width="480"
+            height="600"
+            loading="lazy"
+            alt="Pocket Home running on the KY-01L: favourites for WeRead, My Card, Phone, Messages, Notes and System settings."
+          />
+        </div>
+        <span class="ky01-caption">POCKET HOME ON THE KY-01L · 480 x 600 E-INK</span>
+      </>
+    </div>
+  ) :   slug === "mrsl" ? (
     <div class="project-art mrsl-art">
       <>
         <div class="browser-chrome">

@@ -54,6 +54,24 @@ export const projects = [
     result:
       "A usable tool built around a real family need. The worksheet on this portfolio is an illustrative sample, not a screenshot of the application.",
   },
+  {
+    slug: "ky01-launcher",
+    publicName: "Pocket Home",
+    name: "Pocket Home",
+    subtitle: "A home screen for a card-sized e-ink phone.",
+    category: "Native Android",
+    stack: "Java · Android API 25 · No dependencies",
+    intro:
+      "Pocket Home is a launcher I wrote for the Kyocera KY-01L, a card-sized phone with a 480 x 600 e-ink screen. Its stock home screen was built for a device this one is not, so I replaced it.",
+    problem:
+      "An e-ink panel redraws slowly and visibly, the screen is 480 x 600, and the firmware is Android 7.1. A home screen designed for a scrolling colour phone works against all three.",
+    contribution:
+      "A native Java launcher in a 24 KiB APK, with no runtime libraries, no WebView and no network permission. Favourites and a paged app list of six per page with explicit previous and next instead of scrolling; long press to rename an app, choose one of sixteen monochrome icons, or add a favourite; a light or dark tone. Preferences are keyed by component name, so they survive a process restart and an in-place update.",
+    decision:
+      "Refuse anything that redraws without being asked. Clock and battery update from broadcasts only while the launcher is resumed, the receiver is unregistered on pause, and the app list refreshes on resume rather than continuously. On e-ink an idle animation is not decoration, it is visible flicker.",
+    result:
+      "Running as the default home screen on my own device and verified against it: build and signature, the HOME resolver, icon and favourite persistence across a force stop, all three app pages, and both 240 and 280 density. One memory snapshot read 11.5 MB PSS, which is a reading rather than a benchmark. E-ink ghosting and touch feel need physical inspection; a screenshot cannot establish either.",
+  },
 ];
 
 // Earlier work. The terminal's /projects lists it after the selected projects;

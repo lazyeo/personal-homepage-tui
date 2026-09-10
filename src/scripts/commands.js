@@ -11,7 +11,7 @@ const projectBox = (project, secondary) => `
   <div class="ascii-box__header">[ ${project.publicName || project.name} ]</div>
   <div class="output__line">${project.intro}</div>
   <div class="output__line output__line--secondary">${secondary}</div>
-  <div class="output__line output__line--accent">→ <a href="${project.link}" target="_blank" rel="noopener">${linkLabel(project.link)}</a></div>
+  ${project.link ? `<div class="output__line output__line--accent">→ <a href="${project.link}" target="_blank" rel="noopener">${linkLabel(project.link)}</a></div>` : ''}
 </div>`;
 
 export const commands = {

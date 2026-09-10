@@ -30,6 +30,15 @@ const stories = [
     note: "Maths, writing practice and AI coloring pages become printable activities. The web app does the preparation; the useful part happens away from it.",
     cta: "See how it grew",
   },
+  {
+    name: "Pocket Home",
+    title: "A home screen that holds still.",
+    origin:
+      "The KY-01L is the size of a credit card and its screen is e-ink. Its stock home screen assumed a phone it is not, so I wrote one that takes the panel seriously.",
+    detail: "What the panel asks for",
+    note: "Native Java in a 24 KiB APK, with no libraries and no network permission. Nothing on screen redraws unless something asked it to.",
+    cta: "See how it holds still",
+  },
 ];
 ---
 
@@ -150,14 +159,16 @@ const stories = [
                     <path d="m6 18 12-12M6 6h12v12" />
                   </svg>
                 </a>
-                <a
-                  class="visit-link"
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Visit the website
-                </a>
+                {project.link && (
+                  <a
+                    class="visit-link"
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Visit the website
+                  </a>
+                )}
               </>
             </div>
             <div class="project-static-art">

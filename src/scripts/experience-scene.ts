@@ -12,6 +12,7 @@ import {
   Vec3,
   Raycast,
 } from "ogl";
+import { projects } from "../data/projects";
 
 const vertex = `
 attribute vec3 position, normal;
@@ -59,6 +60,8 @@ export function mountScene(host: HTMLElement, studio: boolean) {
   const projectExhibit = host.dataset.projectExhibit === "true";
   let selectedProject = Number(host.dataset.selected || 0);
   const projectMeshes: Mesh[] = [];
+  let deviceIndex = -1;
+  let deviceSpin = 0;
   const raycast = new Raycast();
   let inspecting = false;
   let hoveredProject = -1;
@@ -66,7 +69,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
   const inspectButton =
     document.querySelector<HTMLButtonElement>("#project-inspect");
   const hoverLabel = document.querySelector<HTMLElement>("#exhibit-hover");
-  const projectNames = ["MRSL", "CareerMatch AI", "Kids Worksheets"];
+  const projectNames = projects.map((p) => p.publicName || p.name);
   const status = document.querySelector<HTMLElement>("#scene-status")!;
   const toggle = document.querySelector<HTMLButtonElement>("#motion-toggle")!;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
@@ -326,6 +329,43 @@ export function mountScene(host: HTMLElement, studio: boolean) {
       const face = screen(item, [4.4, 2.75], [0, 0, 0.078], textures[i]);
       projectMeshes.push(face);
     }
+    // The other three exhibit a screen, so they are flat panels. This one is a
+    // device, so it is built as one: 55 x 91 x 5.3mm in the same proportions
+    // the viewer uses, carrying a real capture of the launcher rather than an
+    // illustration of it.
+    deviceIndex = layers.length;
+    const device = new Transform();
+    device.setParent(object);
+    layers.push(device);
+    const body = box(device, [1.42, 2.34, 0.15], [0, 0, 0], "#2c3130", 0.45);
+    box(device, [0.15, 0.15, 0.04], [-0.3, -0.92, 0.078], "#454c44", 0.3);
+    box(device, [0.15, 0.15, 0.04], [0.3, -0.92, 0.078], "#454c44", 0.3);
+    // The other textures are handed a finished canvas at construction. Build
+    // this one the same way, once the capture has arrived, rather than filling
+    // an empty texture in place; the layer already exists, so indices are
+    // stable whether or not the image ever lands.
+    const deviceImage = new Image();
+    deviceImage.onload = () => {
+      // Every texture that works here is handed a canvas, so hand it one.
+      const surface = document.createElement("canvas");
+      surface.width = deviceImage.naturalWidth;
+      surface.height = deviceImage.naturalHeight;
+      surface.getContext("2d")!.drawImage(deviceImage, 0, 0);
+      screen(
+        device,
+        [1.16, 1.45],
+        [0, 0.22, 0.094],
+        new Texture(gl, {
+          image: surface,
+          generateMipmaps: false,
+          minFilter: gl.LINEAR,
+        }),
+      );
+      requestRender();
+    };
+    deviceImage.src = "/ky01/screens/home.png";
+    // Registered instead of the screen so the whole slab is pickable.
+    projectMeshes.push(body);
     object.rotation.y = -0.16;
   } else if (!studio) {
     round(object, [2.85, 0.18, 2.05], [0, -1.28, 0], colors.sage);
@@ -540,7 +580,8 @@ export function mountScene(host: HTMLElement, studio: boolean) {
   function render(time: number) {
     frame = 0;
     if (!allowed()) return;
-    const ease = 1 - Math.exp(-Math.min(time - lastTime || 16, 50) / 110);
+    const stepMs = Math.min(time - lastTime || 16, 50);
+    const ease = 1 - Math.exp(-stepMs / 110);
     lastTime = time;
     turn += (targetTurn - turn) * ease;
     tilt += (targetTilt - tilt) * ease;
@@ -553,7 +594,8 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     let projectDistance = 0;
     layers.forEach((layer, i) => {
       if (projectExhibit) {
-        const seat = (i - selectedProject + 3) % 3;
+        const seat =
+          (i - selectedProject + layers.length) % layers.length;
         const arc = Math.sin(
           Math.PI * Math.min(1, Math.max(0, (time - switchTime) / 650)),
         );
@@ -561,16 +603,38 @@ export function mountScene(host: HTMLElement, studio: boolean) {
           seat === 0
             ? new Vec3(-0.35, 0.03 + arc * 0.24, 1.35 + arc * 0.6)
             : seat === 1
-              ? new Vec3(1.4, 0.48, -1.05)
-              : new Vec3(-1.7, 0.25, -0.9);
+              ? new Vec3(1.55, 0.44, -1.0)
+              : seat === 2
+                ? new Vec3(-0.1, 0.72, -2.15)
+                : new Vec3(-1.78, 0.24, -0.85);
         if (hoveredProject === i && seat !== 0) target.y += 0.1;
         const rotation =
-          seat === 0 ? (inspecting ? 0.16 : -0.08) : seat === 1 ? -0.45 : 0.42;
-        layer.rotation.y += (rotation - layer.rotation.y) * ease;
+          seat === 0
+            ? inspecting
+              ? 0.16
+              : -0.08
+            : seat === 1
+              ? -0.5
+              : seat === 2
+                ? 0.06
+                : 0.45;
+        // The device turns while it is the one being looked at, so its shape
+        // reads as a shape. It rests as soon as another project is brought
+        // forward, and never turns when reduced motion is asked for.
+        if (i === deviceIndex && seat === 0 && !reduced.matches) {
+          deviceSpin += stepMs * 0.00024;
+          layer.rotation.y = rotation + deviceSpin;
+          projectDistance += 1;
+        } else {
+          if (i === deviceIndex) deviceSpin = 0;
+          layer.rotation.y += (rotation - layer.rotation.y) * ease;
+        }
         layer.position.lerp(target, ease);
         projectDistance +=
           layer.position.distance(target) +
-          Math.abs(rotation - layer.rotation.y) +
+          (i === deviceIndex && seat === 0
+            ? 0
+            : Math.abs(rotation - layer.rotation.y)) +
           (arc > 0.001 ? 0.01 : 0);
         return;
       }
@@ -657,7 +721,12 @@ export function mountScene(host: HTMLElement, studio: boolean) {
   if (inspectButton) on(inspectButton, "click", inspectProject);
   on(host, "project-change", (event) => {
     const index = (event as CustomEvent<number>).detail;
-    if (!projectExhibit || !Number.isInteger(index) || index < 0 || index > 2)
+    if (
+      !projectExhibit ||
+      !Number.isInteger(index) ||
+      index < 0 ||
+      index >= layers.length
+    )
       return;
     if (selectedProject !== index) switchTime = performance.now();
     selectedProject = index;
