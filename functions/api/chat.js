@@ -23,16 +23,16 @@ const REVIEWED_PROJECT_CONTEXT = projects.map((project) => `## ${project.publicN
 ${project.intro}
 My contribution: ${project.contribution}
 Design decision: ${project.decision}
-Technologies: ${project.stack}
-Public URL: ${project.link}
+Technologies: ${project.stack}${project.link ? `
+Public URL: ${project.link}` : ''}
 Evidence and limits: ${project.result}`).join('\n\n');
 
 // The terminal's /projects lists these too, so the chat has to know them or the
 // same terminal window would name a project the assistant has never heard of.
 const ARCHIVE_PROJECT_CONTEXT = archiveProjects.map((project) => `## ${project.name}
 ${project.intro} ${project.note}
-Technologies: ${project.stack}
-Public URL: ${project.link}`).join('\n\n');
+Technologies: ${project.stack}${project.link ? `
+Public URL: ${project.link}` : ''}`).join('\n\n');
 
 const FALLBACK_PORTFOLIO_CONTEXT = `# Shaun Zhang - Portfolio Context
 
