@@ -42,6 +42,16 @@ function ensureFrame() {
   frame.title = "Shaun’s interactive portfolio terminal";
   slot.append(frame);
 }
+// Touch devices reach the click roughly 90ms after touchstart, nowhere near
+// enough to load the framed page, so warm it once this page has gone idle.
+if (matchMedia("(hover: none)").matches) {
+  const warm = () =>
+    "requestIdleCallback" in window
+      ? requestIdleCallback(ensureFrame, { timeout: 4000 })
+      : setTimeout(ensureFrame, 1500);
+  if (document.readyState === "complete") warm();
+  else addEventListener("load", warm, { once: true });
+}
 document
   .querySelectorAll<HTMLAnchorElement>("[data-terminal]")
   .forEach((link) => {

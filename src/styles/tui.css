@@ -3,12 +3,6 @@
    Terminal User Interface aesthetics for the web
    ═══════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
-/* The latin subsets above drop box drawing and block elements, so the logo's
-   characters fell back to whatever the platform had, with advances that did
-   not match and rows that drifted apart. This second face carries exactly the
-   seven it uses plus a space, and weighs 880 bytes. */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&text=%20%E2%96%88%E2%95%90%E2%95%91%E2%95%94%E2%95%97%E2%95%9A%E2%95%9D&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;

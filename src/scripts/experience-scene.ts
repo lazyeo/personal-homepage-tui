@@ -472,7 +472,10 @@ export function mountScene(host: HTMLElement, studio: boolean) {
 
   let frame = 0,
     visible = true,
-    paused = reduced.matches,
+    // Reduced motion suppresses the establishing move below, not the ability
+    // to touch the thing: motion the visitor asks for by dragging is not the
+    // motion the preference is about. Only the toggle pauses now.
+    paused = false,
     lost = false,
     disposed = false;
   let turn = object.rotation.y,
@@ -517,7 +520,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
   setCameraTarget();
   cameraPosition.copy(targetCamera);
   // One short establishing move; the scene has no perpetual ambient animation.
-  if (!paused) {
+  if (!reduced.matches) {
     cameraPosition.z += 1;
     turn -= 0.2;
   }
@@ -634,11 +637,6 @@ export function mountScene(host: HTMLElement, studio: boolean) {
   }
   on(toggle, "click", () => {
     paused = !paused;
-    updateStatus();
-    requestRender();
-  });
-  on(reduced, "change", () => {
-    paused = reduced.matches;
     updateStatus();
     requestRender();
   });
