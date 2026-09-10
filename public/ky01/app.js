@@ -126,6 +126,16 @@ if (embedded) {
   const hold = () => { holdUntil = Date.now() + 12000; };
   for (const event of ['pointerdown', 'wheel', 'keydown'])
     stage.addEventListener(event, hold, { passive: true });
+  // The stage is focusable so it can be driven from the keyboard, and it keeps
+  // its ring for that. But focusing it from a click drew a full-width rule
+  // across the seam above the controls, which reads as a divider, not focus.
+  stage.addEventListener('pointerdown', () => {
+    stage.dataset.pointerFocus = 'true';
+  }, { passive: true });
+  for (const event of ['keydown', 'blur'])
+    stage.addEventListener(event, () => {
+      delete stage.dataset.pointerFocus;
+    }, { passive: true });
   for (const button of document.querySelectorAll('.view-controls button'))
     button.addEventListener('click', hold);
   setInterval(() => {
