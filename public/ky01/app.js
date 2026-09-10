@@ -107,7 +107,35 @@ function setView(v){spin(false);pitch=v==='angle'?-.1:0;yaw=v==='back'?Math.PI:v
 function clearView(){document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed','false'));}
 function updateEmbed(){const url=new URL('./',location.href);url.search=new URLSearchParams({embed:'1',screen:selected,lang:chinese?'zh':'en'}).toString();$('#embed-code').value=`<iframe src="${url.href}" title="KY-01L interactive 3D preview" style="width:100%;height:620px;border:0;background:transparent" loading="lazy"></iframe>`;$('#embed-open').href=url.href;}
 async function selectScreen(name){if(!names.includes(name))name='home';const seq=++loadSequence;try{let t=textureCache.get(name);if(!t){t=await new THREE.TextureLoader().loadAsync(`screens/${name}.png`);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=renderer.capabilities.getMaxAnisotropy();textureCache.set(name,t);}if(seq!==loadSequence)return;if(uploadTexture){uploadTexture.dispose();uploadTexture=null;}screen.material.map=t;screen.material.needsUpdate=true;selected=name;document.querySelectorAll('[data-screen]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.screen===name)));$('#loading').hidden=true;$('#status').textContent='';stage.dataset.screen=name;updateEmbed();invalidate();}catch{$('#loading').textContent='Screen could not load. Reload to retry. / 截图加载失败，请刷新重试。';$('#loading').hidden=false;}}
-document.querySelectorAll('[data-screen]').forEach(b=>b.onclick=()=>selectScreen(b.dataset.screen));
+document.querySelectorAll('[data-screen]').forEach(b=>b.onclick=()=>selectScreen(b.dataset.screen));// Embedded, the screenshot rail is hidden, so a visitor would only ever meet
+// the home screen. Cycle the bundled captures instead, and hold off while they
+// have hold of the device rather than yanking the screen out from under them.
+if (embedded) {
+  const labels = {
+    home: 'Home',
+    board: 'Board',
+    'board-zh': 'Board \u00b7 \u4e2d\u6587',
+    cover: 'Sleep cover',
+  };
+  const caption = document.createElement('p');
+  caption.id = 'screen-caption';
+  caption.textContent = labels[selected] || selected;
+  $('#hint').after(caption);
+  let index = Math.max(0, names.indexOf(selected));
+  let holdUntil = 0;
+  const hold = () => { holdUntil = Date.now() + 12000; };
+  for (const event of ['pointerdown', 'wheel', 'keydown'])
+    stage.addEventListener(event, hold, { passive: true });
+  for (const button of document.querySelectorAll('.view-controls button'))
+    button.addEventListener('click', hold);
+  setInterval(() => {
+    if (reduced.matches || document.hidden || Date.now() < holdUntil) return;
+    index = (index + 1) % names.length;
+    selectScreen(names[index]);
+    caption.textContent = labels[names[index]] || names[index];
+  }, 5000);
+}
+
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
 $('#spin').onclick=()=>{clearView();spin(!auto);};$('#reset').onclick=()=>{zoom=215;setView('angle');};
 const pointers=new Map();let previousDistance=0;

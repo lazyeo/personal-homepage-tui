@@ -9,3 +9,4 @@ button[aria-pressed=true],
 body.embed .view-controls button[aria-pressed=true],
 .screens button[aria-pressed=true]{background:#8ec07c;border-color:#8ec07c;color:#1d2021}
 body.embed .view-controls button{background:#32302f}
+#screen-caption{font-size:12px;text-align:center;color:var(--muted);margin:0 0 12px;letter-spacing:.3px}
