@@ -6,6 +6,13 @@ import MobileCommands from "../components/MobileCommands.astro";
 ---
 
 <Layout title="Shaun | Terminal">
+  <script is:inline>
+    // Whether this page is framed is knowable immediately. Deciding it in a
+    // deferred module painted the standalone return bar inside the drawer
+    // first, then removed it along with the 54px it occupied.
+    if (window.self !== window.top)
+      document.documentElement.classList.add("terminal-embedded");
+  </script>
   <nav
     class="terminal-return"
     id="terminal-return"
@@ -53,11 +60,6 @@ import MobileCommands from "../components/MobileCommands.astro";
 <script>
   import { initTerminal } from "../scripts/terminal.js";
 
-  if (window.self !== window.top) {
-    document.getElementById("terminal-return")?.setAttribute("hidden", "");
-    document.documentElement.classList.add("terminal-embedded");
-  }
-
   // Initialize terminal on page load
   initTerminal();
   document.addEventListener("astro:page-load", initTerminal);
@@ -101,6 +103,9 @@ import MobileCommands from "../components/MobileCommands.astro";
   }
   .terminal-embedded .terminal {
     height: 100dvh;
+  }
+  .terminal-embedded .terminal-return {
+    display: none;
   }
   @media (max-width: 420px) {
     .terminal-return span {

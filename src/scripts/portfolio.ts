@@ -5,14 +5,24 @@ const expand = document.querySelector<HTMLButtonElement>("#expand-terminal");
 const motion = matchMedia("(prefers-reduced-motion: reduce)");
 let closing = false;
 let opener: HTMLElement | null = null;
+// The drawer is a view, so the platform Back gesture should leave it rather
+// than leave the site. Push an entry without touching the URL: a shareable
+// address would then have to survive a reload, and the drawer does not.
+let historyEntry = false;
 
-function closeTerminal() {
+function closeTerminal(fromHistory = false) {
   if (!dialog?.open || closing) return;
   closing = true;
   dialog.getAnimations().forEach((animation) => animation.cancel());
   const finish = () => {
     dialog.close();
     closing = false;
+    if (historyEntry) {
+      historyEntry = false;
+      // Closing any other way has to consume the entry we pushed, or Back
+      // would afterwards step through a view that is no longer open.
+      if (!fromHistory) history.back();
+    }
   };
   if (motion.matches) return finish();
   const animation = dialog.animate(
@@ -57,6 +67,10 @@ document
       if (dialog.open) return;
       ensureFrame();
       dialog.showModal();
+      if (!historyEntry) {
+        history.pushState({ terminalOpen: true }, "");
+        historyEntry = true;
+      }
       if (!motion.matches)
         dialog.animate(
           [{ transform: "translateX(100%)" }, { transform: "translateX(0)" }],
@@ -71,7 +85,11 @@ expand?.addEventListener("click", () => {
   expand.textContent = expanded ? "Back to sidebar" : "Full screen";
   expand.setAttribute("aria-pressed", String(expanded));
 });
-close?.addEventListener("click", closeTerminal);
+close?.addEventListener("click", () => closeTerminal());
+addEventListener("popstate", () => {
+  if (dialog?.open) closeTerminal(true);
+  else historyEntry = false;
+});
 dialog?.addEventListener("cancel", (event) => {
   event.preventDefault();
   closeTerminal();

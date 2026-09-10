@@ -105,6 +105,17 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
     line-height: 1.2;
   }
 
+  /* The block face has not arrived at parse time, so the first check always
+     fails and the ASCII logo would paint before being replaced. Reserve the
+     taller logo's box and show neither until the answer is known. Without
+     scripting the attribute is never set and the ASCII logo simply shows. */
+  .ascii-header__logo {
+    min-height: 4.2rem;
+  }
+  [data-ascii-header][data-deciding] .ascii-logo {
+    visibility: hidden;
+  }
+
   [data-ascii-header][data-blocks='aligned'] .ascii-logo--desktop {
     display: block;
   }
@@ -153,15 +164,21 @@ const tagline = "Christchurch · Product-Minded Vibe Coder";
       );
     }
 
-    function apply() {
+    function settle() {
       if (aligned()) header.dataset.blocks = 'aligned';
+      delete header.dataset.deciding;
     }
 
-    // Once during parsing, so a platform whose own font already works shows no
-    // flash, and again once the box-drawing face has actually loaded.
-    apply();
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(apply);
+    // Check once during parsing: a platform whose own font already carries the
+    // glyphs settles immediately, with nothing hidden. Otherwise stay blank
+    // until the box-drawing face resolves, rather than showing the wrong logo.
+    header.dataset.deciding = '';
+    if (aligned()) {
+      settle();
+    } else if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(settle);
+    } else {
+      settle();
     }
   })();
 </script>
