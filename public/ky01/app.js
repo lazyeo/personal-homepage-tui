@@ -126,16 +126,42 @@ if (embedded) {
   const hold = () => { holdUntil = Date.now() + 12000; };
   for (const event of ['pointerdown', 'wheel', 'keydown'])
     stage.addEventListener(event, hold, { passive: true });
-  // The stage is focusable so it can be driven from the keyboard, and it keeps
-  // its ring for that. But focusing it from a click drew a full-width rule
-  // across the seam above the controls, which reads as a divider, not focus.
-  stage.addEventListener('pointerdown', () => {
-    stage.dataset.pointerFocus = 'true';
-  }, { passive: true });
-  for (const event of ['keydown', 'blur'])
-    stage.addEventListener(event, () => {
-      delete stage.dataset.pointerFocus;
-    }, { passive: true });
+  // The stage is focusable so the device can be turned from the keyboard, and
+  // it keeps its ring for that. Focusing it from a click drew a full-width rule
+  // on the seam above the controls, which reads as a divider rather than focus.
+  //
+  // Suppressing that by marking pointer focus was not enough: the viewer's own
+  // pointerdown handler is registered first and focuses the stage inside it, so
+  // the ring was already painted by the time the mark was set. Track the input
+  // that is actually in use instead, from the document and in the capture phase
+  // so it is known first, and let the ring default to off.
+  const syncModality = (keyboard) => {
+    stage.toggleAttribute('data-keyboard', keyboard);
+  };
+  // A bare modifier is not navigation, and neither is a shortcut: holding Alt,
+  // or Alt-Tabbing to another window, should not light up a focus ring here.
+  const modifiers = new Set([
+    'Alt',
+    'Control',
+    'Shift',
+    'Meta',
+    'CapsLock',
+    'ContextMenu',
+  ]);
+  document.addEventListener(
+    'keydown',
+    (event) => {
+      if (modifiers.has(event.key)) return;
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      syncModality(true);
+    },
+    { capture: true, passive: true },
+  );
+  for (const event of ['pointerdown', 'pointerup'])
+    document.addEventListener(event, () => syncModality(false), {
+      capture: true,
+      passive: true,
+    });
   for (const button of document.querySelectorAll('.view-controls button'))
     button.addEventListener('click', hold);
   setInterval(() => {
