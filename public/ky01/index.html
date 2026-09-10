@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KY-01L · Pocket in 3D</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><a class="wordmark" href="./">Pocket / Shaun</a><button id="language" aria-label="Switch to Chinese">中文</button></header>
+<main>
+<section class="intro"><h1>Pocket, in every dimension.</h1><p id="subtitle">Shaun OS on the KY-01L. A little device, a closer look.</p></section>
+<section class="viewer" aria-label="Interactive KY-01L preview">
+<div id="stage" tabindex="0" role="img" aria-label="3D KY-01L. Drag to rotate, scroll or pinch to zoom. Arrow keys rotate; plus and minus zoom."><div id="loading" role="status">Loading the device…</div></div>
+<div class="view-controls" aria-label="View controls"><button data-view="front">Front</button><button data-view="angle" aria-pressed="true">Angle</button><button data-view="back">Back</button><button id="spin" aria-pressed="false">Auto-rotate</button><button id="reset">Reset</button></div>
+<p id="hint">Drag to rotate · Scroll or pinch to zoom</p>
+</section>
+<aside>
+<div class="screen-heading"><h2 id="screen-title">On the screen</h2><span>480 × 600</span></div>
+<div id="screens" class="screens"><button data-screen="home" aria-pressed="true"><img src="screens/home.png" alt=""><span>Home</span></button><button data-screen="board" aria-pressed="false"><img src="screens/board.png" alt=""><span>Board / EN</span></button><button data-screen="board-zh" aria-pressed="false"><img src="screens/board-zh.png" alt=""><span>Board / 中文</span></button><button data-screen="cover" aria-pressed="false"><img src="screens/cover.png" alt=""><span>Sleep cover</span></button></div>
+<label class="upload" for="upload" id="upload-label">Use your screenshot<input type="file" id="upload" accept="image/png,image/jpeg,image/webp"></label><p class="small" id="upload-help">PNG, JPG or WebP · Stays in your browser.</p>
+<p id="status" role="status" class="small"></p>
+<div class="details"><h2>KY-01L</h2><p id="device-detail">Ink Black. E-paper. Card-sized.</p><p class="dimensions">91 × 55 × 5.3 <span>mm</span></p><p class="small" id="model-note">Display model with approximate hardware details. Board screens contain demo data.</p></div>
+<details id="embed-details"><summary id="embed-title">Embed this preview</summary><p class="small" id="embed-help">Host this folder on your website, then copy the iframe. The selected bundled screen is included.</p><textarea id="embed-code" readonly aria-label="iframe embed code"></textarea><button id="copy">Copy embed code</button><a id="embed-open" href="?embed=1" target="_blank" rel="noopener">Open minimal viewer</a></details>
+</aside>
+</main>
+<footer><span id="footer-note">Built around real device screenshots.</span><a href="https://www.docomo.ne.jp/support/product/ky01l/spec.html" target="_blank" rel="noopener" id="spec-link">Device specifications ↗</a></footer>
+<script type="module" src="app.js"></script>
+</body></html>
