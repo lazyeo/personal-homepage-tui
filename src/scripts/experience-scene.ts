@@ -70,7 +70,6 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     document.querySelector<HTMLButtonElement>("#project-inspect");
   const hoverLabel = document.querySelector<HTMLElement>("#exhibit-hover");
   const projectNames = projects.map((p) => p.publicName || p.name);
-  const deviceOnly = host.dataset.deviceOnly === "true";
   const status = document.querySelector<HTMLElement>("#scene-status");
   const toggle = document.querySelector<HTMLButtonElement>("#motion-toggle");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
@@ -264,9 +263,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     image.src = "/ky01/screens/home.png";
     return body;
   }
-  if (deviceOnly) {
-    buildDevice(object, 1.55);
-  } else if (projectExhibit) {
+  if (projectExhibit) {
     round(object, [2.9, 0.17, 1.9], [0, -1.63, 0], colors.sage);
     round(object, [2.67, 0.03, 1.75], [0, -1.53, 0], "#c8d0bb");
     shadow.position.y = -1.74;
@@ -550,13 +547,11 @@ export function mountScene(host: HTMLElement, studio: boolean) {
         : view === 2
           ? 6.3
           : 10.5
-      : deviceOnly
-        ? 9.2
-        : projectExhibit
-          ? inspecting
-            ? 8.3
-            : 10.1
-          : 9.8;
+      : projectExhibit
+        ? inspecting
+          ? 8.3
+          : 10.1
+        : 9.8;
     targetCamera.set(
       studio && view === 2 ? 1 : 0,
       studio
@@ -565,12 +560,10 @@ export function mountScene(host: HTMLElement, studio: boolean) {
           : view === 2
             ? 2.7
             : 5.5
-        : deviceOnly
-          ? 0.35
-          : projectExhibit
-            ? 1.7
-            : 2.35,
-      distance * (narrow ? (projectExhibit || deviceOnly ? 1.25 : 1.15) : 1),
+        : projectExhibit
+          ? 1.7
+          : 2.35,
+      distance * (narrow ? (projectExhibit ? 1.25 : 1.15) : 1),
     );
   }
   setCameraTarget();
@@ -607,7 +600,6 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     camera.lookAt(look);
     object.rotation.y = turn;
     object.rotation.x = tilt;
-    if (deviceOnly && !reduced.matches && !drag) targetTurn += stepMs * 0.00022;
     let projectDistance = 0;
     layers.forEach((layer, i) => {
       if (projectExhibit) {
@@ -671,7 +663,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
         cameraPosition.distance(targetCamera) >
       0.001;
     host.dataset.animating = String(unsettled);
-    if (unsettled || (deviceOnly && !reduced.matches && !drag)) requestRender();
+    if (unsettled) requestRender();
   }
   function resize() {
     renderer.setSize(host.clientWidth, host.clientHeight);

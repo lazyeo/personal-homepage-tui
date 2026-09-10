@@ -5,7 +5,13 @@
 <title>KY-01L · Pocket in 3D</title>
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body><script>
+  // Whether this is an embed is knowable from the URL immediately. Leaving it
+  // to the module below painted the header, the intro and the screenshot rail
+  // first, then removed them.
+  if (new URLSearchParams(location.search).has('embed'))
+    document.body.className = (document.body.className + ' embed').trim();
+</script>
 <header><a class="wordmark" href="./">Pocket / Shaun</a><button id="language" aria-label="Switch to Chinese">中文</button></header>
 <main>
 <section class="intro"><h1>Pocket, in every dimension.</h1><p id="subtitle">Shaun OS on the KY-01L. A little device, a closer look.</p></section>

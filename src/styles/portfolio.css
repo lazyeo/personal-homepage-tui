@@ -1082,23 +1082,14 @@ dialog::backdrop {
   margin: 40px auto 0;
   max-width: 940px;
 }
-#device-stage {
+.device-viewer iframe {
   display: block;
   width: 100%;
   height: 620px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: var(--surface-raised);
-  touch-action: pan-y;
-  cursor: grab;
-}
-#device-stage:active {
-  cursor: grabbing;
-}
-#device-stage canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
+  /* The framed viewer paints its own paper; match it so nothing flashes. */
+  background: #f1f0e9;
 }
 .device-viewer p {
   margin: 14px 0 0;
@@ -1205,7 +1196,7 @@ dialog::backdrop {
   }
 }
 @media (max-width: 760px) {
-  #device-stage {
+  .device-viewer iframe {
     height: 460px;
   }
   .wrap {
