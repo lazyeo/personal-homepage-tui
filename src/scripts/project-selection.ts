@@ -1,14 +1,12 @@
+import { projects } from "../data/projects";
 const showcase = document.querySelector<HTMLElement>(".project-showcase")!;
 const host = showcase.querySelector<HTMLElement>("#scene")!;
 const panels = Array.from(
   showcase.querySelectorAll<HTMLElement>("[data-project-panel]"),
 );
 const motion = matchMedia("(prefers-reduced-motion: reduce)");
-const notes = [
-  "Live MRSL homepage · captured 8 September 2026.",
-  "CareerMatch workflow illustration, not an application screenshot.",
-  "Illustrative worksheet, not an application screenshot.",
-];
+// Kept with the projects, so reordering them cannot mislabel the evidence.
+const notes = projects.map((project) => project.evidenceNote);
 let selected = 0;
 function selectProject(index: number, animate = true) {
   if (!Number.isInteger(index) || index < 0 || index >= panels.length) return;

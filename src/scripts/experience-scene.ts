@@ -70,8 +70,9 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     document.querySelector<HTMLButtonElement>("#project-inspect");
   const hoverLabel = document.querySelector<HTMLElement>("#exhibit-hover");
   const projectNames = projects.map((p) => p.publicName || p.name);
-  const status = document.querySelector<HTMLElement>("#scene-status")!;
-  const toggle = document.querySelector<HTMLButtonElement>("#motion-toggle")!;
+  const deviceOnly = host.dataset.deviceOnly === "true";
+  const status = document.querySelector<HTMLElement>("#scene-status");
+  const toggle = document.querySelector<HTMLButtonElement>("#motion-toggle");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const coarse = matchMedia("(pointer: coarse)");
   const canvas = document.createElement("canvas");
@@ -225,7 +226,47 @@ export function mountScene(host: HTMLElement, studio: boolean) {
   shadow.position.y = -1.41;
   shadow.setParent(scene);
   const layers: Transform[] = [];
-  if (projectExhibit) {
+  function buildDevice(parent: Transform, k: number) {
+    const body = box(
+      parent,
+      [2.05 * k, 3.37 * k, 0.22 * k],
+      [0, 0, 0],
+      "#2c3130",
+      0.45,
+    );
+    for (const x of [-0.43, 0.43])
+      box(
+        parent,
+        [0.22 * k, 0.22 * k, 0.05 * k],
+        [x * k, -1.33 * k, 0.113 * k],
+        "#454c44",
+        0.3,
+      );
+    // ogl uploads nothing from an HTMLImageElement here, so draw it first.
+    const image = new Image();
+    image.onload = () => {
+      const surface = document.createElement("canvas");
+      surface.width = image.naturalWidth;
+      surface.height = image.naturalHeight;
+      surface.getContext("2d")!.drawImage(image, 0, 0);
+      screen(
+        parent,
+        [1.67 * k, 2.09 * k],
+        [0, 0.32 * k, 0.135 * k],
+        new Texture(gl, {
+          image: surface,
+          generateMipmaps: false,
+          minFilter: gl.LINEAR,
+        }),
+      );
+      requestRender();
+    };
+    image.src = "/ky01/screens/home.png";
+    return body;
+  }
+  if (deviceOnly) {
+    buildDevice(object, 1.55);
+  } else if (projectExhibit) {
     round(object, [2.9, 0.17, 1.9], [0, -1.63, 0], colors.sage);
     round(object, [2.67, 0.03, 1.75], [0, -1.53, 0], "#c8d0bb");
     shadow.position.y = -1.74;
@@ -310,62 +351,33 @@ export function mountScene(host: HTMLElement, studio: boolean) {
         minFilter: gl.LINEAR,
       });
     }
-    const textures = [
-      screenTexture,
-      exhibitTexture(false),
-      exhibitTexture(true),
-    ];
-    for (let i = 0; i < 3; i++) {
+    // Built from the same list, in the same order, so a change to the data
+    // cannot leave the exhibit showing one project under another's name.
+    const panelTexture: Record<string, ReturnType<typeof exhibitTexture>> = {
+      mrsl: screenTexture,
+      careermatch: exhibitTexture(false),
+      "kids-worksheets": exhibitTexture(true),
+    };
+    projects.forEach((project) => {
       const item = new Transform();
       item.setParent(object);
       layers.push(item);
+      if (project.slug === "ky01-launcher") {
+        deviceIndex = layers.length - 1;
+        projectMeshes.push(buildDevice(item, 1));
+        return;
+      }
       box(
         item,
         [4.6, 2.95, 0.14],
         [0, 0, 0],
-        i === 1 ? "#595b79" : colors.ink,
+        project.slug === "careermatch" ? "#595b79" : colors.ink,
         0.5,
       );
-      const face = screen(item, [4.4, 2.75], [0, 0, 0.078], textures[i]);
-      projectMeshes.push(face);
-    }
-    // The other three exhibit a screen, so they are flat panels. This one is a
-    // device, so it is built as one: 55 x 91 x 5.3mm in the same proportions
-    // the viewer uses, carrying a real capture of the launcher rather than an
-    // illustration of it.
-    deviceIndex = layers.length;
-    const device = new Transform();
-    device.setParent(object);
-    layers.push(device);
-    const body = box(device, [1.42, 2.34, 0.15], [0, 0, 0], "#2c3130", 0.45);
-    box(device, [0.15, 0.15, 0.04], [-0.3, -0.92, 0.078], "#454c44", 0.3);
-    box(device, [0.15, 0.15, 0.04], [0.3, -0.92, 0.078], "#454c44", 0.3);
-    // The other textures are handed a finished canvas at construction. Build
-    // this one the same way, once the capture has arrived, rather than filling
-    // an empty texture in place; the layer already exists, so indices are
-    // stable whether or not the image ever lands.
-    const deviceImage = new Image();
-    deviceImage.onload = () => {
-      // Every texture that works here is handed a canvas, so hand it one.
-      const surface = document.createElement("canvas");
-      surface.width = deviceImage.naturalWidth;
-      surface.height = deviceImage.naturalHeight;
-      surface.getContext("2d")!.drawImage(deviceImage, 0, 0);
-      screen(
-        device,
-        [1.16, 1.45],
-        [0, 0.22, 0.094],
-        new Texture(gl, {
-          image: surface,
-          generateMipmaps: false,
-          minFilter: gl.LINEAR,
-        }),
+      projectMeshes.push(
+        screen(item, [4.4, 2.75], [0, 0, 0.078], panelTexture[project.slug]),
       );
-      requestRender();
-    };
-    deviceImage.src = "/ky01/screens/home.png";
-    // Registered instead of the screen so the whole slab is pickable.
-    projectMeshes.push(body);
+    });
     object.rotation.y = -0.16;
   } else if (!studio) {
     round(object, [2.85, 0.18, 2.05], [0, -1.28, 0], colors.sage);
@@ -538,11 +550,13 @@ export function mountScene(host: HTMLElement, studio: boolean) {
         : view === 2
           ? 6.3
           : 10.5
-      : projectExhibit
-        ? inspecting
-          ? 8.3
-          : 10.1
-        : 9.8;
+      : deviceOnly
+        ? 9.2
+        : projectExhibit
+          ? inspecting
+            ? 8.3
+            : 10.1
+          : 9.8;
     targetCamera.set(
       studio && view === 2 ? 1 : 0,
       studio
@@ -551,10 +565,12 @@ export function mountScene(host: HTMLElement, studio: boolean) {
           : view === 2
             ? 2.7
             : 5.5
-        : projectExhibit
-          ? 1.7
-          : 2.35,
-      distance * (narrow ? (projectExhibit ? 1.25 : 1.15) : 1),
+        : deviceOnly
+          ? 0.35
+          : projectExhibit
+            ? 1.7
+            : 2.35,
+      distance * (narrow ? (projectExhibit || deviceOnly ? 1.25 : 1.15) : 1),
     );
   }
   setCameraTarget();
@@ -591,6 +607,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     camera.lookAt(look);
     object.rotation.y = turn;
     object.rotation.x = tilt;
+    if (deviceOnly && !reduced.matches && !drag) targetTurn += stepMs * 0.00022;
     let projectDistance = 0;
     layers.forEach((layer, i) => {
       if (projectExhibit) {
@@ -622,8 +639,10 @@ export function mountScene(host: HTMLElement, studio: boolean) {
         // reads as a shape. It rests as soon as another project is brought
         // forward, and never turns when reduced motion is asked for.
         if (i === deviceIndex && seat === 0 && !reduced.matches) {
-          deviceSpin += stepMs * 0.00024;
-          layer.rotation.y = rotation + deviceSpin;
+          // Swayed rather than spun: this one leads the exhibit, and a full
+          // turn would leave a visitor looking at the back of a black slab.
+          deviceSpin += stepMs * 0.00035;
+          layer.rotation.y = rotation + Math.sin(deviceSpin) * 0.42;
           projectDistance += 1;
         } else {
           if (i === deviceIndex) deviceSpin = 0;
@@ -652,7 +671,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
         cameraPosition.distance(targetCamera) >
       0.001;
     host.dataset.animating = String(unsettled);
-    if (unsettled) requestRender();
+    if (unsettled || (deviceOnly && !reduced.matches && !drag)) requestRender();
   }
   function resize() {
     renderer.setSize(host.clientWidth, host.clientHeight);
@@ -679,9 +698,10 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     target.addEventListener(name, listener, { signal: abort.signal });
   function updateStatus() {
     host.dataset.ready = String(!paused && !lost);
+    if (!toggle || !status) return;
     toggle.textContent = paused ? "Enable interactive 3D" : "Use static view";
     toggle.setAttribute("aria-pressed", String(!paused));
-    status.textContent = paused
+    if (status) status.textContent = paused
       ? "Static view · motion is off"
       : projectExhibit
         ? "Pick an edge. Bring a different story forward."
@@ -699,11 +719,12 @@ export function mountScene(host: HTMLElement, studio: boolean) {
       if (hoverLabel) hoverLabel.hidden = true;
     }
   }
-  on(toggle, "click", () => {
-    paused = !paused;
-    updateStatus();
-    requestRender();
-  });
+  if (toggle)
+    on(toggle, "click", () => {
+      paused = !paused;
+      updateStatus();
+      requestRender();
+    });
   on(document, "visibilitychange", requestRender);
   function inspectProject() {
     if (!projectExhibit || paused || lost) return;
@@ -852,12 +873,12 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     event.preventDefault();
     lost = true;
     updateStatus();
-    status.textContent = "Static view · graphics context interrupted";
-    toggle.hidden = true;
+    if (status) status.textContent = "Static view · graphics context interrupted";
+    if (toggle) toggle.hidden = true;
   });
   // Reload is explicit after context loss: never leave a blank canvas or silently rebuild resources.
   on(canvas, "webglcontextrestored", () => {
-    status.textContent = "Static view · reload to restore 3D";
+    if (status) status.textContent = "Static view · reload to restore 3D";
   });
   on(window, "pagehide", (event) => {
     if ((event as PageTransitionEvent).persisted) return;
@@ -877,11 +898,11 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     requestRender();
   };
   preview.onerror = () => {
-    status.textContent = "3D study · website preview unavailable";
+    if (status) status.textContent = "3D study · website preview unavailable";
   };
   preview.src = "/images/mrsl-live-2026-09-08.webp";
   host.append(canvas);
-  toggle.hidden = false;
+  if (toggle) toggle.hidden = false;
   updateStatus();
   resize();
 }

@@ -28,11 +28,7 @@ const { project } = Astro.props;
     </div>{
       project.slug === "ky01-launcher" ? (
         <div class="device-viewer">
-          <iframe
-            src="/ky01/?embed=1&screen=home&lang=en"
-            title="Interactive 3D preview of the KY-01L running Pocket Home"
-            loading="lazy"
-          />
+          <div id="device-stage" data-device-only="true" />
           <p>
             Drag to turn the device. The screen is a capture from the launcher
             running on the physical KY-01L, not a mock-up.
@@ -67,3 +63,26 @@ const { project } = Astro.props;
     </div>
   </article></Portfolio
 >
+
+<script>
+  // The same scene the homepage exhibit uses, in its bare device mode: no
+  // second WebGL library, and nothing to flash past before it settles.
+  const stage = document.querySelector<HTMLElement>("#device-stage");
+  if (stage) {
+    const watch = new IntersectionObserver(
+      async (entries, observer) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        try {
+          const { mountScene } = await import("../../scripts/experience-scene");
+          mountScene(stage, false);
+        } catch (error) {
+          console.warn("Device view unavailable.", error);
+          stage.dataset.failed = "true";
+        }
+      },
+      { rootMargin: "250px" },
+    );
+    watch.observe(stage);
+  }
+</script>

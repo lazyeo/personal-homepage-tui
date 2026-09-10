@@ -2,8 +2,11 @@
 import { projects } from "../data/projects";
 import ProjectVisual from "./ProjectVisual.astro";
 import "../styles/project-showcase.css";
+// Keyed by slug, not by position: these are paired with src/data/projects.ts
+// and reordering that list must not reassign anyone's story.
 const stories = [
   {
+    slug: "mrsl",
     name: "MRSL",
     title: "A better front door.",
     origin:
@@ -13,6 +16,7 @@ const stories = [
     cta: "Step inside the rebuild",
   },
   {
+    slug: "careermatch",
     name: "CareerMatch AI",
     title: "Finding the thread.",
     origin:
@@ -22,6 +26,7 @@ const stories = [
     cta: "Follow the thinking",
   },
   {
+    slug: "kids-worksheets",
     name: "Kids Worksheets",
     title: "Made for a small human.",
     origin:
@@ -31,6 +36,7 @@ const stories = [
     cta: "See how it grew",
   },
   {
+    slug: "ky01-launcher",
     name: "Pocket Home",
     title: "A home screen that holds still.",
     origin:
@@ -40,6 +46,7 @@ const stories = [
     cta: "See how it holds still",
   },
 ];
+const storyFor = (slug: string) => stories.find((s) => s.slug === slug)!;
 ---
 
 <section
@@ -116,7 +123,7 @@ const stories = [
         </div>
       </div>
       <p class="project-preview-note" id="preview-note">
-        Live MRSL homepage · captured 8 September 2026.
+        {projects[0].evidenceNote}
       </p>
     </div>
     <div
@@ -129,32 +136,32 @@ const stories = [
         projects.map((project, i) => (
           <article
             data-project-panel={i}
-            data-project-name={stories[i].name}
+            data-project-name={storyFor(project.slug).name}
             id={`project-${project.slug}`}
             aria-labelledby={`title-${project.slug}`}
           >
-            <h3 id={`title-${project.slug}`}>{stories[i].title}</h3>
+            <h3 id={`title-${project.slug}`}>{storyFor(project.slug).title}</h3>
             <p class="project-kind">
-              {stories[i].name} <span aria-hidden="true">/</span>{" "}
+              {storyFor(project.slug).name} <span aria-hidden="true">/</span>{" "}
               {project.category}
             </p>
-            <p class="project-origin">{stories[i].origin}</p>
+            <p class="project-origin">{storyFor(project.slug).origin}</p>
             <details class="project-notes">
               <>
                 <summary>
-                  {stories[i].detail}
+                  {storyFor(project.slug).detail}
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 5v14M5 12h14" />
                   </svg>
                 </summary>
-                <p>{stories[i].note}</p>
+                <p>{storyFor(project.slug).note}</p>
                 <p class="project-stack">{project.stack}</p>
               </>
             </details>
             <div class="project-actions">
               <>
                 <a class="story-link" href={`/work/${project.slug}/`}>
-                  {stories[i].cta}
+                  {storyFor(project.slug).cta}
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="m6 18 12-12M6 6h12v12" />
                   </svg>
