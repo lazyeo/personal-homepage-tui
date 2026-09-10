@@ -233,14 +233,36 @@ export function mountScene(host: HTMLElement, studio: boolean) {
       "#2c3130",
       0.45,
     );
-    for (const x of [-0.43, 0.43])
-      box(
-        parent,
-        [0.22 * k, 0.22 * k, 0.05 * k],
-        [x * k, -1.33 * k, 0.113 * k],
-        "#454c44",
-        0.3,
-      );
+    // Below the screen the real device carries a back chevron and a home
+    // circle. Two raised blocks stood in for them and read as blemishes.
+    const nav = document.createElement("canvas");
+    nav.width = 512;
+    nav.height = 150;
+    const navContext = nav.getContext("2d")!;
+    navContext.fillStyle = "#2c3130";
+    navContext.fillRect(0, 0, nav.width, nav.height);
+    navContext.strokeStyle = "#8d9a8c";
+    navContext.lineWidth = 9;
+    navContext.lineCap = "round";
+    navContext.lineJoin = "round";
+    navContext.beginPath();
+    navContext.moveTo(180, 50);
+    navContext.lineTo(142, 75);
+    navContext.lineTo(180, 100);
+    navContext.stroke();
+    navContext.beginPath();
+    navContext.arc(352, 75, 26, 0, Math.PI * 2);
+    navContext.stroke();
+    screen(
+      parent,
+      [1.67 * k, 0.49 * k],
+      [0, -1.16 * k, 0.113 * k],
+      new Texture(gl, {
+        image: nav,
+        generateMipmaps: false,
+        minFilter: gl.LINEAR,
+      }),
+    );
     // ogl uploads nothing from an HTMLImageElement here, so draw it first.
     const image = new Image();
     image.onload = () => {

@@ -1088,8 +1088,8 @@ dialog::backdrop {
   height: 620px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  /* The framed viewer paints its own paper; match it so nothing flashes. */
-  background: #f1f0e9;
+  /* The framed viewer paints this same panel colour; match it so nothing flashes. */
+  background: var(--surface-raised);
 }
 .device-viewer p {
   margin: 14px 0 0;
