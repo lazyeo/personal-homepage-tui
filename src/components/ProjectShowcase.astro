@@ -114,7 +114,9 @@ const storyFor = (slug: string) => stories.find((s) => s.slug === slug)!;
         >
       </div>
       <div class="project-stage-status">
-        <p id="scene-status" role="status">
+        <p class="project-preview-note" id="preview-note">
+          {projects[0].evidenceNote}
+        </p><p id="scene-status" role="status">
           The collection · loading the interactive view
         </p><div>
           <button type="button" id="project-inspect" hidden>Look closer</button
@@ -122,9 +124,6 @@ const storyFor = (slug: string) => stories.find((s) => s.slug === slug)!;
             >Use static view</button>
         </div>
       </div>
-      <p class="project-preview-note" id="preview-note">
-        {projects[0].evidenceNote}
-      </p>
     </div>
     <div
       id="project-details"

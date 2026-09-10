@@ -571,7 +571,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
           : 10.5
       : projectExhibit
         ? inspecting
-          ? 8.3
+          ? 6.9
           : 10.1
         : 9.8;
     targetCamera.set(
@@ -585,7 +585,15 @@ export function mountScene(host: HTMLElement, studio: boolean) {
         : projectExhibit
           ? 1.7
           : 2.35,
-      distance * (narrow ? (projectExhibit ? 1.25 : 1.15) : 1),
+      // Narrow screens are pulled back so the whole arrangement fits, but
+    // applying that to a closer look made it further away than resting on a
+    // wide one, which is the opposite of what the control offers.
+    distance *
+      (narrow && !(projectExhibit && inspecting)
+        ? projectExhibit
+          ? 1.25
+          : 1.15
+        : 1),
     );
   }
   setCameraTarget();
@@ -715,11 +723,14 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     if (!toggle || !status) return;
     toggle.textContent = paused ? "Enable interactive 3D" : "Use static view";
     toggle.setAttribute("aria-pressed", String(!paused));
-    if (status) status.textContent = paused
-      ? "Static view · motion is off"
-      : projectExhibit
-        ? "Pick an edge. Bring a different story forward."
-        : "Drag to explore · rests when you do";
+    // A live region is for reporting state, not for captioning the controls:
+    // the position, the names and the buttons beside it already say this.
+    if (status)
+      status.textContent = paused
+        ? "Static view · motion is off"
+        : projectExhibit
+          ? ""
+          : "Drag to explore · rests when you do";
     document
       .querySelectorAll<HTMLInputElement | HTMLButtonElement>(
         ".scene-controls input, .scene-controls button",

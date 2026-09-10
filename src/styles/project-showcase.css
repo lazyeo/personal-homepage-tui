@@ -155,11 +155,14 @@
 .project-stage-status button[hidden] {
   display: none;
 }
+.project-stage-status > p:empty {
+  display: none;
+}
 .project-preview-note {
   font-size: 10px;
   color: var(--showcase-meta);
   line-height: 1.6;
-  margin: 4px 0 0;
+  margin: 0;
 }
 .project-details {
   min-width: 0;

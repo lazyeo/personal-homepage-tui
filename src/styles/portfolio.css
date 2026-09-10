@@ -173,8 +173,14 @@ img {
 }
 nav {
   display: flex;
+  align-items: center;
   gap: 35px;
   font-size: 13px;
+  /* The arrow resolves from a fallback font and makes its link's line box
+     0.5px taller than its neighbour's. Left to line-height: normal that
+     difference lands differently depending on when the font arrives, so the
+     two sit level only some of the time. */
+  line-height: 1.4;
 }
 nav a:hover,
 .text-link:hover,
