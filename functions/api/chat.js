@@ -21,6 +21,7 @@ const DEFAULT_CONTEXT_KEY = 'portfolio_context:latest';
 // but stale or missing KV must not hide the projects visible on the site.
 const REVIEWED_PROJECT_CONTEXT = projects.map((project) => `## ${project.publicName || project.name}
 ${project.intro}
+Why I built it: ${project.problem}
 My contribution: ${project.contribution}
 Design decision: ${project.decision}
 Technologies: ${project.stack}${project.link ? `

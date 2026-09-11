@@ -8,9 +8,9 @@ export const projects = [
     category: "Native Android",
     stack: "Java · Android API 25 · No dependencies",
     intro:
-      "Pocket Home is a launcher I wrote for the Kyocera KY-01L, a card-sized phone with a 480 x 600 e-ink screen. Its stock home screen was built for a device this one is not, so I replaced it.",
+      "Pocket Home is a launcher I wrote for the Kyocera KY-01L, a card-sized phone with a 480 x 600 e-ink screen. Its stock launcher will not list or start third-party apps, so a phone running Android could only ever run what shipped on it.",
     problem:
-      "An e-ink panel redraws slowly and visibly, the screen is 480 x 600, and the firmware is Android 7.1. A home screen designed for a scrolling colour phone works against all three.",
+      "The device runs Android, but nothing you install appears on its home screen or can be started from it, so the platform underneath goes to waste. Replacing the launcher is not simply a matter of writing an ordinary one either: the panel is e-ink at 480 x 600 and the firmware is Android 7.1, so a scrolling colour-phone layout does not fit it.",
     contribution:
       "A native Java launcher in a 24 KiB APK, with no runtime libraries, no WebView and no network permission. Favourites and a paged app list of six per page with explicit previous and next instead of scrolling; long press to rename an app, choose one of sixteen monochrome icons, or add a favourite; a light or dark tone. Preferences are keyed by component name, so they survive a process restart and an in-place update.",
     decision:
