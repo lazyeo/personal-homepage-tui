@@ -103,7 +103,7 @@ export const commands = {
 <div class="output__section">SELECTED WORK</div>
 ${projects.map((project) => projectBox(project, project.decision)).join('')}
 <div class="output__line output__line--muted"></div>
-<div class="output__section">EARLIER WORK</div>
+<div class="output__section">ALSO BUILT</div>
 ${archiveProjects.map((project) => projectBox(project, project.note)).join('')}
 <div class="output__line output__line--muted"></div>
 <div class="output__line">Run <span class="cmd-link" data-cmd="/contact">/contact</span> to discuss potential collaborations.</div>

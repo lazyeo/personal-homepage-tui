@@ -78,11 +78,23 @@ export const projects = [
   },
 ];
 
-// Earlier work. The terminal's /projects lists it after the selected projects;
-// the homepage does not, because these have no case study and mixing them in
-// would dilute the three that do. Copy is carried over from the command's
+// Everything else. The terminal's /projects lists these after the selected
+// ones; the homepage does not, because they have no case study and mixing them
+// in would dilute the ones that do. Not a claim about age: a current draft
+// belongs here just as much as an old coursework project. Copy is carried over from the command's
 // previous hard-coded markup, with no claims added.
 export const archiveProjects = [
+  {
+    slug: "nz-immigration-rag",
+    name: "NZ Immigration Policy Chat",
+    subtitle: "Answers with their sources attached",
+    category: "Retrieval system",
+    stack: "RAG · Cloudflare Workers · Web",
+    link: "https://nz-immigration-chatbot.emcfi2024.workers.dev/",
+    intro:
+      "A chatbot that answers New Zealand immigration policy questions from a prepared corpus of official sources, and keeps the source trail visible on every answer.",
+    note: "Built because an assistant sounds equally assured whether or not it is right, and here being wrong has consequences. Still a draft; the corpus is a snapshot, and it is a research tool rather than immigration advice.",
+  },
   {
     slug: "smart-canvas",
     name: "Smart Canvas",
