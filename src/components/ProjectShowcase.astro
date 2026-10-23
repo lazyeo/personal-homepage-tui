@@ -45,6 +45,16 @@ const stories = [
     note: "Native Java in a 24 KiB APK, with no libraries and no network permission. Nothing on screen redraws unless something asked it to.",
     cta: "Step inside the launcher",
   },
+  {
+    slug: "nimpression-ops",
+    name: "Nimpression Ops",
+    title: "Correct, even offline.",
+    origin:
+      "A dispatcher, a driver on the road and a payroll run all lean on the same records. I rebuilt this freight operations system in C# and .NET from a university capstone report, aiming for something that stays right when the network, or the rules, get difficult.",
+    detail: "What holds it together",
+    note: "Clean Architecture and CQRS on .NET 10, EF Core on PostgreSQL, and SignalR used only to say what changed. Pay follows New Zealand minimum-wage rules; personal data is encrypted field by field.",
+    cta: "Look at the architecture",
+  },
 ];
 const storyFor = (slug: string) => stories.find((s) => s.slug === slug)!;
 ---
@@ -69,7 +79,7 @@ const storyFor = (slug: string) => stories.find((s) => s.slug === slug)!;
         data-project-exhibit="true"
         data-selected="0"
         role="img"
-        aria-label="A collection of three layered project displays. Select an exposed display to bring it forward. Use Previous and Next below as a keyboard alternative."
+        aria-label="A collection of layered project displays. Select an exposed display to bring it forward. Use Previous and Next below as a keyboard alternative."
       >
         <div class="project-stage-fallback">
           <img
@@ -172,7 +182,7 @@ const storyFor = (slug: string) => stories.find((s) => s.slug === slug)!;
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Visit the website
+                    {project.linkLabel ?? "Visit the website"}
                   </a>
                 )}
               </>

@@ -25,7 +25,8 @@ Why I built it: ${project.problem}
 My contribution: ${project.contribution}
 Design decision: ${project.decision}
 Technologies: ${project.stack}${project.link ? `
-Public URL: ${project.link}` : ''}
+Public URL: ${project.link}` : ''}${project.repo ? `
+Source code: ${project.repo}` : ''}
 Evidence and limits: ${project.result}`).join('\n\n');
 
 // The terminal's /projects lists these too, so the chat has to know them or the

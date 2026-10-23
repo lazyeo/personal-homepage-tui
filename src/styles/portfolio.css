@@ -654,6 +654,9 @@ nav a:hover,
 .mrsl-art img {
   box-shadow: 0 15px 40px #25302018;
 }
+.nimpression-art {
+  background: #dde2e6;
+}
 .project-featured .mrsl-art {
   max-height: 500px;
 }

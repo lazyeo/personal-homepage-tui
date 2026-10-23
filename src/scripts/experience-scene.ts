@@ -188,6 +188,12 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     "A considered home for a property business.",
     "#243b33",
   );
+  const nimpressionTexture = labelTexture(
+    "Nimpression Ops",
+    "Dispatch, payroll and compliance on .NET 10.",
+    "#26323d",
+    ["DISPATCH", "PAYROLL", "COMPLIANCE"],
+  );
   const textureProgram = (texture: Texture) =>
     new Program(gl, {
       vertex,
@@ -376,6 +382,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
       mrsl: screenTexture,
       careermatch: exhibitTexture(false),
       "kids-worksheets": exhibitTexture(true),
+      "nimpression-ops": nimpressionTexture,
     };
     projects.forEach((project) => {
       const item = new Transform();
@@ -638,25 +645,23 @@ export function mountScene(host: HTMLElement, studio: boolean) {
         const arc = Math.sin(
           Math.PI * Math.min(1, Math.max(0, (time - switchTime) / 650)),
         );
+        // Seats run round a ring: front, right, back right, back left, left.
+        // Next moves every display one seat towards the front, so each one
+        // travels to a neighbouring seat instead of cutting across the stage.
+        const seats: [number, number, number, number][] = [
+          [1.55, 0.44, -1.0, -0.5],
+          [0.75, 0.74, -2.3, -0.16],
+          [-0.95, 0.8, -2.45, 0.2],
+          [-1.78, 0.24, -0.85, 0.45],
+        ];
+        const back = seats[Math.min(seat, seats.length) - 1];
         const target =
           seat === 0
             ? new Vec3(-0.35, 0.03 + arc * 0.24, 1.35 + arc * 0.6)
-            : seat === 1
-              ? new Vec3(1.55, 0.44, -1.0)
-              : seat === 2
-                ? new Vec3(-0.1, 0.72, -2.15)
-                : new Vec3(-1.78, 0.24, -0.85);
+            : new Vec3(back[0], back[1], back[2]);
         if (hoveredProject === i && seat !== 0) target.y += 0.1;
         const rotation =
-          seat === 0
-            ? inspecting
-              ? 0.16
-              : -0.08
-            : seat === 1
-              ? -0.5
-              : seat === 2
-                ? 0.06
-                : 0.45;
+          seat === 0 ? (inspecting ? 0.16 : -0.08) : back[3];
         // The device turns while it is the one being looked at, so its shape
         // reads as a shape. It rests as soon as another project is brought
         // forward, and never turns when reduced motion is asked for.
@@ -915,17 +920,26 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     abort.abort();
     gl.getExtension("WEBGL_lose_context")?.loseContext();
   });
-  const preview = new Image();
-  preview.onload = () => {
-    if (disposed || lost) return;
-    screenTexture.image = preview;
-    screenTexture.needsUpdate = true;
-    requestRender();
-  };
-  preview.onerror = () => {
-    if (status) status.textContent = "3D study · website preview unavailable";
-  };
-  preview.src = "/images/mrsl-live-2026-09-08.webp";
+  // Each label stays up until its real capture has loaded, so a slow or
+  // missing image leaves a titled panel rather than a blank one.
+  (
+    [
+      [screenTexture, "/images/mrsl-live-2026-09-08.webp"],
+      [nimpressionTexture, "/images/nimpression-payslip-2026-10-23.webp"],
+    ] as const
+  ).forEach(([texture, src]) => {
+    const preview = new Image();
+    preview.onload = () => {
+      if (disposed || lost) return;
+      texture.image = preview;
+      texture.needsUpdate = true;
+      requestRender();
+    };
+    preview.onerror = () => {
+      if (status) status.textContent = "3D study · website preview unavailable";
+    };
+    preview.src = src;
+  });
   host.append(canvas);
   if (toggle) toggle.hidden = false;
   updateStatus();

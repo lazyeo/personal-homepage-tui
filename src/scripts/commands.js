@@ -12,6 +12,7 @@ const projectBox = (project, secondary) => `
   <div class="output__line">${project.intro}</div>
   <div class="output__line output__line--secondary">${secondary}</div>
   ${project.link ? `<div class="output__line output__line--accent">→ <a href="${project.link}" target="_blank" rel="noopener">${linkLabel(project.link)}</a></div>` : ''}
+  ${project.repo ? `<div class="output__line output__line--accent">→ <a href="${project.repo}" target="_blank" rel="noopener">${linkLabel(project.repo)}</a></div>` : ''}
 </div>`;
 
 export const commands = {
@@ -73,6 +74,10 @@ export const commands = {
 
 <div class="output__line output__line--accent">Web Development</div>
 <div class="output__line">  Python Flask · MySQL · HTML/CSS · Git & Version Control</div>
+<div class="output__line output__line--muted"></div>
+
+<div class="output__line output__line--accent">C# & .NET</div>
+<div class="output__line">  .NET 10 · ASP.NET Core Minimal API · EF Core · MediatR / CQRS · SignalR · xUnit</div>
 <div class="output__line output__line--muted"></div>
 
 <div class="output__line output__line--accent">Machine Learning & Data Science</div>

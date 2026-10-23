@@ -21,7 +21,13 @@ const { project } = Astro.props;
       <span>{project.category}</span><span>{project.stack}</span>{
         project.link && (
           <a href={project.link} target="_blank" rel="noopener noreferrer">
-            Visit project ↗&#xFE0E;
+            {project.linkLabel ?? "Visit project"} ↗&#xFE0E;
+          </a>
+        )
+      }{
+        project.repo && (
+          <a href={project.repo} target="_blank" rel="noopener noreferrer">
+            Source on GitHub ↗&#xFE0E;
           </a>
         )
       }

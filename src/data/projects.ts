@@ -19,6 +19,27 @@ export const projects = [
       "Running as the default home screen on my own device and verified against it: build and signature, the HOME resolver, icon and favourite persistence across a force stop, all three app pages, and both 240 and 280 density. One memory snapshot read 11.5 MB PSS, which is a reading rather than a benchmark. E-ink ghosting and touch feel need physical inspection; a screenshot cannot establish either.",
   },
   {
+    slug: "nimpression-ops",
+    evidenceNote: "Live demo payslip · captured 23 October 2026 · generated data.",
+    name: "Nimpression Ops",
+    subtitle: "Fleet operations that stay correct when the connection does not.",
+    category: "Full-stack system",
+    stack: "C# · .NET 10 · ASP.NET Core · EF Core · PostgreSQL · Angular",
+    link: "https://nimpression.a-dobe.club/",
+    linkLabel: "Try the live demo",
+    repo: "https://github.com/lazyeo/nimpression-ops",
+    intro:
+      "Nimpression Ops runs dispatch, timesheets, payroll and compliance for a small New Zealand freight fleet, in C# on .NET 10 with an Angular front end. I rebuilt it from a system described in a university capstone report; it is not work for the company.",
+    problem:
+      "The report described the system well, but not how it should behave when things go wrong: a dropped realtime connection, a pay rule at the edge of the law, personal data that must be protected and later forgotten.",
+    contribution:
+      "A .NET 10 Minimal API in Clean Architecture layers, with CQRS through MediatR, EF Core on PostgreSQL and SignalR. Payroll compares hourly and per-trip pay and tops up to the minimum wage; personal fields are encrypted with AES-256-GCM; a transactional outbox commits domain events with their data.",
+    decision:
+      "Let the realtime channel carry nothing that matters. A SignalR message only says what changed and the client refetches over HTTP, so a lost message costs one extra request, never a wrong record. Likewise fines and payslips share no key: NZ law bars taking a fine from wages without written consent, so the code cannot.",
+    result:
+      "A public repository and a live demo with administrator, dispatcher and driver accounts. 683 xUnit test methods, the integration suite on real PostgreSQL via Testcontainers; CI passed on the deployed commit. The demo data is generated; the demo is a showcase, not a production service.",
+  },
+  {
     slug: "mrsl",
     evidenceNote: "Live MRSL homepage · captured 8 September 2026.",
     name: "MRSL",
