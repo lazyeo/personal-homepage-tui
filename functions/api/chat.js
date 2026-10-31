@@ -8,7 +8,7 @@ import { createProvider } from '../../src/lib/ai/index.js';
 import { projects, archiveProjects } from '../../src/data/projects.ts';
 
 const DEFAULT_PROVIDER = 'openai';
-const DEFAULT_OPENAI_MODEL = 'gpt-3.5-turbo';
+const DEFAULT_OPENAI_MODEL = 'gpt-6-luna';
 const DEFAULT_GEMINI_MODEL = 'gemini-2.0-flash';
 const MAX_INPUT_CHARS = 1000;
 const MAX_HISTORY_MESSAGES = 10;
