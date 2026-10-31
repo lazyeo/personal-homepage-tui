@@ -41,7 +41,7 @@ for (const question of ['所以你做过什么项目呢', 'What projects have yo
 for (const [label, context] of [['long KV', longContext], ['short stale KV', '# Profile\nFull-stack developer.'], ['missing KV', null]]) {
   test(`reviewed projects available with ${label}`, async (t) => {
     const prompt = await capturePrompt(t, context, '做过什么项目？');
-    for (const fact of ['MRSL', 'Astro', 'Wix', 'https://www.mrsl.nz/', 'CareerMatch AI', 'https://cvto.work/', 'Kids Worksheet Generator', 'https://kids.a-dobe.club/']) {
+    for (const fact of ['MRSL', 'Astro', 'Wix', 'https://www.mrsl.nz/', 'Alma Android', 'https://github.com/lazyeo/alma-android', 'Kids Worksheet Generator', 'https://kids.a-dobe.club/']) {
       assert.ok(prompt.includes(fact), `missing public fact: ${fact}`);
     }
     assert.ok(prompt.includes('take precedence'), 'current facts must override stale supplementary data');

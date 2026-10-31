@@ -51,7 +51,6 @@ Current public positioning:
 - Current visa: Post-Study Open Work Visa with full work rights in New Zealand.
 
 Selected public projects:
-- CareerMatch AI: AI-powered career matching and job application support.
 - Kids Worksheet Generator: printable children’s learning materials and AI coloring pages.
 - Smart Canvas: AI-powered flowchart generation through conversational interaction.
 - Personal Homepage TUI: terminal-style portfolio with AI chat.
@@ -363,7 +362,7 @@ function selectRelevantContext(fullContext, query, maxChars = MAX_RETRIEVED_CONT
 function getDetectedProjectFacts(context) {
   const sections = splitMarkdownSections(context);
   return sections
-    .filter((section) => /project|chat|rag|ai|canvas|generator|careermatch|portfolio|tracker/i.test(section.heading))
+    .filter((section) => /project|chat|rag|ai|canvas|generator|android|alma|portfolio|tracker/i.test(section.heading))
     .map((section) => {
       const firstSentence = section.text
         .split('\n')

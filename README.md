@@ -11,7 +11,7 @@ in the author's local working archive, which is deliberately outside version
 control, so they cannot be recovered from a clone of this repository.
 
 The homepage now presents selected work, with case studies at `/work/mrsl/`,
-`/work/careermatch/`, and `/work/kids-worksheets/`. The original terminal is at
+`/work/alma-android/`, and `/work/kids-worksheets/`. The original terminal is at
 `/terminal/`. Clicking the homepage computer or terminal links loads that route
 inside a same-origin drawer sliding in from the right, preserving its state when
 closed and reopened. Full screen expands the drawer in place; Back to sidebar
@@ -132,7 +132,7 @@ MIT
 ## Public Portfolio Context Updates
 
 The AI chat always includes the reviewed homepage projects from `src/data/projects.ts`
-(MRSL, CareerMatch AI, and Kids Worksheet Generator). Their contributions, technologies,
+(MRSL, Alma Android, and Kids Worksheet Generator). Their contributions, technologies,
 links and evidence limits take precedence over outdated supplemental text. Updating this
 shared data and deploying the Pages Function updates both surfaces; a frontend-only
 preview does not update the live AI endpoint.

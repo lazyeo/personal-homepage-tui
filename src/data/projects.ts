@@ -59,23 +59,26 @@ export const projects = [
       "A public website at mrsl.nz. The homepage screenshot was captured from the live site on 8 September 2026; it documents the interface, not a measured business outcome.",
   },
   {
-    slug: "careermatch",
-    evidenceNote: "CareerMatch workflow illustration, not an application screenshot.",
-    name: "CareerMatch AI",
-    subtitle: "A little clarity in the job search.",
-    category: "AI product",
-    stack: "LLM workflows · Supabase · Web",
-    link: "https://cvto.work/",
+    slug: "alma-android",
+    evidenceNote:
+      "App screenshot from the public repository · unfolded layout · synthetic fixture data.",
+    name: "Alma Android",
+    subtitle: "Your desktop AI agent, carried in a pocket.",
+    category: "Open-source Android app",
+    stack: "TypeScript · React · Capacitor",
+    link: "https://github.com/lazyeo/alma-android/releases",
+    linkLabel: "Download the APK",
+    repo: "https://github.com/lazyeo/alma-android",
     intro:
-      "An AI-assisted tool that grew out of my own job search: understanding a role, finding relevant experience and preparing a more thoughtful application.",
+      "An unofficial Android client for Alma Desktop, the AI agent on my Mac. Pair a phone with one or more desktops and keep working with threads, agents and files away from the keyboard. MIT, v0.1.4, October 2026.",
     problem:
-      "Job descriptions and personal experience rarely line up neatly. Repeatedly translating between them makes applying for suitable roles slow and difficult.",
+      "A desktop agent is no use once you stand up. I wanted to follow a task, answer its question or approve a step from a phone, with no third-party server in between.",
     contribution:
-      "Designed and built a workflow for resume and job-description matching, structured gap analysis, and tailored CV and cover-letter recommendations.",
+      "TypeScript and React in Capacitor: QR pairing, an end-to-end encrypted relay with LAN direct on shared Wi-Fi, streaming replies with tool calls and approvals, file diffs, foldable two-pane layouts, English and Chinese, SHA-256-verified in-app updates.",
     decision:
-      "Start with the candidate’s actual background and the requirements of a specific role. Organize the output around useful application decisions, with the person reviewing the result.",
+      "Built the way the product works: Alma and its agent crew plan, code, test and release while I steer and test on real devices. No push service, so alerts are local and only live with the connection.",
     result:
-      "A productized personal workflow for job-fit analysis and application preparation. The portfolio illustration summarizes the workflow; it is not a screenshot or a measured outcome.",
+      "A public repository with releases and a changelog, used daily on my phone and foldable, tests in CI. The screenshot is the unfolded layout on synthetic fixture data: no real conversations or credentials.",
   },
   {
     slug: "kids-worksheets",

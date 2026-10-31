@@ -71,7 +71,7 @@ try {
     0,
     "No duplicate tabs",
   );
-  const links = ["mrsl", "careermatch", "kids-worksheets"];
+  const links = ["mrsl", "alma-android", "kids-worksheets"];
   for (let i = 0; i < 3; i++) {
     assert.equal(
       await page.locator("#scene").getAttribute("data-selected"),
@@ -154,9 +154,9 @@ try {
   await page.waitForTimeout(1400);
   assert.equal(
     await page.locator("#collection-name").textContent(),
-    "CareerMatch AI",
+    "Alma Android",
   );
-  await page.locator("#work").screenshot({ path: `${output}/career.png` });
+  await page.locator("#work").screenshot({ path: `${output}/alma-android.png` });
   const frames = await page.locator("#scene").getAttribute("data-frames");
   await page.waitForTimeout(500);
   assert.equal(
@@ -245,7 +245,7 @@ try {
     assert.equal(await navigation.locator('.project-showcase').count(), 1);
     assert.equal(await navigation.locator('a[href="/studio/"], a[href="/exhibit/"]').count(), 0);
   }
-  for (const slug of ['mrsl', 'careermatch', 'kids-worksheets']) {
+  for (const slug of ['mrsl', 'alma-android', 'kids-worksheets']) {
     await navigation.goto(`${base}/work/${slug}/`, { waitUntil: 'networkidle' });
     assert.equal(await navigation.locator('.case-sections section').count(), 4);
     await navigation.getByRole('link', { name: 'All work', exact: false }).click();

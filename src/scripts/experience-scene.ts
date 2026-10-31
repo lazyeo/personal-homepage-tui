@@ -194,6 +194,12 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     "#26323d",
     ["DISPATCH", "PAYROLL", "COMPLIANCE"],
   );
+  const almaAndroidTexture = labelTexture(
+    "Alma Android",
+    "Your desktop AI agent, carried in a pocket.",
+    "#232738",
+    ["PAIR", "ENCRYPTED RELAY", "FOLDABLE"],
+  );
   const textureProgram = (texture: Texture) =>
     new Program(gl, {
       vertex,
@@ -295,78 +301,39 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     round(object, [2.9, 0.17, 1.9], [0, -1.63, 0], colors.sage);
     round(object, [2.67, 0.03, 1.75], [0, -1.53, 0], "#c8d0bb");
     shadow.position.y = -1.74;
-    function exhibitTexture(worksheet: boolean) {
+    // The worksheet is the one remaining HTML-illustrated project; every other
+    // panel shows a real capture, so this draws only that illustration.
+    function worksheetTexture() {
       const surface = document.createElement("canvas");
       surface.width = 1280;
       surface.height = 800;
       const ctx = surface.getContext("2d")!;
-      ctx.fillStyle = worksheet ? "#f7efcf" : "#eeedf5";
+      ctx.fillStyle = "#f7efcf";
       ctx.fillRect(0, 0, 1280, 800);
-      ctx.fillStyle = worksheet ? "#465638" : "#45485e";
+      ctx.fillStyle = "#465638";
       ctx.font = "24px sans-serif";
-      ctx.fillText(
-        worksheet
-          ? "KIDS WORKSHEETS / A LITTLE PRACTICE, EVERY DAY"
-          : "CAREERMATCH AI / FIND YOUR NEXT CHAPTER",
-        75,
-        78,
-      );
+      ctx.fillText("KIDS WORKSHEETS / A LITTLE PRACTICE, EVERY DAY", 75, 78);
       ctx.font = "74px Georgia";
-      ctx.fillText(worksheet ? "Let’s count" : "Your experience.", 75, 207);
+      ctx.fillText("Let’s count", 75, 207);
+      ctx.fillText("something good.", 75, 287);
+      ctx.font = "22px sans-serif";
       ctx.fillText(
-        worksheet ? "something good." : "A clearer direction.",
+        "Made for curious minds.      Name: __________________",
         75,
-        287,
+        352,
       );
-      if (worksheet) {
-        ctx.font = "22px sans-serif";
-        ctx.fillText(
-          "Made for curious minds.      Name: __________________",
-          75,
-          352,
-        );
-        ctx.font = "46px Georgia";
-        ["3 + 2 = ___", "4 + 1 = ___", "2 + 6 = ___", "5 + 3 = ___"].forEach(
-          (sum, i) =>
-            ctx.fillText(
-              sum,
-              85 + (i % 2) * 570,
-              478 + Math.floor(i / 2) * 124,
-            ),
-        );
-      } else {
-        [
-          "Your experience",
-          "The opportunity",
-          "A thoughtful application",
-        ].forEach((title, i) => {
-          const y = 375 + i * 105;
-          ctx.strokeStyle = "#45485e33";
-          ctx.beginPath();
-          ctx.moveTo(75, y);
-          ctx.lineTo(1205, y);
-          ctx.stroke();
-          ctx.font = "24px sans-serif";
-          ctx.fillText(`0${i + 1}`, 80, y + 55);
-          ctx.font = "32px Georgia";
-          ctx.fillText(title, 160, y + 55);
-          ctx.font = "19px sans-serif";
+      ctx.font = "46px Georgia";
+      ["3 + 2 = ___", "4 + 1 = ___", "2 + 6 = ___", "5 + 3 = ___"].forEach(
+        (sum, i) =>
           ctx.fillText(
-            [
-              "What you have actually done.",
-              "What the role really needs.",
-              "Find the connection. Tell your story.",
-            ][i],
-            685,
-            y + 55,
-          );
-        });
-      }
+            sum,
+            85 + (i % 2) * 570,
+            478 + Math.floor(i / 2) * 124,
+          ),
+      );
       ctx.font = "20px sans-serif";
       ctx.fillText(
-        worksheet
-          ? "ILLUSTRATIVE WORKSHEET · THE LEARNING HAPPENS OFFLINE"
-          : "WORKFLOW ILLUSTRATION · YOU REVIEW THE RECOMMENDATIONS",
+        "ILLUSTRATIVE WORKSHEET · THE LEARNING HAPPENS OFFLINE",
         75,
         750,
       );
@@ -378,10 +345,10 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     }
     // Built from the same list, in the same order, so a change to the data
     // cannot leave the exhibit showing one project under another's name.
-    const panelTexture: Record<string, ReturnType<typeof exhibitTexture>> = {
+    const panelTexture: Record<string, Texture> = {
       mrsl: screenTexture,
-      careermatch: exhibitTexture(false),
-      "kids-worksheets": exhibitTexture(true),
+      "alma-android": almaAndroidTexture,
+      "kids-worksheets": worksheetTexture(),
       "nimpression-ops": nimpressionTexture,
     };
     projects.forEach((project) => {
@@ -393,13 +360,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
         projectMeshes.push(buildDevice(item, 1));
         return;
       }
-      box(
-        item,
-        [4.6, 2.95, 0.14],
-        [0, 0, 0],
-        project.slug === "careermatch" ? "#595b79" : colors.ink,
-        0.5,
-      );
+      box(item, [4.6, 2.95, 0.14], [0, 0, 0], colors.ink, 0.5);
       projectMeshes.push(
         screen(item, [4.4, 2.75], [0, 0, 0.078], panelTexture[project.slug]),
       );
@@ -926,6 +887,7 @@ export function mountScene(host: HTMLElement, studio: boolean) {
     [
       [screenTexture, "/images/mrsl-live-2026-09-08.webp"],
       [nimpressionTexture, "/images/nimpression-payslip-2026-10-23.webp"],
+      [almaAndroidTexture, "/images/alma-android-exhibit-2026-10-30.webp"],
     ] as const
   ).forEach(([texture, src]) => {
     const preview = new Image();

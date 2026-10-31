@@ -714,74 +714,35 @@ nav a:hover,
   display: block;
   margin-top: 13px;
 }
-.career-art {
-  background: #dfe6ec;
-  padding: 30px;
+.alma-art {
+  background: #232738;
+  display: grid;
+  place-items: center;
+  gap: 14px;
+  padding: 24px 0;
 }
-.workflow-sheet {
-  background: #fafbfc;
-  padding: 25px 29px 19px;
-  width: 345px;
-  transform: rotate(-5deg);
-  box-shadow: 8px 20px 35px #3f597126;
-  border-radius: 6px;
+.alma-device {
+  border: 6px solid #3a3f55;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px #00000059;
+  line-height: 0;
+  overflow: hidden;
 }
-.sheet-brand {
-  font-size: 11px;
-  font-weight: bold;
-  color: #304764;
-}
-.sheet-brand span {
-  background: #dce6f0;
-  margin-left: 4px;
-  padding: 2px 4px;
-  font-size: 8px;
-  border-radius: 3px;
-}
-.workflow-sheet h3 {
-  font: 26px/1.13 var(--serif);
-  color: #314760;
-  margin: 19px 0 15px;
-}
-.workflow-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-top: 1px solid #dce2e8;
-  padding: 11px 0;
-  color: #384c60;
-  font-size: 10px;
-}
-.workflow-row > span {
-  font-size: 8px;
-  color: #63768b;
-}
-.workflow-row small {
+.alma-device img {
+  width: 200px;
+  height: auto;
   display: block;
-  font-size: 8px;
-  color: #65768a;
-  margin-top: 3px;
 }
-.workflow-row b {
-  margin-left: auto;
-  font-weight: 400;
+.alma-caption {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: #9aa0b8;
 }
 .illustration-caption {
   font-size: 7px;
   letter-spacing: 0.08em;
   color: #596775;
   margin-top: 8px;
-}
-.floating-note {
-  position: absolute;
-  bottom: 30px;
-  right: 22px;
-  transform: rotate(5deg);
-  background: #e9edf7;
-  color: #425373;
-  padding: 13px 18px;
-  font: italic 16px var(--serif);
-  box-shadow: 1px 5px 13px #36466615;
 }
 .kids-art {
   background: #ece4d6;
@@ -1060,9 +1021,14 @@ dialog::backdrop {
 .case-study > .project-art {
   border-radius: 9px;
 }
-.case-study > .career-art,
 .case-study > .kids-art {
   height: 470px;
+}
+.case-study > .alma-art {
+  height: auto;
+}
+.case-study > .alma-art img {
+  width: 420px;
 }
 .ky01-art {
   background: #23272a;
@@ -1180,9 +1146,8 @@ dialog::backdrop {
   .project-art {
     height: 335px;
   }
-  .workflow-sheet {
-    width: 290px;
-    padding: 22px;
+  .alma-device img {
+    width: 180px;
   }
   .worksheet {
     width: 285px;
@@ -1333,8 +1298,8 @@ dialog::backdrop {
   .project-art {
     height: 345px;
   }
-  .workflow-sheet {
-    width: 300px;
+  .alma-device img {
+    width: 185px;
   }
   .worksheet {
     width: 290px;
@@ -1489,24 +1454,24 @@ dialog::backdrop {
     text-align: left;
     margin-top: 12px;
   }
-  .workflow-sheet,
   .worksheet {
     width: 255px;
     padding: 20px;
   }
-  .career-art {
-    padding: 20px;
+  .alma-art {
+    padding: 16px 0;
   }
-  .workflow-sheet h3,
+  .alma-device img {
+    width: 170px;
+  }
+  .case-study > .alma-art img {
+    width: min(420px, 80vw);
+  }
   .worksheet h3 {
     font-size: 24px;
   }
   .worksheet-name {
     font-size: 6px;
-  }
-  .floating-note {
-    font-size: 13px;
-    right: 12px;
   }
   .pencil {
     right: 18px;
