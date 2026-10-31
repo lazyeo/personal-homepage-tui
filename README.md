@@ -131,16 +131,18 @@ MIT
 
 ## Public Portfolio Context Updates
 
-The AI chat always includes the reviewed homepage projects from `src/data/projects.ts`
-(MRSL, Alma Android, and Kids Worksheet Generator). Their contributions, technologies,
-links and evidence limits take precedence over outdated supplemental text. Updating this
-shared data and deploying the Pages Function updates both surfaces; a frontend-only
-preview does not update the live AI endpoint.
+The AI chat always includes every project from `src/data/projects.ts` (the reviewed
+homepage projects and the archive list). Their contributions, technologies, links and
+evidence limits take precedence over outdated supplemental text. Updating this shared
+data and deploying the Pages Function updates both surfaces; a frontend-only preview
+does not update the live AI endpoint.
 
-Cloudflare KV provides supplementary public background and other projects. Long context
-is selected by markdown section, with Chinese/English project intent and recent user
-turns supporting broad questions and follow-ups. The shared projects reserve space
-within the 8,000-character context budget before KV sections are selected.
+Cloudflare KV provides supplementary public background. The whole KV document goes
+into the system prompt as quoted material, capped at 60,000 characters; nothing is
+selected per question. The corpus is a few thousand tokens, so the system prompt is
+identical across requests and can be cached by the provider. The conversation history
+arrives from the browser as the visitor's unverified report, capped at 10 turns and
+6,000 characters, newest first.
 
 Run the endpoint regression tests without credentials or model charges (Node 22.18+):
 
