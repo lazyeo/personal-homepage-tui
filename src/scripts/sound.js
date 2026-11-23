@@ -6,8 +6,24 @@
 let audioContext = null;
 let soundEnabled = true;
 
-// Initialize audio context on first user interaction
+// Browsers refuse to start audio before the visitor has interacted with the
+// page, and log a warning for every attempt (the typewriter intro alone made
+// ~40 on mobile). So no context exists until the first real gesture; sounds
+// requested before then are simply skipped.
+let userActivated = false;
+function markActivated() {
+  userActivated = true;
+  if (audioContext?.state === 'suspended') audioContext.resume().catch(() => {});
+}
+if (typeof window !== 'undefined') {
+  for (const type of ['pointerdown', 'keydown', 'touchstart']) {
+    window.addEventListener(type, markActivated, { capture: true, passive: true });
+  }
+}
+
 function getAudioContext() {
+  const activated = userActivated || navigator.userActivation?.hasBeenActive;
+  if (!activated) return null;
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
@@ -54,6 +70,7 @@ function playBeep(frequency = 600, duration = 0.03, volume = 0.03, type = 'sine'
 
   try {
     const ctx = getAudioContext();
+    if (!ctx) return;
     const oscillator = ctx.createOscillator();
     const gainNode = ctx.createGain();
 
