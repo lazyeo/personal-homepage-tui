@@ -665,7 +665,7 @@ function showAudioConsole() {
     </style>
     <h3>
       ┌─ Audio Debug ─┐
-      <button class="close-btn" onclick="document.getElementById('audio-console').remove()">[×]</button>
+      <button class="close-btn" id="ac-close">[×]</button>
     </h3>
 
     <div class="section">── Sound Parameters ──</div>
@@ -811,6 +811,7 @@ await sleep(${p.speed});`;
   }
 
   // Test once
+  document.getElementById('ac-close').onclick = () => console.remove();
   document.getElementById('ac-test-once').onclick = () => {
     const p = getParams();
     const freq = p.freq + Math.random() * p.freqVar;
