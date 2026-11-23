@@ -1,49 +1,52 @@
 # Personal Homepage TUI
 
-## Portfolio preview
+## Portfolio
 
-The accepted baseline is now `/`: the terminal-computer Hero plus the layered,
-click-selected 3D project collection. Continue future work on `src/pages/index.astro`,
-`TerminalHero.astro`, `ProjectShowcase.astro`, `project-selection.ts`, and
-`experience-scene.ts`. `/exhibit/` and `/studio/` only redirect to `/`.
-Retired editions are not built and not offered in navigation. They are kept only
-in the author's local working archive, which is deliberately outside version
-control, so they cannot be recovered from a clone of this repository.
+The homepage at `/` is written for a recruiter's first 30 seconds: a hero with
+role, stack, work rights and contact links (`TerminalHero.astro`), every selected
+project visible at once (`ProjectShowcase.astro`), Experience and How I work
+(`Experience.astro`), and a Contact section. `/exhibit/` and `/studio/` only
+redirect to `/`.
 
-The homepage now presents selected work, with case studies at `/work/mrsl/`,
-`/work/alma-android/`, and `/work/kids-worksheets/`. The original terminal is at
-`/terminal/`. Clicking the homepage computer or terminal links loads that route
-inside a same-origin drawer sliding in from the right, preserving its state when
-closed and reopened. Full screen expands the drawer in place; Back to sidebar
-restores its width without navigation or reloading the terminal. The standalone
-terminal includes an explicit Back to portfolio link.
+Case studies live at `/work/<slug>/` for every project in `src/data/projects.ts`:
+Nimpression Ops, Alma Android, Kids Worksheet Generator, MRSL and Pocket Home.
+`/work/careermatch/` was removed and 301-redirects to `/#work` (`public/_redirects`);
+unknown paths get the 404 page. `src/data/projects.ts` is a reviewed public subset,
+not an automatic import of private resume data or the Cloudflare KV chat context;
+the homepage cards, the case studies, the terminal's `/projects` and the AI chat all
+read it.
+
+The original terminal is at `/terminal/`. The homepage computer and the Open
+terminal link load it inside a same-origin drawer sliding in from the right,
+preserving its state when closed and reopened. The standalone terminal includes
+an explicit Back to portfolio link.
 
 Run `npm run dev` for development, or `npm run build` followed by
 `npm run preview -- --port 4322` for the production preview.
 
-The Hero computer uses CSS perspective and pointer interaction. The separate
-project collection loads its WebGL runtime only when it enters the viewport,
-and renders on demand. Reduced-motion preferences keep a usable static view.
-Portfolio content lives in `src/data/projects.ts`. It is a reviewed public subset,
-not an automatic import of private resume data or the Cloudflare KV chat context.
+`astro dev` and `astro preview` do not run Cloudflare Pages Functions or apply
+`public/_headers` / `public/_redirects`: terminal commands work locally, while real
+AI replies, the CSP and the redirects only apply on Cloudflare Pages.
 
-`astro dev` and `astro preview` do not run Cloudflare Pages Functions: terminal
-commands work locally, while real AI replies require the configured Pages
-Function environment described below. This preview does not publish or change it.
+Security headers are in `public/_headers`, including an enforced
+Content-Security-Policy: scripts, fonts and styles come from the site itself (no
+inline script, so Astro is configured not to inline small scripts), images from the
+site plus `data:`/`blob:`, and `connect-src` adds only the GitHub contributions API
+used by the terminal heatmap. `SAMEORIGIN` framing allows the terminal drawer and
+the ky01 viewer while blocking third-party embedding. Font licenses are in
+`public/fonts/`.
 
-The `SAMEORIGIN` framing header allows the portfolio's terminal dialog while
-continuing to block embedding by third-party sites. MRSL uses an existing rebuild
-screenshot; the other project visuals are labeled illustrations. Font licenses
-are included in `public/fonts/`.
-
-Browser acceptance tests (with optional external Playwright tooling):
+Browser acceptance test (install `playwright-core` outside this package and point
+at a running preview):
 
 ```sh
-PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node scripts/check-project-showcase.mjs
+PLAYWRIGHT_MODULE=/absolute/path/to/playwright-core/index.mjs PORTFOLIO_URL=http://127.0.0.1:4322 node scripts/check-project-showcase.mjs
 ```
 
-The runner tests the canonical homepage, legacy redirects, project picking,
-terminal persistence, case-study return paths, responsive layouts and fallbacks.
+It checks the hero facts and contact links above the fold, the navigation, all
+projects visible in order (also without JavaScript), Experience, 44px tap targets,
+the terminal drawer, 320/390/768px layouts without horizontal overflow, case-study
+return links and the legacy redirects.
 
 A terminal-style personal portfolio website built with Astro, featuring command-line interaction aesthetics while maintaining modern web usability.
 
@@ -107,7 +110,8 @@ Security notes:
 - Browser code calls the same-origin `/api/chat` endpoint only; provider calls happen in Cloudflare Pages Functions.
 - Gemini requests use the `x-goog-api-key` header instead of putting the key in the URL.
 - Provider error details returned to visitors are generic, and server logs redact common key patterns.
-- `/api/chat` applies server-side rate limiting through the `PORTFOLIO_CONTEXT` KV binding. Optional controls: `CHAT_RATE_LIMIT_MAX_REQUESTS`, `CHAT_RATE_LIMIT_WINDOW_SECONDS`, `CHAT_RATE_LIMIT_SALT`, and comma-separated `CHAT_RATE_LIMIT_BYPASS_IPS` for trusted testing IPs.
+- `/api/chat` accepts POSTs only from `https://hi.a-dobe.club` and `*.shaun-page-tui.pages.dev` (checked on the `Origin` header; anything else, or no Origin, gets 403). It sends no CORS headers and answers other methods, including preflight, with 405.
+- `/api/chat` applies server-side rate limiting through the `PORTFOLIO_CONTEXT` KV binding: a per-IP hourly limit plus a global daily cap counted under `rate_limit:global:<UTC date>`. Optional controls: `CHAT_RATE_LIMIT_MAX_REQUESTS`, `CHAT_RATE_LIMIT_WINDOW_SECONDS`, `CHAT_GLOBAL_DAILY_LIMIT` (default 500), `CHAT_RATE_LIMIT_SALT`, and comma-separated `CHAT_RATE_LIMIT_BYPASS_IPS` for trusted testing IPs (bypasses both limits). Once the daily cap is reached, visitors are asked to email instead.
 
 ## Commands (In-site)
 
