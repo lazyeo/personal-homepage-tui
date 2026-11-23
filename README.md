@@ -31,8 +31,9 @@ AI replies, the CSP and the redirects only apply on Cloudflare Pages.
 Security headers are in `public/_headers`, including an enforced
 Content-Security-Policy: scripts, fonts and styles come from the site itself (no
 inline script, so Astro is configured not to inline small scripts), images from the
-site plus `data:`/`blob:`, and `connect-src` adds only the GitHub contributions API
-used by the terminal heatmap. `SAMEORIGIN` framing allows the terminal drawer and
+site plus `data:`/`blob:`. The only third-party hosts are Cloudflare Web Analytics
+(its edge-injected beacon from `static.cloudflareinsights.com`, reporting to
+`cloudflareinsights.com`) and the GitHub contributions API used by the terminal heatmap. `SAMEORIGIN` framing allows the terminal drawer and
 the ky01 viewer while blocking third-party embedding. Font licenses are in
 `public/fonts/`.
 
