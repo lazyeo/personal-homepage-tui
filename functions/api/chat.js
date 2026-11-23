@@ -18,6 +18,23 @@ const MAX_HISTORY_CHARS = 6000;
 const RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 const DEFAULT_CONTEXT_KEY = 'portfolio_context:latest';
+// One ceiling for everyone, on top of the per-IP one: rotating IPs gets past a
+// per-IP limit, and every answer is a paid provider call.
+const GLOBAL_DAILY_LIMIT = 500;
+const CONTACT_EMAIL = 'shaun@a-dobe.club';
+
+// The chat is a feature of this site, not a public API. Browsers send Origin on
+// every POST, same-origin included, so a request without one did not come from
+// a page here. Non-browser clients can forge Origin; the rate limits below are
+// what bound them. This check stops other websites spending the quota through
+// their visitors' browsers.
+const PRODUCTION_ORIGIN = 'https://hi.a-dobe.club';
+const PAGES_ORIGIN = /^https:\/\/(?:[a-z0-9-]+\.)?shaun-page-tui\.pages\.dev$/;
+
+export function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  return origin === PRODUCTION_ORIGIN || PAGES_ORIGIN.test(origin);
+}
 
 // The homepage and chat share reviewed public facts. KV can add background,
 // but stale or missing KV must not hide the projects visible on the site.
@@ -249,6 +266,40 @@ async function checkRateLimit(request, env) {
   };
 }
 
+function getGlobalDailyLimit(env) {
+  const limit = Number.parseInt(env.CHAT_GLOBAL_DAILY_LIMIT, 10);
+  return Number.isFinite(limit) && limit > 0 ? limit : GLOBAL_DAILY_LIMIT;
+}
+
+// Counted per UTC day. KV is read-then-write, so concurrent requests can
+// overshoot by a few; the cap bounds cost, it is not an exact quota.
+async function checkGlobalDailyLimit(env, now = Date.now()) {
+  const kv = env.PORTFOLIO_CONTEXT;
+  if (!kv || typeof kv.get !== 'function' || typeof kv.put !== 'function') return { allowed: true };
+
+  const limit = getGlobalDailyLimit(env);
+  const day = new Date(now).toISOString().slice(0, 10);
+  const key = `rate_limit:global:${day}`;
+  const nextDay = Date.parse(`${day}T00:00:00Z`) + 24 * 60 * 60 * 1000;
+  const retryAfter = Math.max(1, Math.ceil((nextDay - now) / 1000));
+
+  let count = 0;
+  try {
+    count = Number.parseInt(await kv.get(key), 10) || 0;
+  } catch (error) {
+    console.warn('Failed to read global rate limit KV entry:', safeErrorDetail(error?.message || error));
+    return { allowed: true };
+  }
+  if (count >= limit) return { allowed: false, retryAfter };
+
+  try {
+    await kv.put(key, String(count + 1), { expirationTtl: 2 * 24 * 60 * 60 });
+  } catch (error) {
+    console.warn('Failed to update global rate limit KV entry:', safeErrorDetail(error?.message || error));
+  }
+  return { allowed: true };
+}
+
 function sanitizeMessages(history = []) {
   if (!Array.isArray(history)) return [];
 
@@ -324,6 +375,10 @@ PORTFOLIO_CONTEXT`;
 }
 
 export async function onRequestPost({ request, env }) {
+  if (!isAllowedOrigin(request.headers.get('Origin'))) {
+    return json({ success: false, error: 'Requests from other sites are not accepted.' }, 403);
+  }
+
   const config = getConfig(env);
 
   if (!config.apiKey) {
@@ -352,6 +407,16 @@ export async function onRequestPost({ request, env }) {
       'X-RateLimit-Limit': String(rateLimit.limit),
       'X-RateLimit-Remaining': '0',
     });
+  }
+
+  if (!rateLimit.bypassed) {
+    const daily = await checkGlobalDailyLimit(env);
+    if (!daily.allowed) {
+      return json({
+        success: false,
+        error: `My AI terminal has answered all the questions it can for today. Please email me at ${CONTACT_EMAIL} and I'll reply in person.`,
+      }, 429, { 'Retry-After': String(daily.retryAfter) });
+    }
   }
 
   const history = sanitizeMessages(body.history);
@@ -393,6 +458,16 @@ Current question:
   }
 }
 
-export async function onRequestGet() {
-  return json({ success: false, error: 'Method not allowed.' }, 405);
+// Every other method is answered by the function rather than falling through to the
+// static asset server, which would add its default `Access-Control-Allow-Origin: *`.
+// No preflight is answered either, so a cross-origin JSON POST never gets sent.
+function methodNotAllowed() {
+  return json({ success: false, error: 'Method not allowed.' }, 405, { Allow: 'POST' });
 }
+
+export const onRequestGet = methodNotAllowed;
+export const onRequestHead = methodNotAllowed;
+export const onRequestOptions = methodNotAllowed;
+export const onRequestPut = methodNotAllowed;
+export const onRequestPatch = methodNotAllowed;
+export const onRequestDelete = methodNotAllowed;

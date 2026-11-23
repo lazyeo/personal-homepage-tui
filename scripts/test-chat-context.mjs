@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { onRequestPost } from '../functions/api/chat.js';
+import { onRequestPost, onRequestOptions, isAllowedOrigin } from '../functions/api/chat.js';
 import { projects, archiveProjects } from '../src/data/projects.ts';
 
 const longContext = '# Profile\nProduct-minded developer.\n\n## Background\n'
@@ -18,8 +18,9 @@ async function captureMessages(t, context, message, history = []) {
     return Response.json({ choices: [{ message: { content: 'Test response' } }] });
   });
   const response = await onRequestPost({
-    request: new Request('https://portfolio.test/api/chat', {
+    request: new Request('https://hi.a-dobe.club/api/chat', {
       method: 'POST', body: JSON.stringify({ message, history }),
+      headers: { Origin: 'https://hi.a-dobe.club' },
     }),
     env: {
       AI_API_KEY: 'test-only', AI_PROVIDER: 'openai',
@@ -125,4 +126,83 @@ test('supplementary context cannot close the fence it is quoted inside', async (
   // Exactly the opening and closing fence the prompt writes itself.
   assert.equal(prompt.split('PORTFOLIO_CONTEXT').length - 1, 2);
   assert.ok(prompt.includes('PORTFOLIO-CONTEXT'));
+});
+
+// A KV double that keeps what is written, so the counters can be observed.
+function memoryKv(initial = {}) {
+  const store = new Map(Object.entries(initial));
+  return {
+    store,
+    get: async (key) => (store.has(key) ? store.get(key) : null),
+    put: async (key, value) => { store.set(key, value); },
+  };
+}
+
+function chatRequest(origin, message = 'What do you build?') {
+  return new Request('https://hi.a-dobe.club/api/chat', {
+    method: 'POST',
+    body: JSON.stringify({ message }),
+    headers: origin ? { Origin: origin, 'CF-Connecting-IP': '203.0.113.7' } : { 'CF-Connecting-IP': '203.0.113.7' },
+  });
+}
+
+const chatEnv = (kv, extra = {}) => ({
+  AI_API_KEY: 'test-only', AI_PROVIDER: 'openai', PORTFOLIO_CONTEXT: kv, ...extra,
+});
+
+test('only this site and its Pages previews are allowed origins', () => {
+  for (const origin of ['https://hi.a-dobe.club', 'https://shaun-page-tui.pages.dev', 'https://feat-x.shaun-page-tui.pages.dev', 'https://4f2a9c1e.shaun-page-tui.pages.dev']) {
+    assert.ok(isAllowedOrigin(origin), origin);
+  }
+  for (const origin of [null, '', 'null', 'https://evil.example', 'http://hi.a-dobe.club', 'https://hi.a-dobe.club.evil.example',
+    'https://evil-shaun-page-tui.pages.dev', 'https://x.shaun-page-tui.pages.dev.evil.example', 'https://a.b.shaun-page-tui.pages.dev']) {
+    assert.ok(!isAllowedOrigin(origin), String(origin));
+  }
+});
+
+test('a request from another site is rejected before any model call or quota use', async (t) => {
+  const fetchMock = t.mock.method(globalThis, 'fetch', async () => Response.json({}));
+  const kv = memoryKv();
+  for (const origin of ['https://evil.example', null]) {
+    const response = await onRequestPost({ request: chatRequest(origin), env: chatEnv(kv) });
+    assert.equal(response.status, 403);
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), null);
+  }
+  assert.equal(fetchMock.mock.callCount(), 0);
+  assert.equal(kv.store.size, 0, 'rejected requests must not touch the counters');
+});
+
+test('preflight and other methods get 405 without a wildcard CORS header', async () => {
+  const response = await onRequestOptions();
+  assert.equal(response.status, 405);
+  assert.equal(response.headers.get('Access-Control-Allow-Origin'), null);
+});
+
+test('the global daily cap stops answers once reached, with an email to write to', async (t) => {
+  const fetchMock = t.mock.method(globalThis, 'fetch', async () =>
+    Response.json({ choices: [{ message: { content: 'Test response' } }] }));
+  const day = new Date().toISOString().slice(0, 10);
+  const kv = memoryKv();
+  const env = chatEnv(kv, { CHAT_GLOBAL_DAILY_LIMIT: '2' });
+
+  for (let i = 0; i < 2; i++) {
+    const ok = await onRequestPost({ request: chatRequest('https://hi.a-dobe.club'), env });
+    assert.equal(ok.status, 200);
+  }
+  assert.equal(kv.store.get(`rate_limit:global:${day}`), '2');
+
+  const blocked = await onRequestPost({ request: chatRequest('https://hi.a-dobe.club'), env });
+  assert.equal(blocked.status, 429);
+  assert.ok(Number(blocked.headers.get('Retry-After')) > 0);
+  assert.match((await blocked.json()).error, /shaun@a-dobe\.club/);
+  assert.equal(fetchMock.mock.callCount(), 2, 'no model call once the cap is reached');
+});
+
+test('the global daily cap defaults to 500', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () =>
+    Response.json({ choices: [{ message: { content: 'Test response' } }] }));
+  const day = new Date().toISOString().slice(0, 10);
+  const almost = memoryKv({ [`rate_limit:global:${day}`]: '499' });
+  assert.equal((await onRequestPost({ request: chatRequest('https://hi.a-dobe.club'), env: chatEnv(almost) })).status, 200);
+  assert.equal((await onRequestPost({ request: chatRequest('https://hi.a-dobe.club'), env: chatEnv(almost) })).status, 429);
 });
