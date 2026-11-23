@@ -110,7 +110,7 @@ Security notes:
 - Browser code calls the same-origin `/api/chat` endpoint only; provider calls happen in Cloudflare Pages Functions.
 - Gemini requests use the `x-goog-api-key` header instead of putting the key in the URL.
 - Provider error details returned to visitors are generic, and server logs redact common key patterns.
-- `/api/chat` accepts POSTs only from `https://hi.a-dobe.club` and `*.shaun-page-tui.pages.dev` (checked on the `Origin` header; anything else, or no Origin, gets 403). It sends no CORS headers and answers other methods, including preflight, with 405.
+- `/api/chat` accepts POSTs only from `https://hi.a-dobe.club` and `personal-homepage-tui.pages.dev` and its deployment previews (the Pages project `shaun-page-tui` is served on that subdomain) (checked on the `Origin` header; anything else, or no Origin, gets 403). It sends no CORS headers and answers other methods, including preflight, with 405.
 - `/api/chat` applies server-side rate limiting through the `PORTFOLIO_CONTEXT` KV binding: a per-IP hourly limit plus a global daily cap counted under `rate_limit:global:<UTC date>`. Optional controls: `CHAT_RATE_LIMIT_MAX_REQUESTS`, `CHAT_RATE_LIMIT_WINDOW_SECONDS`, `CHAT_GLOBAL_DAILY_LIMIT` (default 500), `CHAT_RATE_LIMIT_SALT`, and comma-separated `CHAT_RATE_LIMIT_BYPASS_IPS` for trusted testing IPs (bypasses both limits). Once the daily cap is reached, visitors are asked to email instead.
 
 ## Commands (In-site)

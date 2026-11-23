@@ -29,7 +29,10 @@ const CONTACT_EMAIL = 'shaun@a-dobe.club';
 // what bound them. This check stops other websites spending the quota through
 // their visitors' browsers.
 const PRODUCTION_ORIGIN = 'https://hi.a-dobe.club';
-const PAGES_ORIGIN = /^https:\/\/(?:[a-z0-9-]+\.)?shaun-page-tui\.pages\.dev$/;
+// The Pages project is named shaun-page-tui, but its pages.dev subdomain is
+// personal-homepage-tui. Only that host and its deployment previews are ours;
+// an unclaimed pages.dev name could be registered by anyone.
+const PAGES_ORIGIN = /^https:\/\/(?:[a-z0-9-]+\.)?personal-homepage-tui\.pages\.dev$/;
 
 export function isAllowedOrigin(origin) {
   if (!origin) return false;

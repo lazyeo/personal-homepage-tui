@@ -151,11 +151,12 @@ const chatEnv = (kv, extra = {}) => ({
 });
 
 test('only this site and its Pages previews are allowed origins', () => {
-  for (const origin of ['https://hi.a-dobe.club', 'https://shaun-page-tui.pages.dev', 'https://feat-x.shaun-page-tui.pages.dev', 'https://4f2a9c1e.shaun-page-tui.pages.dev']) {
+  for (const origin of ['https://hi.a-dobe.club', 'https://personal-homepage-tui.pages.dev', 'https://feat-x.personal-homepage-tui.pages.dev', 'https://99cdfca4.personal-homepage-tui.pages.dev']) {
     assert.ok(isAllowedOrigin(origin), origin);
   }
   for (const origin of [null, '', 'null', 'https://evil.example', 'http://hi.a-dobe.club', 'https://hi.a-dobe.club.evil.example',
-    'https://evil-shaun-page-tui.pages.dev', 'https://x.shaun-page-tui.pages.dev.evil.example', 'https://a.b.shaun-page-tui.pages.dev']) {
+    'https://shaun-page-tui.pages.dev', 'https://x.shaun-page-tui.pages.dev', 'https://evil-personal-homepage-tui.pages.dev',
+    'https://x.personal-homepage-tui.pages.dev.evil.example', 'https://a.b.personal-homepage-tui.pages.dev']) {
     assert.ok(!isAllowedOrigin(origin), String(origin));
   }
 });
