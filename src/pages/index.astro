@@ -2,18 +2,38 @@
 import Portfolio from "../layouts/Portfolio.astro";
 import TerminalHero from "../components/TerminalHero.astro";
 import ProjectShowcase from "../components/ProjectShowcase.astro";
+import Experience from "../components/Experience.astro";
 ---
 
-<Portfolio title="Shaun Zhang — Ideas, in use" workHref="#work">
+<Portfolio>
   <TerminalHero />
   <ProjectShowcase />
-  <section class="contact-section wrap">
+  <Experience />
+  <section class="contact-section wrap" id="contact" aria-labelledby="contact-title">
     <div>
-      <h2>Something in mind?<br /><em>Let’s make it real.</em></h2><a
-        class="contact-email"
-        href="mailto:shaun@a-dobe.club">shaun@a-dobe.club</a>
-    </div><div class="contact-aside">
-      <p>Curious about how I work?<br />Start a conversation.</p><a
+      <h2 id="contact-title">Let’s talk.</h2>
+      <p class="contact-lede">
+        Hiring for a software, AI or business analysis role in New Zealand?
+        Email me, or find me on LinkedIn and GitHub.
+      </p>
+      <div class="contact-actions">
+        <a class="button" href="mailto:shaun@a-dobe.club">shaun@a-dobe.club</a>
+        <a
+          class="button button-quiet"
+          href="https://www.linkedin.com/in/shaun-nz/"
+          target="_blank"
+          rel="noopener noreferrer">LinkedIn ↗&#xFE0E;</a
+        >
+        <a
+          class="button button-quiet"
+          href="https://github.com/lazyeo"
+          target="_blank"
+          rel="noopener noreferrer">GitHub ↗&#xFE0E;</a
+        >
+      </div>
+    </div>
+    <div class="contact-aside">
+      <p>Curious about how I work? <br />Start a conversation.</p><a
         class="text-link"
         href="/terminal"
         data-terminal>Ask my AI terminal</a

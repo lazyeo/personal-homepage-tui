@@ -1,0 +1,97 @@
+---
+// Public facts only, from the reviewed portfolio context. Keep it scannable:
+// one line of what the role was, one of what it involved.
+const roles = [
+  {
+    when: "2025 – present",
+    title: "Volunteer LMS / WordPress Integration Developer",
+    org: "Youthline Central South Island · Christchurch, NZ",
+    detail:
+      "Configure and maintain the Moodle LMS for volunteer training, integrate it with WordPress/WooCommerce through Edwiser, customise PHP theme templates, and fix plugin, access and content issues.",
+  },
+  {
+    when: "2022 – 2024",
+    title: "Product Director",
+    org: "EdgeMatrix · Nanjing Yilisha Technology",
+    detail:
+      "Requirements, roadmap, API documentation and coordination with the technical team for a distributed computing network for AI applications.",
+  },
+  {
+    when: "2017 – 2022",
+    title: "Independent developer & GameMaker community builder",
+    org: "Self-directed",
+    detail:
+      "Built and led a Chinese GameMaker Studio 2 community of nearly 1,000 developers and wrote 50+ tutorials. Games: “Signal”, 2nd place at Microsoft ID@Xbox Dream Campus Tour; “Swing & Crash”, Best Student Game at Giant 48-hour Game Innovation Camp.",
+  },
+  {
+    when: "2008 – 2017",
+    title: "Senior Product Manager / Product Manager",
+    org: "Internet companies in China",
+    detail:
+      "Mobile reading, e-commerce, sports tech and telecom-related products from concept to launch: requirements, specifications, user research and leading product teams.",
+  },
+];
+const steps = [
+  ["Spec", "I write the spec and the acceptance criteria."],
+  ["Build", "AI agents implement against them."],
+  ["Verify", "CI tests and checks on real devices."],
+  ["Release", "Versioned releases with a changelog."],
+];
+---
+
+<section
+  class="experience-section wrap"
+  id="experience"
+  aria-labelledby="experience-title"
+>
+  <div class="section-heading">
+    <h2 id="experience-title">Experience.</h2><p>
+      Product leadership first, hands-on engineering now.
+    </p>
+  </div>
+  <div class="experience-grid">
+    <div>
+      <ol class="xp-list">
+        {
+          roles.map((role) => (
+            <li>
+              <p class="xp-when">{role.when}</p>
+              <div>
+                <h3>{role.title}</h3>
+                <p class="xp-org">{role.org}</p>
+                <p class="xp-detail">{role.detail}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="xp-education">
+        <h3>Education</h3>
+        <p>
+          <strong>Master of Applied Computing</strong> · Lincoln University, New
+          Zealand · Completed 2025
+        </p>
+      </div>
+    </div>
+    <aside class="how-i-work" aria-labelledby="how-title">
+      <h3 id="how-title">How I work</h3>
+      <ol>
+        {
+          steps.map(([name, text]) => (
+            <li>
+              <strong>{name}</strong>
+              <span>{text}</span>
+            </li>
+          ))
+        }
+      </ol>
+      <p>
+        <a href="/work/alma-android/">Alma Android</a> has shipped 11 releases this
+        way, with CI on every push and each build used on my own phone and
+        foldable. <a href="/work/nimpression-ops/">Nimpression Ops</a> carries 683
+        xUnit tests, including an integration suite on real PostgreSQL, and CI
+        passed on the deployed commit.
+      </p>
+    </aside>
+  </div>
+</section>

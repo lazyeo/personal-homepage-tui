@@ -174,7 +174,7 @@ img {
 nav {
   display: flex;
   align-items: center;
-  gap: 35px;
+  gap: 27px;
   font-size: 13px;
   /* The arrow resolves from a fallback font and makes its link's line box
      0.5px taller than its neighbour's. Left to line-height: normal that
@@ -182,12 +182,19 @@ nav {
      two sit level only some of the time. */
   line-height: 1.4;
 }
+nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 4px;
+}
 nav a:hover,
 .text-link:hover,
 .site-footer a:hover {
   text-decoration: underline;
 }
 .terminal-link {
+  min-height: 44px;
   font-size: 12px;
   border: 1px solid var(--line-soft);
   border-radius: 6px;
@@ -220,29 +227,90 @@ nav a:hover,
   z-index: 2;
 }
 .hero h1 {
-  font-size: clamp(48px, 5.3vw, 76px);
-  line-height: 1.08;
-  margin-bottom: 27px;
-  white-space: nowrap;
+  font-size: clamp(42px, 4.5vw, 66px);
+  line-height: 1.06;
+  margin-bottom: 18px;
 }
 .hero h1 em {
   font-style: italic;
 }
-.hero-copy > p {
+.hero-kicker {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 16px;
+}
+.hero-stack {
+  font-size: 15px;
+  color: var(--accent);
+  line-height: 1.6;
+}
+.hero-value {
+  margin-top: 16px;
+  max-width: 34em;
   font-size: 16px;
-  line-height: 1.95;
+  line-height: 1.75;
   color: var(--ink-dim);
+}
+.hero-facts {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.hero-facts li {
+  font-size: 13px;
+  padding: 7px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-facts li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 .hero-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 27px;
-  margin-top: 29px;
+  gap: 10px;
+  margin-top: 26px;
+}
+.hero-actions .button:first-child {
+  gap: 20px;
+}
+.hero-slogan {
+  font-family: var(--serif);
+  font-size: 15px;
+}
+.hero-slogan em {
+  font-style: italic;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
   gap: 30px;
   background: var(--accent);
   color: var(--on-accent);
@@ -256,6 +324,15 @@ nav a:hover,
 .button:hover {
   background: var(--accent-strong);
   transform: translateY(-2px);
+}
+.button-quiet {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-medium);
+  padding: 15px 20px;
+}
+.button-quiet:hover {
+  background: var(--surface-hover);
 }
 .text-link {
   font-size: 13px;
@@ -759,7 +836,7 @@ nav a:hover,
   letter-spacing: 0.14em;
   color: #8a653f;
 }
-.worksheet h3 {
+.worksheet-title {
   font: 27px/1.12 var(--serif);
   color: #795736;
   margin: 14px 0;
@@ -859,19 +936,145 @@ nav a:hover,
   display: flex;
   align-items: end;
   justify-content: space-between;
+  gap: 40px;
   padding-block: 92px 100px;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 20px;
 }
 .contact-section h2 {
   font-size: 57px;
   line-height: 1.13;
 }
-.contact-email {
+.contact-lede {
+  margin-top: 16px;
+  max-width: 34em;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+}
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+.contact-actions .button {
+  font-size: 15px;
+}
+.contact-aside .text-link {
   display: inline-flex;
-  gap: 45px;
-  font-size: 17px;
-  border-bottom: 1px solid var(--line-medium);
-  padding-bottom: 8px;
-  margin-top: 29px;
+  align-items: center;
+  min-height: 44px;
+}
+.experience-section {
+  padding-block: 80px;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 20px;
+}
+.experience-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+.xp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.xp-list li {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 24px;
+  padding-block: 22px;
+  border-bottom: 1px solid var(--line);
+}
+.xp-list li:first-child {
+  padding-top: 0;
+}
+.xp-when {
+  font-size: 13px;
+  color: var(--ink-muted);
+  padding-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.xp-list h3,
+.xp-education h3,
+.how-i-work h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0;
+}
+.xp-org {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--accent);
+}
+.xp-detail {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+}
+.xp-education {
+  margin-top: 28px;
+}
+.xp-education p {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+}
+.xp-education strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.how-i-work {
+  border: 1px solid var(--line-strong);
+  border-radius: 9px;
+  padding: 28px;
+  background: var(--surface-raised);
+}
+.how-i-work ol {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  counter-reset: step;
+  display: grid;
+  gap: 14px;
+}
+.how-i-work li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 28px 64px 1fr;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+.how-i-work li::before {
+  content: counter(step, decimal-leading-zero);
+  font-size: 11px;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.how-i-work li strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.how-i-work > p {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-strong);
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--ink-dim);
+}
+.how-i-work a {
+  color: var(--accent);
+  text-decoration: underline;
 }
 .contact-aside {
   font-size: 12px;
@@ -899,9 +1102,15 @@ nav a:hover,
 }
 .site-footer > div {
   display: flex;
-  gap: 20px;
+  gap: 12px;
   margin-left: auto;
-  font-size: 10px;
+  font-size: 13px;
+}
+.site-footer > div a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 6px;
 }
 .site-footer > span {
   font-size: 9px;
@@ -1118,7 +1327,11 @@ dialog::backdrop {
     width: calc(100% - 72px);
   }
   .hero h1 {
-    font-size: 54px;
+    font-size: 48px;
+  }
+  .experience-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
   }
   .computer {
     scale: 0.84;
@@ -1183,11 +1396,17 @@ dialog::backdrop {
     font-size: 32px;
   }
   nav {
-    gap: 20px;
+    gap: 2px;
+    font-size: 13px;
+  }
+  nav a {
+    padding-inline: 7px;
   }
   .terminal-link {
     font-size: 0;
-    padding: 10px;
+    padding: 0;
+    width: 44px;
+    justify-content: center;
     gap: 0;
   }
   .terminal-link > span {
@@ -1195,19 +1414,32 @@ dialog::backdrop {
   }
   .hero {
     grid-template-columns: 1fr;
-    padding-top: 50px;
+    padding-top: 36px;
     padding-bottom: 70px;
     gap: 0;
     min-height: 0;
   }
   .hero h1 {
-    font-size: clamp(40px, 8.5vw, 62px);
-    line-height: 1.08;
-    margin-bottom: 20px;
+    font-size: clamp(36px, 9.6vw, 56px);
+    line-height: 1.06;
+    margin-bottom: 14px;
   }
-  .hero-copy > p {
+  .hero-stack {
     font-size: 14px;
-    line-height: 1.9;
+  }
+  .hero-value {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .hero-facts li {
+    font-size: 12.5px;
+  }
+  .hero-actions .button:first-child {
+    flex-basis: 100%;
+  }
+  .hero-actions .button-quiet {
+    flex: 1;
+    padding-inline: 10px;
   }
   .hero-actions {
     margin-top: 22px;
@@ -1215,14 +1447,16 @@ dialog::backdrop {
   .location {
     margin-top: 27px;
   }
+  /* The illustration is the secondary entry on phones: small enough that
+     the work starts soon after the hero copy. */
   .computer-stage {
-    height: 435px;
+    height: 330px;
     max-width: 460px;
     width: 100%;
-    margin: 20px auto 0;
+    margin: 12px auto 0;
   }
   .computer {
-    scale: 0.82;
+    scale: 0.62;
     left: 50%;
     top: 32px;
     transform-origin: 0 30%;
@@ -1237,8 +1471,8 @@ dialog::backdrop {
     right: 20px;
   }
   .desk-shadow {
-    top: 290px;
-    width: 260px;
+    top: 228px;
+    width: 200px;
   }
   .hero-bottom {
     bottom: 0;
@@ -1329,8 +1563,24 @@ dialog::backdrop {
   .contact-section h2 {
     font-size: 44px;
   }
-  .contact-email {
-    font-size: 16px;
+  .contact-lede {
+    font-size: 15px;
+  }
+  .experience-section {
+    padding-block: 52px;
+  }
+  .xp-list li {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .how-i-work {
+    padding: 22px;
+  }
+  .how-i-work li {
+    grid-template-columns: 26px 1fr;
+  }
+  .how-i-work li span {
+    grid-column: 2;
   }
   .contact-aside {
     margin-top: 33px;
@@ -1346,11 +1596,12 @@ dialog::backdrop {
     padding-block: 22px;
   }
   .site-footer > div {
-    margin-left: auto;
+    margin-left: -6px;
+    width: 100%;
   }
   .site-footer > span {
     width: 100%;
-    font-size: 9px;
+    font-size: 11px;
   }
   .site-footer p {
     display: none;
@@ -1421,17 +1672,24 @@ dialog::backdrop {
 }
 @media (max-width: 380px) {
   nav {
-    gap: 14px;
+    gap: 0;
+    font-size: 12.5px;
+  }
+  nav a {
+    padding-inline: 5px;
+  }
+  .wordmark {
+    font-size: 27px;
   }
   .computer {
-    scale: 0.67;
-    top: 48px;
+    scale: 0.55;
+    top: 40px;
   }
   .computer-stage {
-    height: 385px;
+    height: 300px;
   }
   .desk-shadow {
-    top: 265px;
+    top: 210px;
   }
   .hero-actions {
     gap: 20px;
@@ -1467,7 +1725,7 @@ dialog::backdrop {
   .case-study > .alma-art img {
     width: min(420px, 80vw);
   }
-  .worksheet h3 {
+  .worksheet-title {
     font-size: 24px;
   }
   .worksheet-name {
@@ -1515,4 +1773,20 @@ dialog::backdrop {
   .computer {
     transform: translateX(-50%) rotateY(-13deg);
   }
+}
+@media (max-width: 480px) {
+  /* Its rotated line runs off the right edge on narrow phones. */
+  .orbit-label {
+    display: none;
+  }
+}
+.not-found {
+  padding-block: 110px 140px;
+}
+.not-found h1 {
+  font-size: clamp(42px, 5vw, 66px);
+  line-height: 1.08;
+}
+.not-found h1 em {
+  font-style: italic;
 }

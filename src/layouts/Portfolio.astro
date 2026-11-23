@@ -3,13 +3,32 @@ import "../styles/portfolio.css";
 interface Props {
   title?: string;
   description?: string;
-  workHref?: string;
 }
 const {
-  workHref = '/#work',
-  title = "Shaun Zhang — Product-minded developer",
-  description = "Websites, useful tools and AI-powered products. Selected work by Shaun Zhang, a product-minded developer in Christchurch, New Zealand.",
+  title = "Shaun Zhang — Product-minded full-stack developer, Christchurch NZ",
+  description = "Shaun Zhang is a product-minded full-stack developer in Christchurch, New Zealand: C#/.NET, TypeScript, Java (Android) and AI-agent workflows. Full work rights in NZ; open to software, AI and BA roles.",
 } = Astro.props;
+// On the homepage the section links stay in-page; elsewhere they lead back to it.
+const home = Astro.url.pathname === "/" ? "" : "/";
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL("/og-image.png", Astro.site).href;
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Shaun Zhang",
+  alternateName: "Shun Zhang",
+  jobTitle: "Product-minded full-stack developer",
+  url: "https://hi.a-dobe.club/",
+  email: "mailto:shaun@a-dobe.club",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Christchurch",
+    addressCountry: "NZ",
+  },
+  alumniOf: { "@type": "CollegeOrUniversity", name: "Lincoln University" },
+  knowsAbout: ["C#", ".NET", "TypeScript", "Java", "Android", "AI-agent workflows", "Business analysis"],
+  sameAs: ["https://github.com/lazyeo", "https://www.linkedin.com/in/shaun-nz/"],
+};
 ---
 
 <!doctype html>
@@ -21,31 +40,47 @@ const {
     /><meta name="description" content={description} /><meta
       name="theme-color"
       content="#1d2021"
+    /><link rel="canonical" href={canonical} /><meta
+      property="og:type"
+      content="website"
+    /><meta property="og:url" content={canonical} /><meta
+      property="og:site_name"
+      content="Shaun Zhang"
     /><meta property="og:title" content={title} /><meta
       property="og:description"
       content={description}
-    /><link rel="icon" href="/favicon.svg" type="image/svg+xml" /><!-- The terminal drawer frames /terminal, whose fonts come from these two
-      origins. Opening the handshakes here keeps them off the click path. --><link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link
+    /><meta property="og:image" content={ogImage} /><meta
+      property="og:image:width"
+      content="1200"
+    /><meta property="og:image:height" content="630" /><meta
+      property="og:image:alt"
+      content="Shaun Zhang, product-minded full-stack developer in Christchurch, New Zealand"
+    /><meta name="twitter:card" content="summary_large_image" /><meta
+      name="twitter:title"
+      content={title}
+    /><meta name="twitter:description" content={description} /><meta
+      name="twitter:image"
+      content={ogImage}
+    /><link rel="icon" href="/favicon.svg" type="image/svg+xml" /><link
       rel="preload"
       href="/fonts/dm-serif-display.ttf"
       as="font"
       type="font/ttf"
       crossorigin
-    /><title>{title}</title></head
+    /><script type="application/ld+json" set:html={JSON.stringify(person)} /><title
+      >{title}</title
+    ></head
   >
   <body
     ><a class="skip-link" href="#main">Skip to content</a><header
       class="site-header wrap"
     >
-      <a class="wordmark" href="/" aria-label="Shaun home"
+      <a class="wordmark" href="/" aria-label="Shaun Zhang, home"
         >shaun<span>.</span></a
       ><nav aria-label="Main navigation">
-        <a href={workHref}>Work</a><a
-          href="mailto:shaun@a-dobe.club">Get in touch ↗&#xFE0E;</a
-        >
+        <a href={`${home}#work`}>Work</a><a href={`${home}#experience`}
+          >Experience</a
+        ><a href={`${home}#contact`}>Contact</a>
       </nav><a class="terminal-link" href="/terminal" data-terminal
         ><span aria-hidden="true">&gt;_</span> Open terminal</a
       >
@@ -54,12 +89,12 @@ const {
       <a class="wordmark" href="/">shaun<span>.</span></a><p>
         Made with curiosity. Built with care.
       </p><div>
-        <a
+        <a href="mailto:shaun@a-dobe.club">Email</a><a
           href="https://github.com/lazyeo"
           target="_blank"
           rel="noopener noreferrer">GitHub ↗&#xFE0E;</a
         ><a
-          href="https://linkedin.com/in/shaun-nz/"
+          href="https://www.linkedin.com/in/shaun-nz/"
           target="_blank"
           rel="noopener noreferrer">LinkedIn ↗&#xFE0E;</a
         >

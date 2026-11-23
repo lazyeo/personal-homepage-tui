@@ -1,26 +1,14 @@
+// Homepage order. Every field shown on the homepage card is a reviewed public
+// fact; the chat prompt is built from the same entries.
 export const projects = [
-  {
-    slug: "ky01-launcher",
-    evidenceNote: "Launcher capture from the physical KY-01L.",
-    publicName: "Pocket Home",
-    name: "Pocket Home",
-    subtitle: "A home screen for a card-sized e-ink phone.",
-    category: "Native Android",
-    stack: "Java · Android API 25 · No dependencies",
-    intro:
-      "Pocket Home is a launcher I wrote for the Kyocera KY-01L, a card-sized phone with a 480 x 600 e-ink screen. Its stock launcher will not list or start third-party apps, so a phone running Android could only ever run what shipped on it.",
-    problem:
-      "The device runs Android, but nothing you install appears on its home screen or can be started from it, so the platform underneath goes to waste. Replacing the launcher is not simply a matter of writing an ordinary one either: the panel is e-ink at 480 x 600 and the firmware is Android 7.1, so a scrolling colour-phone layout does not fit it.",
-    contribution:
-      "A native Java launcher in a 24 KiB APK, with no runtime libraries, no WebView and no network permission. Favourites and a paged app list of six per page with explicit previous and next instead of scrolling; long press to rename an app, choose one of sixteen monochrome icons, or add a favourite; a light or dark tone. Preferences are keyed by component name, so they survive a process restart and an in-place update.",
-    decision:
-      "Refuse anything that redraws without being asked. Clock and battery update from broadcasts only while the launcher is resumed, the receiver is unregistered on pause, and the app list refreshes on resume rather than continuously. On e-ink an idle animation is not decoration, it is visible flicker.",
-    result:
-      "Running as the default home screen on my own device and verified against it: build and signature, the HOME resolver, icon and favourite persistence across a force stop, all three app pages, and both 240 and 280 density. One memory snapshot read 11.5 MB PSS, which is a reading rather than a benchmark. E-ink ghosting and touch feel need physical inspection; a screenshot cannot establish either.",
-  },
   {
     slug: "nimpression-ops",
     evidenceNote: "Live demo payslip · captured 23 October 2026 · generated data.",
+    tagline: "Correct, even offline.",
+    summary:
+      "Dispatch, timesheets, payroll and compliance for a small New Zealand freight fleet: an independent rebuild of a system described in a university capstone report.",
+    role: "Designed and built it end to end: .NET API, Angular front end, tests, CI and deployment.",
+    proof: "683 xUnit tests · live demo · CI passed on the deployed commit",
     name: "Nimpression Ops",
     subtitle: "Fleet operations that stay correct when the connection does not.",
     category: "Full-stack system",
@@ -40,8 +28,64 @@ export const projects = [
       "A public repository and a live demo with administrator, dispatcher and driver accounts. 683 xUnit test methods, the integration suite on real PostgreSQL via Testcontainers; CI passed on the deployed commit. The demo data is generated; the demo is a showcase, not a production service.",
   },
   {
+    slug: "alma-android",
+    evidenceNote:
+      "App screenshot from the public repository · unfolded layout · synthetic fixture data.",
+    tagline: "The agent follows you out.",
+    summary:
+      "An open-source Android client for Alma Desktop: follow AI-agent tasks, answer their questions and approve steps from a phone or foldable.",
+    role: "Product owner and developer: I write the specs and acceptance criteria, AI agents implement, and I test every release on real devices.",
+    proof: "11 public releases, latest v0.1.10 · tests in CI · JUnit for the Java layer",
+    name: "Alma Android",
+    subtitle: "Your desktop AI agent, carried in a pocket.",
+    category: "Open-source Android app",
+    stack: "TypeScript · React · Capacitor · Java (native Capacitor plugins) · JUnit",
+    link: "https://github.com/lazyeo/alma-android/releases",
+    linkLabel: "Download the APK",
+    repo: "https://github.com/lazyeo/alma-android",
+    intro:
+      "An unofficial Android client for Alma Desktop, the AI agent on my Mac. Pair a phone or foldable with one or more desktops and keep working with threads, agents and files away from the keyboard. Open source under MIT; the latest release is v0.1.10, 17 November 2026.",
+    problem:
+      "A desktop agent is no use once you stand up. I wanted to follow a task, answer its question or approve a step from a phone, with no third-party server in between.",
+    contribution:
+      "TypeScript and React in Capacitor, over a native Java layer of custom Capacitor plugins: a background connection service, a LAN WebSocket client, speech recording, share-sheet intake, in-app updates and foldable hinge tracking, with JUnit unit tests. On top of it: QR pairing, an end-to-end encrypted relay with LAN direct on shared Wi-Fi, streaming replies with tool calls and approvals, file diffs, foldable two-pane layouts, English and Chinese, SHA-256-verified in-app updates, and hold-to-talk voice input that falls back through a user-ordered chain of speech-to-text providers when one fails.",
+    decision:
+      "I run development as an AI-agent workflow: I write the spec and acceptance criteria, agents implement, and nothing ships without CI tests and on-device checks. No push service, so alerts are local and only live with the connection.",
+    result:
+      "A public repository with 11 releases from v0.1.0 to v0.1.10 and a changelog, used daily on my phone and foldable. CI runs the type checks and tests and builds the APK on every push. The screenshot is the unfolded layout on synthetic fixture data: no real conversations or credentials.",
+  },
+  {
+    slug: "kids-worksheets",
+    evidenceNote: "Illustrative worksheet, not an application screenshot.",
+    tagline: "Made for a small human.",
+    summary:
+      "Generates printable maths and writing practice and AI coloring pages for children.",
+    role: "Built it end to end: product workflow, implementation and deployment.",
+    proof: "Live at kids.a-dobe.club",
+    name: "Kids Worksheet Generator",
+    subtitle: "Learning that leaves the screen.",
+    category: "Personal product",
+    stack: "React · TypeScript · Cloudflare Workers AI · D1 · R2",
+    link: "https://kids.a-dobe.club/",
+    intro:
+      "Kids Worksheet Generator creates printable maths, writing exercises and AI coloring pages. It started with a simple wish: more useful learning materials for my son, with less screen time.",
+    problem:
+      "Preparing fresh practice by hand takes time. I wanted a simple way to make materials for learning together away from a screen.",
+    contribution:
+      "Built a web application for printable exercises and added AI-generated coloring pages, handling the product workflow, implementation and deployment.",
+    decision:
+      "Make paper the final interface. The digital tool helps parents prepare; the learning experience happens with a pencil and a printed page.",
+    result:
+      "A usable tool built around a real family need. The worksheet on this portfolio is an illustrative sample, not a screenshot of the application.",
+  },
+  {
     slug: "mrsl",
     evidenceNote: "Live MRSL homepage · captured 8 September 2026.",
+    tagline: "A better front door.",
+    summary:
+      "A website rebuild for My Rental Specialists, a Christchurch property-management business.",
+    role: "Rebuilt the front end in Astro and TypeScript on Wix CMS: listings, property pages and enquiry forms.",
+    proof: "Live at mrsl.nz",
     name: "MRSL",
     subtitle: "A considered home for a property business.",
     category: "Client website",
@@ -59,46 +103,27 @@ export const projects = [
       "A public website at mrsl.nz. The homepage screenshot was captured from the live site on 8 September 2026; it documents the interface, not a measured business outcome.",
   },
   {
-    slug: "alma-android",
-    evidenceNote:
-      "App screenshot from the public repository · unfolded layout · synthetic fixture data.",
-    name: "Alma Android",
-    subtitle: "Your desktop AI agent, carried in a pocket.",
-    category: "Open-source Android app",
-    stack: "TypeScript · React · Capacitor",
-    link: "https://github.com/lazyeo/alma-android/releases",
-    linkLabel: "Download the APK",
-    repo: "https://github.com/lazyeo/alma-android",
+    slug: "ky01-launcher",
+    evidenceNote: "Launcher capture from the physical KY-01L.",
+    tagline: "The apps were already there.",
+    summary:
+      "A native Java home screen for the Kyocera KY-01L, a card-sized e-ink Android phone whose stock launcher cannot start installed apps.",
+    role: "Designed and wrote it in Java, and verified it on the physical device.",
+    proof: "24 KiB APK · no runtime libraries · default launcher on my own phone",
+    name: "Pocket Home",
+    subtitle: "A home screen for a card-sized e-ink phone.",
+    category: "Native Android",
+    stack: "Java · Android API 25 · No dependencies",
     intro:
-      "An unofficial Android client for Alma Desktop, the AI agent on my Mac. Pair a phone with one or more desktops and keep working with threads, agents and files away from the keyboard. MIT, v0.1.4, October 2026.",
+      "Pocket Home is a launcher I wrote for the Kyocera KY-01L, a card-sized phone with a 480 x 600 e-ink screen. Its stock launcher will not list or start third-party apps, so a phone running Android could only ever run what shipped on it.",
     problem:
-      "A desktop agent is no use once you stand up. I wanted to follow a task, answer its question or approve a step from a phone, with no third-party server in between.",
+      "The device runs Android, but nothing you install appears on its home screen or can be started from it, so the platform underneath goes to waste. Replacing the launcher is not simply a matter of writing an ordinary one either: the panel is e-ink at 480 x 600 and the firmware is Android 7.1, so a scrolling colour-phone layout does not fit it.",
     contribution:
-      "TypeScript and React in Capacitor: QR pairing, an end-to-end encrypted relay with LAN direct on shared Wi-Fi, streaming replies with tool calls and approvals, file diffs, foldable two-pane layouts, English and Chinese, SHA-256-verified in-app updates.",
+      "A native Java launcher in a 24 KiB APK, with no runtime libraries, no WebView and no network permission. Favourites and a paged app list of six per page with explicit previous and next instead of scrolling; long press to rename an app, choose one of sixteen monochrome icons, or add a favourite; a light or dark tone. Preferences are keyed by component name, so they survive a process restart and an in-place update.",
     decision:
-      "Built the way the product works: Alma and its agent crew plan, code, test and release while I steer and test on real devices. No push service, so alerts are local and only live with the connection.",
+      "Refuse anything that redraws without being asked. Clock and battery update from broadcasts only while the launcher is resumed, the receiver is unregistered on pause, and the app list refreshes on resume rather than continuously. On e-ink an idle animation is not decoration, it is visible flicker.",
     result:
-      "A public repository with releases and a changelog, used daily on my phone and foldable, tests in CI. The screenshot is the unfolded layout on synthetic fixture data: no real conversations or credentials.",
-  },
-  {
-    slug: "kids-worksheets",
-    evidenceNote: "Illustrative worksheet, not an application screenshot.",
-    publicName: "Kids Worksheet Generator",
-    name: "Little tools, big curiosity.",
-    subtitle: "Learning that leaves the screen.",
-    category: "Personal product",
-    stack: "Print workflows · AI images · Web",
-    link: "https://kids.a-dobe.club/",
-    intro:
-      "Kids Worksheet Generator creates printable maths, writing exercises and AI coloring pages. It started with a simple wish: more useful learning materials for my son, with less screen time.",
-    problem:
-      "Preparing fresh practice by hand takes time. I wanted a simple way to make materials for learning together away from a screen.",
-    contribution:
-      "Built a web application for printable exercises and added AI-generated coloring pages, handling the product workflow, implementation and deployment.",
-    decision:
-      "Make paper the final interface. The digital tool helps parents prepare; the learning experience happens with a pencil and a printed page.",
-    result:
-      "A usable tool built around a real family need. The worksheet on this portfolio is an illustrative sample, not a screenshot of the application.",
+      "Running as the default home screen on my own device and verified against it: build and signature, the HOME resolver, icon and favourite persistence across a force stop, all three app pages, and both 240 and 280 density. One memory snapshot read 11.5 MB PSS, which is a reading rather than a benchmark. E-ink ghosting and touch feel need physical inspection; a screenshot cannot establish either.",
   },
 ];
 
