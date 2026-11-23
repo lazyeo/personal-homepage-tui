@@ -61,7 +61,7 @@ try {
     }
     assert.equal(await card.getByRole("link", { name: /^Case study/ }).getAttribute("href"), `/work/${slug}/`);
   }
-  assert.ok((await cards.nth(0).innerText()).includes("683 xUnit tests"));
+  assert.ok((await cards.nth(0).innerText()).includes("600+ xUnit tests"));
   assert.equal(await page.locator("#work canvas, #project-next, [data-project-panel]").count(), 0, "no carousel");
   assert.equal(await page.getByText("CareerMatch").count(), 0, "CareerMatch stays off the homepage");
 

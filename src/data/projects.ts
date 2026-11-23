@@ -8,7 +8,7 @@ export const projects = [
     summary:
       "Dispatch, timesheets, payroll and compliance for a small New Zealand freight fleet: an independent rebuild of a system described in a university capstone report.",
     role: "Designed and built it end to end: .NET API, Angular front end, tests, CI and deployment.",
-    proof: "683 xUnit tests · live demo · CI passed on the deployed commit",
+    proof: "600+ xUnit tests · live demo · CI passed on the deployed commit",
     name: "Nimpression Ops",
     subtitle: "Fleet operations that stay correct when the connection does not.",
     category: "Full-stack system",
@@ -25,7 +25,7 @@ export const projects = [
     decision:
       "Let the realtime channel carry nothing that matters. A SignalR message only says what changed and the client refetches over HTTP, so a lost message costs one extra request, never a wrong record. Likewise fines and payslips share no key: NZ law bars taking a fine from wages without written consent, so the code cannot.",
     result:
-      "A public repository and a live demo with administrator, dispatcher and driver accounts. 683 xUnit test methods, the integration suite on real PostgreSQL via Testcontainers; CI passed on the deployed commit. The demo data is generated; the demo is a showcase, not a production service.",
+      "A public repository and a live demo with administrator, dispatcher and driver accounts. 600+ xUnit tests, with integration tests on real PostgreSQL via Testcontainers; CI passed on the deployed commit. The demo data is generated; the demo is a showcase, not a production service.",
   },
   {
     slug: "alma-android",
@@ -35,7 +35,7 @@ export const projects = [
     summary:
       "An open-source Android client for Alma Desktop: follow AI-agent tasks, answer their questions and approve steps from a phone or foldable.",
     role: "Product owner and developer: I write the specs and acceptance criteria, AI agents implement, and I test every release on real devices.",
-    proof: "11 public releases, latest v0.1.10 · tests in CI · JUnit for the Java layer",
+    proof: "Public releases with a changelog · tests in CI · JUnit for the Java layer",
     name: "Alma Android",
     subtitle: "Your desktop AI agent, carried in a pocket.",
     category: "Open-source Android app",
@@ -44,7 +44,7 @@ export const projects = [
     linkLabel: "Download the APK",
     repo: "https://github.com/lazyeo/alma-android",
     intro:
-      "An unofficial Android client for Alma Desktop, the AI agent on my Mac. Pair a phone or foldable with one or more desktops and keep working with threads, agents and files away from the keyboard. Open source under MIT; the latest release is v0.1.10, 17 November 2026.",
+      "An unofficial Android client for Alma Desktop, the AI agent on my Mac. Pair a phone or foldable with one or more desktops and keep working with threads, agents and files away from the keyboard. Open source under MIT, with public releases and a changelog.",
     problem:
       "A desktop agent is no use once you stand up. I wanted to follow a task, answer its question or approve a step from a phone, with no third-party server in between.",
     contribution:
@@ -52,7 +52,7 @@ export const projects = [
     decision:
       "I run development as an AI-agent workflow: I write the spec and acceptance criteria, agents implement, and nothing ships without CI tests and on-device checks. No push service, so alerts are local and only live with the connection.",
     result:
-      "A public repository with 11 releases from v0.1.0 to v0.1.10 and a changelog, used daily on my phone and foldable. CI runs the type checks and tests and builds the APK on every push. The screenshot is the unfolded layout on synthetic fixture data: no real conversations or credentials.",
+      "A public repository with releases and a changelog, used daily on my phone and foldable. CI runs the type checks and tests and builds the APK on every push. The screenshot is the unfolded layout on synthetic fixture data: no real conversations or credentials.",
   },
   {
     slug: "kids-worksheets",
